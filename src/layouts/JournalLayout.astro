@@ -1,0 +1,88 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+type Props = CollectionEntry<'journal'>['data'];
+
+const { date, hoursWorked, summary, tags } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={`Journal — ${date.toISOString().slice(0, 10)}`} description={summary} />
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 1em;
+			}
+			.meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75em 1.25em;
+				align-items: baseline;
+				margin-bottom: 1.5em;
+				padding-bottom: 1em;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.date {
+				font-family: var(--font-atkinson), system-ui, sans-serif;
+				font-size: 1.5rem;
+				font-weight: 700;
+				color: rgb(var(--black));
+				line-height: 1;
+			}
+			.hours {
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+			}
+			.tags {
+				color: rgb(var(--gray));
+				font-size: 0.85rem;
+			}
+			.tags span {
+				margin-right: 0.5em;
+			}
+			.summary {
+				margin: 0 0 1.5em 0;
+				color: rgb(var(--gray-dark));
+				font-style: italic;
+				line-height: 1.5;
+			}
+			.body {
+				color: rgb(var(--gray-dark));
+			}
+			.back {
+				display: inline-block;
+				margin-bottom: 1.5em;
+				font-size: 0.9em;
+				color: rgb(var(--gray));
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<a href="/journal/" class="back">&larr; All journal entries</a>
+			<div class="meta">
+				<span class="date"><FormattedDate date={date} /></span>
+				{hoursWorked !== undefined && <span class="hours">{hoursWorked}h worked</span>}
+				{tags && tags.length > 0 && (
+					<span class="tags">
+						{tags.map((t: string) => <span>#{t}</span>)}
+					</span>
+				)}
+			</div>
+			<p class="summary">{summary}</p>
+			<div class="body">
+				<slot />
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

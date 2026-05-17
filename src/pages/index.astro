@@ -1,0 +1,172 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const recentJournal = (await getCollection('journal', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.slice(0, 5);
+
+const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 1em;
+			}
+			.intro {
+				margin: 1em 0 3em 0;
+				padding-bottom: 2em;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.intro h1 {
+				margin: 0 0 0.5em 0;
+				font-family: var(--font-atkinson), system-ui, sans-serif;
+				line-height: 1.1;
+			}
+			.intro p {
+				margin: 0;
+				color: rgb(var(--gray-dark));
+				font-size: 1.1rem;
+				line-height: 1.5;
+			}
+			section {
+				margin-bottom: 3em;
+			}
+			section h2 {
+				margin: 0 0 1em 0;
+				font-family: var(--font-atkinson), system-ui, sans-serif;
+				font-size: 1.5rem;
+			}
+			section .all-link {
+				font-size: 0.9rem;
+				color: rgb(var(--gray));
+				margin-left: 0.5em;
+				font-weight: normal;
+			}
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+			.journal-list li {
+				padding: 0.75em 0;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.journal-list a {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5em 1.5em;
+				align-items: baseline;
+				text-decoration: none;
+				color: inherit;
+			}
+			.journal-list a:hover .j-summary {
+				color: rgb(var(--accent));
+			}
+			.j-date {
+				min-width: 9ch;
+				font-family: var(--font-atkinson), system-ui, sans-serif;
+				font-weight: 700;
+				color: rgb(var(--black));
+			}
+			.j-summary {
+				flex: 1;
+				min-width: 240px;
+				margin: 0;
+				color: rgb(var(--gray-dark));
+			}
+			.posts-list li {
+				padding: 1em 0;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.posts-list a {
+				text-decoration: none;
+				color: inherit;
+			}
+			.posts-list a:hover .p-title {
+				color: rgb(var(--accent));
+			}
+			.p-title {
+				margin: 0 0 0.25em 0;
+				font-size: 1.2rem;
+			}
+			.p-date {
+				margin: 0 0 0.25em 0;
+				color: rgb(var(--gray));
+				font-size: 0.9rem;
+			}
+			.p-desc {
+				margin: 0;
+				color: rgb(var(--gray-dark));
+				font-size: 0.95rem;
+			}
+			.empty {
+				color: rgb(var(--gray));
+				font-style: italic;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="intro">
+				<h1>Nico Neumann</h1>
+				<p>
+					I'm building products with AI agents, journaling the work in public, and figuring out
+					what an entrepreneurial life looks like in 2026. This is the log.
+				</p>
+			</section>
+
+			<section>
+				<h2>Recent journal<a href="/journal/" class="all-link">all entries &rarr;</a></h2>
+				{recentJournal.length === 0 ? (
+					<p class="empty">No entries yet.</p>
+				) : (
+					<ul class="journal-list">
+						{recentJournal.map((entry) => (
+							<li>
+								<a href={`/journal/${entry.id}/`}>
+									<span class="j-date"><FormattedDate date={entry.data.date} /></span>
+									<p class="j-summary">{entry.data.summary}</p>
+								</a>
+							</li>
+						))}
+					</ul>
+				)}
+			</section>
+
+			<section>
+				<h2>Recent posts<a href="/posts/" class="all-link">all posts &rarr;</a></h2>
+				{recentPosts.length === 0 ? (
+					<p class="empty">No long-form posts yet — building-in-public writing lands here.</p>
+				) : (
+					<ul class="posts-list">
+						{recentPosts.map((post) => (
+							<li>
+								<a href={`/posts/${post.id}/`}>
+									<h3 class="p-title">{post.data.title}</h3>
+									<p class="p-date"><FormattedDate date={post.data.pubDate} /></p>
+									<p class="p-desc">{post.data.description}</p>
+								</a>
+							</li>
+						))}
+					</ul>
+				)}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

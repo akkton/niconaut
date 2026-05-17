@@ -1,0 +1,70 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`About — ${SITE_TITLE}`} description="About Nico Neumann and this site." />
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			h1 {
+				margin: 0 0 1em 0;
+				font-family: var(--font-atkinson), system-ui, sans-serif;
+			}
+			h2 {
+				margin: 2em 0 0.5em 0;
+				font-family: var(--font-atkinson), system-ui, sans-serif;
+				font-size: 1.25rem;
+			}
+			p {
+				line-height: 1.6;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>About</h1>
+			<p>
+				I'm Nicolas Neumann — Nico. I build with AI agents, ship products, and document the
+				journey here. This blog has two main feeds:
+			</p>
+			<ul>
+				<li><a href="/journal/">Journal</a> — daily entries: hours worked, what shipped, lessons.</li>
+				<li><a href="/posts/">Posts</a> — longer-form: building-in-public writing, milestones, decisions.</li>
+			</ul>
+
+			<h2>Why this exists</h2>
+			<p>
+				Three reasons. First, as proof-of-self: a documented track record I can hand to investors,
+				collaborators, or anyone who wants to know whether I show up consistently and think
+				clearly. Second, as a way to stay in touch with friends, family, and people I'd otherwise
+				lose track of. Third, because writing the work down forces me to understand it.
+			</p>
+
+			<h2>How this site is built</h2>
+			<p>
+				Astro + MDX, hosted on Cloudflare Pages, content authored through Claude Code. The entire
+				publishing pipeline runs through the same AI agent harness I use to build the rest of my
+				products. Meta, in the good way.
+			</p>
+
+			<h2>Get in touch</h2>
+			<p>
+				Email me at <a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>. Or find me on
+				LinkedIn / Instagram (links coming once I update them).
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>

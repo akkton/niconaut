@@ -1,0 +1,43 @@
+---
+date: 2026-05-17
+hoursWorked: 4
+summary: Day 1. Scoped the blog, picked the stack, scaffolded Astro + MDX, set up content collections for journal + posts, wired PostHog, shipped the first build.
+tags: [blog, meta, astro]
+---
+
+# Day 1: the blog is alive
+
+Today I built the thing you are reading. Four-ish hours, end-to-end, from "what should this even be" to "live on the internet."
+
+## Why a blog
+
+Three reasons stacked on top of each other:
+
+1. **Proof-of-self for investors.** When the day comes that I am pitching, I want a link I can hand over that shows I show up, ship, and think clearly. A documented track record beats a deck of claims.
+2. **Networking infrastructure.** One URL I can share with friends, family, future clients, my grandparents. People who would otherwise lose track of me can keep tabs without me having to send 20 update emails.
+3. **Writing forces understanding.** Half the value is the entries themselves; the other half is what happens to my thinking when I am forced to write it down.
+
+## What I picked and why
+
+**Astro + MDX, hosted on Cloudflare Pages, content authored through Claude Code.** Three decisions, each load-bearing:
+
+- *Astro + MDX*: Static site, sub-second loads, content lives as markdown files in a git repo. MDX means I can embed React/Astro components inside posts later — if I want a "hours worked this week" sparkline or an interactive chart, the door is open. Zero JavaScript ships unless I ask for it.
+- *Cloudflare Pages*: Free tier handles more traffic than I will plausibly produce. Auto-deploys on every git push. If I ever need a contact form or a tiny API endpoint, Cloudflare Workers sits one step away.
+- *Claude Code as the authoring interface*: This is the part that justifies the rest. I do not want to hand-write markdown. I want to say "draft today's journal: worked four hours, set up the blog, here's what I learned" and have a draft appear, commit, push, and deploy itself. The same agent harness I use to ship product also publishes the journal about shipping product. Meta in the good way.
+
+I considered Lovable — it was my first instinct. The honest sanity check killed it: Lovable builds apps, and a blog is a content pipeline, not an app. I would have ended up building a custom CMS to host posts, which is the wrong shape for a thing that needs to live for years.
+
+## What I learned today
+
+- **The Astro 6 blog template gets you about 80% of the way there.** Content collections, RSS, sitemap, Atkinson font, image optimization — all in by default. The customization work was mostly *renaming* and *adding a second collection*, not building from scratch.
+- **The right way to use the AI agent for setup is to plan first, execute second.** Going straight into "build me a blog" without scoping it would have produced something generic. Forty minutes of planning before any code saved at least an hour of rework.
+- **Tailwind v4 + Astro is dead simple.** A Vite plugin, one CSS import, done. The whole integration is two files.
+
+## What is still left
+
+- Domain registration (in flight today — picking the name is taking longer than the engineering).
+- Connect the repo to Cloudflare Pages.
+- Real OG image (the placeholder is the Astro starter image).
+- A few more details on the about page once the dust settles.
+
+That is it. The thing is alive. Tomorrow I write entry two.
