@@ -8,7 +8,7 @@ Personal blog: daily journal + long-form posts. Built with Astro + MDX, hosted o
 - **Tailwind v4** via Vite plugin (utility classes available; base typography from `src/styles/global.css`)
 - **PostHog** for analytics (set `PUBLIC_POSTHOG_KEY` in env)
 - **Cloudflare Pages** for hosting
-- **Cloudflare Registrar** for the domain
+- **Namecheap** for domain registration; **Cloudflare DNS** managing the zone (nameservers point at Cloudflare)
 
 ## Local development
 
@@ -49,6 +49,4 @@ See [WRITING.md](./WRITING.md) for the Claude Code authoring workflow.
 
 Cloudflare Pages, auto-deploy on push to `main`. Build command `npm run build`, output directory `dist/`. Custom domain is wired in the Cloudflare Pages project settings.
 
-> The `site:` value in `astro.config.mjs` is currently a placeholder
-> (`https://CHANGE-ME-DOMAIN.example.com`). Replace it with the real
-> registered domain before the site is shared.
+Live at https://nicolasneumann.blog
