@@ -44,6 +44,11 @@ const journal = defineCollection({
 				)
 				.optional(),
 			rizePartial: z.boolean().optional(),
+			screenshot: z.string().optional(),
+			targets: z.array(z.string()).optional(),
+			wins: z.array(z.string()).optional(),
+			losses: z.array(z.string()).optional(),
+			lessons: z.array(z.string()).optional(),
 		}),
 });
 

@@ -3,6 +3,28 @@ date: 2026-05-18
 summary: Day 2. Shipped the design polish, replaced every Astro template placeholder with real content, wired Rize screen-time as a first-class journal feature, rendered a real OG image, and added two custom PostHog events. The blog is now real enough to put in my bios.
 tags: [blog, meta, design, tracking, rize]
 rizePartial: true
+targets:
+  - Make the blog real enough to put in my Instagram + LinkedIn bios
+  - Wire Rize screen-time as a first-class journal feature, not a future maybe
+  - Land the design polish, OG image, and custom tracking events
+  - Backfill the Brazil-trip journal entries (May 13 to 16)
+wins:
+  - Rize integration done end-to-end. Schema fields, reusable component, May 17 retrofitted with full data.
+  - Tagline locked after three rounds of pushback. "Curious about opportunity. Building things. Documenting the mess."
+  - OG image rendered programmatically via sharp + SVG. No design-tool dependency, regenerable any time.
+  - All Astro template junk gone. Footer, About, OG image. Zero em-dashes sitewide.
+  - Two custom PostHog events shipped (outbound_link_click, article_read_50).
+  - Accountability format wired into the journal schema, modeled on the Maker School logging ritual.
+losses:
+  - Brazil-trip backfill (May 13 to 16) not all written. Came in piecemeal.
+  - Canva MCP path for OG image was a dead end. Two hours discovered the auth-permission wall.
+  - Custom events not behaviorally verified live yet. Needs a real user click and a 50% scroll.
+  - Tagline iteration took longer than the entire design-polish CSS pass.
+lessons:
+  - Sharp is already in the dependency tree. That is enough to render any v1 social card. Stop reaching for design tools.
+  - Behavioral verification beats build-passed every time. Grep the rendered HTML for the user-visible thing. Build-passing catches types, not rendering.
+  - Structured data in frontmatter is leverage. Today it renders nicely; in three months it powers a /stats page. Net cost today is zero.
+  - I am the taste, the model is the surface area. The tagline took three rounds because describing what was missing from each candidate worked better than trying to write it directly.
 ---
 
 # Day 2: making the blog real

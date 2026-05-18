@@ -17,6 +17,23 @@ topApps:
   - { name: unpauseai.com, minutes: 37 }
   - { name: WhatsApp, minutes: 33 }
   - { name: instagram.com, minutes: 28 }
+targets:
+  - Decide what the blog is for and pick the stack
+  - Get a working scaffold deployed end-to-end
+  - Write Day 1 entry to start the cadence
+wins:
+  - Blog live on the internet end-to-end in roughly 4 hours
+  - Picked Astro + MDX + Cloudflare Pages without overthinking
+  - Two clean content collections (journal + posts) instead of one mashed-together feed
+losses:
+  - The domain naming question took longer than the entire engineering build
+  - Real OG image punted to Day 2
+  - About page left skeletal
+  - PostHog key fill happened manually rather than through a documented env-setup flow
+lessons:
+  - Planning the scope before writing code saved at least an hour of rework. Forty minutes of upfront planning is cheap.
+  - Astro 6 template carries about 80% of the load. Customize the last 20%, don't rebuild the 80.
+  - Lovable for a content pipeline was the wrong shape. Sanity-checking the tool against the actual job killed a tempting detour.
 ---
 
 # Day 1: the blog is alive

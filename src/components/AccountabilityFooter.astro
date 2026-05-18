@@ -1,0 +1,98 @@
+---
+interface Props {
+	targets?: string[];
+	wins?: string[];
+	losses?: string[];
+	lessons?: string[];
+}
+
+const { targets, wins, losses, lessons } = Astro.props;
+const hasAny =
+	(targets && targets.length > 0) ||
+	(wins && wins.length > 0) ||
+	(losses && losses.length > 0) ||
+	(lessons && lessons.length > 0);
+---
+
+{hasAny && (
+	<section class="accountability" aria-label="Day accountability">
+		{targets && targets.length > 0 && (
+			<div class="block">
+				<h3 class="block-label">Targets</h3>
+				<ul>
+					{targets.map((t) => <li>{t}</li>)}
+				</ul>
+			</div>
+		)}
+		<div class="grid">
+			{wins && wins.length > 0 && (
+				<div class="block wins">
+					<h3 class="block-label">Wins</h3>
+					<ul>
+						{wins.map((w) => <li>{w}</li>)}
+					</ul>
+				</div>
+			)}
+			{losses && losses.length > 0 && (
+				<div class="block losses">
+					<h3 class="block-label">Losses</h3>
+					<ul>
+						{losses.map((l) => <li>{l}</li>)}
+					</ul>
+				</div>
+			)}
+			{lessons && lessons.length > 0 && (
+				<div class="block lessons">
+					<h3 class="block-label">Lessons</h3>
+					<ul>
+						{lessons.map((l) => <li>{l}</li>)}
+					</ul>
+				</div>
+			)}
+		</div>
+	</section>
+)}
+
+<style>
+	.accountability {
+		margin: 2.5em 0 1em 0;
+		padding-top: 1.5em;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+	.block {
+		margin-bottom: 1.5em;
+	}
+	.block-label {
+		margin: 0 0 0.5em 0;
+		font-family: var(--font-atkinson), system-ui, sans-serif;
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgb(var(--gray));
+	}
+	.block ul {
+		margin: 0;
+		padding-left: 1.1em;
+		list-style-type: square;
+	}
+	.block li {
+		margin-bottom: 0.35em;
+		line-height: 1.45;
+		color: rgb(var(--gray-dark));
+		font-size: 0.95rem;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 1.5em;
+	}
+	.wins .block-label { color: #1b8a4a; }
+	.losses .block-label { color: #b03a3a; }
+	.lessons .block-label { color: rgb(var(--gray-dark)); }
+	@media (max-width: 720px) {
+		.grid {
+			grid-template-columns: 1fr;
+			gap: 1em;
+		}
+	}
+</style>

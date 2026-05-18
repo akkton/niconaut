@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import AccountabilityFooter from '../components/AccountabilityFooter.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -8,9 +9,23 @@ import RizeRecap from '../components/RizeRecap.astro';
 
 type Props = CollectionEntry<'journal'>['data'];
 
-const { date, hoursWorked, summary, tags, focusTime, topCategories, topApps, rizePartial } =
-	Astro.props;
+const {
+	date,
+	hoursWorked,
+	summary,
+	tags,
+	focusTime,
+	topCategories,
+	topApps,
+	rizePartial,
+	screenshot,
+	targets,
+	wins,
+	losses,
+	lessons,
+} = Astro.props;
 const showRecap = focusTime !== undefined || (topCategories && topCategories.length > 0);
+const isoDate = date.toISOString().slice(0, 10);
 ---
 
 <html lang="en">
@@ -65,6 +80,24 @@ const showRecap = focusTime !== undefined || (topCategories && topCategories.len
 				font-size: 0.9em;
 				color: rgb(var(--gray));
 			}
+			.screenshot {
+				margin: 0 0 2em 0;
+				padding: 0;
+			}
+			.screenshot img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 8px;
+			}
+			.screenshot figcaption {
+				margin-top: 0.5em;
+				font-size: 0.8rem;
+				color: rgb(var(--gray));
+				text-align: center;
+				letter-spacing: 0.04em;
+			}
 		</style>
 	</head>
 
@@ -90,9 +123,21 @@ const showRecap = focusTime !== undefined || (topCategories && topCategories.len
 					rizePartial={rizePartial}
 				/>
 			)}
+			{screenshot && (
+				<figure class="screenshot">
+					<img src={screenshot} alt={`Rize day summary for ${isoDate}`} loading="lazy" />
+					<figcaption>Day captured in Rize</figcaption>
+				</figure>
+			)}
 			<div class="body">
 				<slot />
 			</div>
+			<AccountabilityFooter
+				targets={targets}
+				wins={wins}
+				losses={losses}
+				lessons={lessons}
+			/>
 		</main>
 		<Footer />
 		<script is:inline>
