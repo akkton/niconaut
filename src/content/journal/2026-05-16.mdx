@@ -1,0 +1,50 @@
+---
+date: 2026-05-16
+summary: OneProposal launch-prep day. Domain swap to oneproposal.app, Stripe live-mode flip, PostHog cookieless integration, credit-ledger fix. Late-evening walkthrough with a friend surfaced six previously-invisible UX bugs before the friends-and-family share message went out.
+tags: [brazil, rize, journal, oneproposal, launch-prep]
+focusTime: 9h 22min
+screenshot: /journal-assets/rize-2026-05-16.png
+topCategories:
+  - { name: Code, percent: 34, minutes: 191 }
+  - { name: Meeting, percent: 17, minutes: 96 }
+  - { name: Product, percent: 10, minutes: 55 }
+  - { name: Social Media, percent: 9, minutes: 50 }
+  - { name: Meetings, percent: 9, minutes: 50 }
+topApps:
+  - { name: Visual Studio Code, minutes: 191 }
+  - { name: lovable.dev, minutes: 51 }
+  - { name: instagram.com, minutes: 50 }
+  - { name: oneproposal.app, minutes: 21 }
+  - { name: Microsoft Outlook, minutes: 18 }
+  - { name: Microsoft Edge, minutes: 14 }
+  - { name: WhatsApp, minutes: 14 }
+targets:
+  - Verify and fix the four launch-blocking bugs (A/B/C/D)
+  - Flip OneProposal to live Stripe mode and swap the domain to oneproposal.app
+  - Walk a friend through the product cold and ship a friends-and-family share message
+wins:
+  - oneproposal.app fully operational. Domain swap touched 19 files and worked end-to-end.
+  - Stripe live-mode active. The product can actually accept money now.
+  - Friend walkthrough surfaced six previously-invisible UX bugs (K1 through K6). Best possible feedback at the lowest possible cost.
+  - Friends-and-family share message sent before midnight.
+losses:
+  - Verification theater on the bug audit. Said "Bug C fixed" without rendering the page. The friend caught it inside the first minute.
+  - Said "shipped" several times when the right word was "committed-but-not-published-yet." That distinction matters more than it sounds.
+  - The agent harness's Stop hook over-fired roughly twelve times on Lovable-handoff turns. Tooling friction. Cost is real.
+lessons:
+  - Audit-without-render is the most expensive mistake class. Always click through.
+  - Shipped has to mean live on prod and behavior-verified. Anything else needs a different word.
+  - A real friend walkthrough catches things the agent harness cannot. The first six bugs were all visible in the first ten minutes of someone else using the product cold.
+---
+
+# Day in Brazil 3
+
+Launch-prep day for OneProposal. By midnight the product had a real domain, real Stripe, real friends, and six real bugs the agent harness hadn't seen.
+
+The walkthrough was the day. Watching someone use the product cold, in real time, is unmatched. Every assumption I'd been making about the flow surfaced inside ten minutes. None of them were technical. They were all "wait, what's supposed to happen here?" The bugs I named K1 through K6 are all things I would have shipped feeling proud, and all of them would have made the first real user bounce.
+
+The categories tell the structural story. 34% Code, 17% Meeting. The meeting block is the friend walkthrough plus the prep and the follow-up. Instagram at 50 minutes is the friends-and-family share message getting drafted and sent. Outlook is the post-launch admin trail.
+
+The friction worth naming is the language one. I kept calling things "shipped" before they were live. That word has to mean live and verified. Everything else needs a different word.
+
+Tomorrow the testers land.
