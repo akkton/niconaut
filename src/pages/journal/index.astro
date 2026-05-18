@@ -14,7 +14,7 @@ const entries = (await getCollection('journal', ({ data }) => !data.draft)).sort
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={`Journal — ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<BaseHead title={`Journal · ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
 			main {
 				width: 720px;
@@ -77,7 +77,7 @@ const entries = (await getCollection('journal', ({ data }) => !data.draft)).sort
 		<Header />
 		<main>
 			<h1>Journal</h1>
-			<p class="subtitle">Daily log — hours, what shipped, what didn't, what I learned.</p>
+			<p class="subtitle">Daily log: hours, what shipped, what didn't, what I learned.</p>
 			{entries.length === 0 ? (
 				<p class="empty">No entries yet.</p>
 			) : (

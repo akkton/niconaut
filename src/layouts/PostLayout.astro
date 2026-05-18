@@ -95,5 +95,28 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
 			</article>
 		</main>
 		<Footer />
+		<script is:inline>
+			(function () {
+				var fired = false;
+				function check() {
+					if (fired) return;
+					var scrolled = window.scrollY + window.innerHeight;
+					var total = document.documentElement.scrollHeight;
+					if (total <= 0) return;
+					if (scrolled / total >= 0.5) {
+						fired = true;
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('article_read_50', {
+								path: window.location.pathname,
+								article_type: 'post',
+							});
+						}
+						window.removeEventListener('scroll', check);
+					}
+				}
+				window.addEventListener('scroll', check, { passive: true });
+				window.addEventListener('load', check);
+			})();
+		</script>
 	</body>
 </html>

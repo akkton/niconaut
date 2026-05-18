@@ -151,7 +151,7 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 			<section>
 				<h2>Recent posts<a href="/posts/" class="all-link">all posts &rarr;</a></h2>
 				{recentPosts.length === 0 ? (
-					<p class="empty">No long-form posts yet — building-in-public writing lands here.</p>
+					<p class="empty">No long-form posts yet. Building-in-public writing lands here.</p>
 				) : (
 					<ul class="posts-list">
 						{recentPosts.map((post) => (

@@ -5,7 +5,10 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<div class="brand">
+			<h2><a href="/">{SITE_TITLE}</a></h2>
+			<span class="tagline">Curious about opportunity. Building things. Documenting the mess.</span>
+		</div>
 		<div class="internal-links">
 			<HeaderLink href="/journal">Journal</HeaderLink>
 			<HeaderLink href="/posts">Posts</HeaderLink>
@@ -20,19 +23,32 @@ import HeaderLink from './HeaderLink.astro';
 		background: white;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
 	}
+	.brand {
+		display: flex;
+		flex-direction: column;
+		gap: 0.05em;
+	}
 	h2 {
 		margin: 0;
 		font-size: 1em;
+		line-height: 1.1;
 	}
 
 	h2 a,
 	h2 a.active {
 		text-decoration: none;
 	}
+	.tagline {
+		font-size: 0.78rem;
+		color: rgb(var(--gray));
+		line-height: 1.2;
+	}
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding: 0.85em 0;
+		gap: 1.5em;
 	}
 	nav a {
 		padding: 1em 0.5em;
@@ -43,5 +59,13 @@ import HeaderLink from './HeaderLink.astro';
 	nav a.active {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
+	}
+	@media (max-width: 640px) {
+		.tagline {
+			display: none;
+		}
+		nav {
+			padding: 0.5em 0;
+		}
 	}
 </style>

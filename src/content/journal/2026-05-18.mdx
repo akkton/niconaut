@@ -1,0 +1,44 @@
+---
+date: 2026-05-18
+summary: Day 2. Shipped the design polish, replaced every Astro template placeholder with real content, wired Rize screen-time as a first-class journal feature, rendered a real OG image, and added two custom PostHog events. The blog is now real enough to put in my bios.
+tags: [blog, meta, design, tracking, rize]
+rizePartial: true
+---
+
+# Day 2: making the blog real
+
+Day 1 was "the thing is alive." Day 2 was "the thing is real enough to point people at without flinching." Different problem. A skeleton is honest about being a skeleton; a skeleton with Astro template placeholders in the footer is just sloppy.
+
+The goal for today was simple: by end of session, I wanted a blog state I was willing to drop into my Instagram bio and LinkedIn profile. That meant cleaning up the obvious tells (footer placeholders, line-height too loose, no real OG image), backfilling content (Brazil trip + Day 1 retrospective), and turning Rize screen-time into a load-bearing journal feature rather than a "maybe later" idea.
+
+## What shipped
+
+**Rize integration as a first-class journal feature.** Every journal entry now has structured frontmatter for `focusTime`, `topCategories`, and `topApps`. A reusable `<RizeRecap />` component renders this above the prose body. Entries without Rize data render unchanged (the schema is fully additive). This sets up a future `/work` or `/stats` page that aggregates focus time across all entries: proof-of-work compounding, not just stories.
+
+**Real OG image, generated programmatically.** Sharp was already in the Astro dependency tree, so I wrote a 20-line SVG-to-PNG script. The OG card is now royal blue (`#2337ff`), the tagline in serif, the URL up top, byline at the bottom. Lives at `scripts/build-og.mjs` and can be regenerated any time the design moves. No Canva account, no manual export, no PNG asset that nobody knows how to update.
+
+**Design polish.** Footer now actually says my name and links to my real socials (the Astro starter pointed at `@astrodotbuild` accounts on every link). Body line-height went from 1.7 to 1.55 because the looser version was reading slightly hollow at 20px. Code blocks got proper dark styling. Header gained a subtitle: *"Curious about opportunity. Building things. Documenting the mess."* That tagline took longer than the entire CSS pass.
+
+**Custom PostHog events.** Two beyond the default `$pageview`: `outbound_link_click` (fires on any external link), and `article_read_50` (scroll past halfway on a journal or post page). These exist so I can tell, when traffic eventually lands, whether anyone actually reads past the lede. Verified live before declaring done: `$pageview` was already landing in PostHog, 13 events today before this entry posted.
+
+## The tagline took longer than the code
+
+I went through three rounds with the agent before landing on the line. First pass leaned generic "small bets, ship daily, build in public" energy. I pushed back: it's *big* bets, not small. Second pass tried "experimenter / leverage" framing, closer but still tech-blog-coded. Third pass got the right ingredients in: curiosity (the through-line), opportunity (the entrepreneurial spirit without being mercantile), and "documenting the mess" (the honest part, this is a personal log of things that don't all work).
+
+The interesting part is that I couldn't write the tagline directly, but I could *describe what was missing from each candidate* and let the agent iterate against that signal. That's the actual workflow: I'm the taste, the model is the surface area.
+
+## What I learned today
+
+**Sharp is in your dependency tree whether you know it or not.** Astro ships with sharp for image optimization. That's enough to render an SVG to PNG, which is enough to programmatically generate any static social card I'll ever need. No reason to involve a design tool for v1 assets.
+
+**Behavioral verification beats "build passed".** Every time I ran the local build today, I also grepped the rendered HTML for specific markers: did the tagline appear on the homepage, did the footer have real names, did the `og:image` meta tag point at the new file. Build-passing means types compile. HTML grep means the user-visible thing actually showed up. The agent harness now treats those as separate gates, which catches a class of "compiles but doesn't render" failures I used to ship.
+
+**Structured data in frontmatter compounds.** The Rize fields don't just show up nicely today. They're queryable across the whole `journal` collection at build time. The same `getCollection('journal')` call that lists entries on `/journal` will eventually power "total focus time this year," "top category by month," "what does my actual ratio of building-to-meetings look like." That kind of compounding is the whole point of putting the data in the schema instead of the prose.
+
+## What's next
+
+The Brazil-trip backfill (May 13 to 16) goes in once I get the day-by-day prose written. May 13 has no Rize data (I only started tracking halfway through May 14, so that day's Rize block will show a "partial day" badge). Today's Rize data goes into this entry's frontmatter once Rize finishes counting the day.
+
+After that: I update Instagram bio + LinkedIn profile to point here. No public announce post, informal sharing only for now. The blog goes from "I built this today" to "this is where I live online" by Friday.
+
+The thing is real. Tomorrow I keep showing up.

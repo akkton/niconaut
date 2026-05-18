@@ -29,7 +29,7 @@ body {
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
 	font-size: 20px;
-	line-height: 1.7;
+	line-height: 1.55;
 }
 main {
 	width: 720px;
@@ -101,9 +101,19 @@ code {
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	background-color: #1e1e1e;
+	color: #f8f8f2;
+	overflow-x: auto;
 }
 pre > code {
 	all: unset;
+	color: inherit;
+}
+@media (prefers-color-scheme: dark) {
+	code {
+		background-color: rgba(255, 255, 255, 0.08);
+		color: #f8f8f2;
+	}
 }
 blockquote {
 	border-left: 4px solid var(--accent);

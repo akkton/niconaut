@@ -25,6 +25,25 @@ const journal = defineCollection({
 			summary: z.string(),
 			tags: z.array(z.string()).default([]),
 			draft: z.boolean().default(false),
+			focusTime: z.string().optional(),
+			topCategories: z
+				.array(
+					z.object({
+						name: z.string(),
+						percent: z.number(),
+						minutes: z.number(),
+					}),
+				)
+				.optional(),
+			topApps: z
+				.array(
+					z.object({
+						name: z.string(),
+						minutes: z.number(),
+					}),
+				)
+				.optional(),
+			rizePartial: z.boolean().optional(),
 		}),
 });
 

@@ -4,15 +4,18 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import RizeRecap from '../components/RizeRecap.astro';
 
 type Props = CollectionEntry<'journal'>['data'];
 
-const { date, hoursWorked, summary, tags } = Astro.props;
+const { date, hoursWorked, summary, tags, focusTime, topCategories, topApps, rizePartial } =
+	Astro.props;
+const showRecap = focusTime !== undefined || (topCategories && topCategories.length > 0);
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={`Journal — ${date.toISOString().slice(0, 10)}`} description={summary} />
+		<BaseHead title={`Journal · ${date.toISOString().slice(0, 10)}`} description={summary} />
 		<style>
 			main {
 				width: 720px;
@@ -79,10 +82,41 @@ const { date, hoursWorked, summary, tags } = Astro.props;
 				)}
 			</div>
 			<p class="summary">{summary}</p>
+			{showRecap && (
+				<RizeRecap
+					focusTime={focusTime}
+					topCategories={topCategories}
+					topApps={topApps}
+					rizePartial={rizePartial}
+				/>
+			)}
 			<div class="body">
 				<slot />
 			</div>
 		</main>
 		<Footer />
+		<script is:inline>
+			(function () {
+				var fired = false;
+				function check() {
+					if (fired) return;
+					var scrolled = window.scrollY + window.innerHeight;
+					var total = document.documentElement.scrollHeight;
+					if (total <= 0) return;
+					if (scrolled / total >= 0.5) {
+						fired = true;
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('article_read_50', {
+								path: window.location.pathname,
+								article_type: 'journal',
+							});
+						}
+						window.removeEventListener('scroll', check);
+					}
+				}
+				window.addEventListener('scroll', check, { passive: true });
+				window.addEventListener('load', check);
+			})();
+		</script>
 	</body>
 </html>

@@ -1,0 +1,210 @@
+---
+interface Category {
+	name: string;
+	percent: number;
+	minutes: number;
+}
+
+interface App {
+	name: string;
+	minutes: number;
+}
+
+interface Props {
+	focusTime?: string;
+	topCategories?: Category[];
+	topApps?: App[];
+	rizePartial?: boolean;
+}
+
+const { focusTime, topCategories = [], topApps = [], rizePartial = false } = Astro.props;
+
+const visibleCategories = topCategories.slice(0, 5);
+const visibleApps = topApps.slice(0, 6);
+
+const formatMinutes = (mins: number): string => {
+	if (mins < 60) return `${mins}m`;
+	const h = Math.floor(mins / 60);
+	const m = mins % 60;
+	return m === 0 ? `${h}h` : `${h}h ${m}m`;
+};
+---
+
+<aside class="rize-recap" aria-label="Screen-time summary from Rize">
+	<header class="rize-head">
+		<span class="rize-label">On screen</span>
+		<span class="rize-time">{focusTime}</span>
+		{rizePartial && <span class="rize-partial" title="Rize tracking was off for part of this day">partial day</span>}
+	</header>
+
+	{visibleCategories.length > 0 && (
+		<div class="rize-section">
+			<div class="rize-section-label">Top categories</div>
+			<ul class="rize-list">
+				{visibleCategories.map((c) => (
+					<li class="rize-row">
+						<span class="rize-row-name">{c.name}</span>
+						<span class="rize-bar" aria-hidden="true">
+							<span class="rize-bar-fill" style={`width: ${Math.min(c.percent, 100)}%`}></span>
+						</span>
+						<span class="rize-row-meta">{c.percent}% &middot; {formatMinutes(c.minutes)}</span>
+					</li>
+				))}
+			</ul>
+		</div>
+	)}
+
+	{visibleApps.length > 0 && (
+		<div class="rize-section">
+			<div class="rize-section-label">Top apps &amp; sites</div>
+			<ul class="rize-app-list">
+				{visibleApps.map((a) => (
+					<li class="rize-app">
+						<span class="rize-app-name">{a.name}</span>
+						<span class="rize-app-time">{formatMinutes(a.minutes)}</span>
+					</li>
+				))}
+			</ul>
+		</div>
+	)}
+
+	<footer class="rize-foot">
+		<span>Tracked with <a href="https://rize.io" target="_blank" rel="noopener">Rize</a></span>
+	</footer>
+</aside>
+
+<style>
+	.rize-recap {
+		margin: 0 0 2em 0;
+		padding: 1em 1.25em;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		background: rgba(var(--gray-light), 0.35);
+		font-size: 0.92rem;
+		line-height: 1.4;
+		color: rgb(var(--gray-dark));
+	}
+	.rize-head {
+		display: flex;
+		align-items: baseline;
+		gap: 0.75em;
+		margin-bottom: 0.75em;
+		padding-bottom: 0.6em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+	.rize-label {
+		font-family: var(--font-atkinson), system-ui, sans-serif;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: rgb(var(--gray));
+	}
+	.rize-time {
+		font-family: var(--font-atkinson), system-ui, sans-serif;
+		font-size: 1.35rem;
+		font-weight: 700;
+		color: rgb(var(--black));
+	}
+	.rize-partial {
+		margin-left: auto;
+		padding: 0.15em 0.55em;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 999px;
+		background: white;
+		font-size: 0.72rem;
+		color: rgb(var(--gray));
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+	.rize-section + .rize-section {
+		margin-top: 0.85em;
+	}
+	.rize-section-label {
+		margin-bottom: 0.35em;
+		font-size: 0.72rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: rgb(var(--gray));
+	}
+	.rize-list,
+	.rize-app-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.rize-row {
+		display: grid;
+		grid-template-columns: minmax(5.5em, 1fr) minmax(0, 2fr) auto;
+		gap: 0.75em;
+		align-items: center;
+		padding: 0.18em 0;
+	}
+	.rize-row-name {
+		font-weight: 600;
+		color: rgb(var(--gray-dark));
+		font-size: 0.9rem;
+	}
+	.rize-bar {
+		display: block;
+		height: 6px;
+		background: rgb(var(--gray-light));
+		border-radius: 3px;
+		overflow: hidden;
+	}
+	.rize-bar-fill {
+		display: block;
+		height: 100%;
+		background: var(--accent);
+		border-radius: 3px;
+	}
+	.rize-row-meta {
+		font-variant-numeric: tabular-nums;
+		font-size: 0.82rem;
+		color: rgb(var(--gray));
+		white-space: nowrap;
+	}
+	.rize-app-list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.15em 1.25em;
+	}
+	.rize-app {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.5em;
+		padding: 0.12em 0;
+		font-size: 0.88rem;
+	}
+	.rize-app-name {
+		color: rgb(var(--gray-dark));
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.rize-app-time {
+		font-variant-numeric: tabular-nums;
+		color: rgb(var(--gray));
+		font-size: 0.82rem;
+	}
+	.rize-foot {
+		margin-top: 0.85em;
+		padding-top: 0.55em;
+		border-top: 1px solid rgb(var(--gray-light));
+		font-size: 0.72rem;
+		color: rgb(var(--gray));
+		text-align: right;
+	}
+	.rize-foot a {
+		color: rgb(var(--gray));
+		text-decoration: underline;
+	}
+	@media (max-width: 540px) {
+		.rize-app-list {
+			grid-template-columns: 1fr;
+		}
+		.rize-row {
+			grid-template-columns: minmax(5em, 1fr) minmax(0, 1.5fr) auto;
+		}
+	}
+</style>

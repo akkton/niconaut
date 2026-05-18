@@ -14,7 +14,7 @@ export async function GET(context) {
 	}));
 
 	const journalItems = journal.map((entry) => ({
-		title: `Journal — ${entry.data.date.toISOString().slice(0, 10)}`,
+		title: `Journal · ${entry.data.date.toISOString().slice(0, 10)}`,
 		description: entry.data.summary,
 		pubDate: entry.data.date,
 		link: `/journal/${entry.id}/`,
