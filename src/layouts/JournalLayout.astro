@@ -147,36 +147,24 @@ const waHref = `https://wa.me/?text=${waText}`;
 			}
 
 			.updates {
-				margin: 2.5em 0 0 0;
-				padding: 1.25em 0 0 0;
-				border-top: 1px solid var(--rule);
-			}
-			.updates-label {
-				font-size: 0.78rem;
-				font-weight: 600;
-				text-transform: uppercase;
-				letter-spacing: 0.08em;
-				color: var(--ink-faint);
-				margin: 0 0 0.85em 0;
+				margin: 2em 0 0 0;
 			}
 			.update {
-				margin-bottom: 1.5em;
-				padding-left: 1em;
-				border-left: 2px solid var(--rule);
+				margin-bottom: 2em;
 			}
 			.update:last-child { margin-bottom: 0; }
 			.update-at {
 				display: block;
 				font-family: var(--font-stack-mono);
-				font-size: 11px;
+				font-size: 12px;
 				color: var(--ink-faint);
 				letter-spacing: 0.02em;
-				margin-bottom: 0.35em;
+				margin-bottom: 0.6em;
 			}
 			.update-note {
 				color: var(--ink);
-				font-size: 14px;
-				line-height: 1.55;
+				font-size: 15px;
+				line-height: 1.65;
 				white-space: pre-line;
 			}
 
@@ -300,15 +288,14 @@ const waHref = `https://wa.me/?text=${waText}`;
 				<slot />
 			</div>
 			{updates && updates.length > 0 && (
-				<section class="updates" aria-label="Later updates to this entry">
-					<h2 class="updates-label">Later notes</h2>
+				<div class="updates">
 					{updates.map((u) => (
 						<div class="update">
 							<span class="update-at">{u.at}</span>
 							<div class="update-note">{u.note}</div>
 						</div>
 					))}
-				</section>
+				</div>
 			)}
 			<section class="share" aria-label="Share this entry">
 				<div class="share-label">Share</div>
