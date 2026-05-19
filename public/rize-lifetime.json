@@ -1,0 +1,12 @@
+{
+	"_comment": "Rize lifetime tracking data, sourced from the annual Team Report PDF export. Powers the 'Since Feb 2026' section on /work. Update this file when a new monthly Rize export lands; no code changes needed.",
+	"asOf": "2026-05-19",
+	"totalHours": 222,
+	"months": [
+		{ "label": "Jan", "year": 2026, "month": 1, "hours": 0 },
+		{ "label": "Feb", "year": 2026, "month": 2, "hours": 150 },
+		{ "label": "Mar", "year": 2026, "month": 3, "hours": 40 },
+		{ "label": "Apr", "year": 2026, "month": 4, "hours": 0 },
+		{ "label": "May", "year": 2026, "month": 5, "hours": 32 }
+	]
+}

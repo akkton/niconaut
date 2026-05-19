@@ -4,24 +4,21 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_TITLE } from '../consts';
+import lifetimeData from '../../public/rize-lifetime.json';
 
 const allEntries = (await getCollection('journal', ({ data }) => !data.draft)).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// Lifetime view sourced from the Rize Team Report PDF (year-to-date snapshot).
-// Updated manually when a new monthly export lands. The daily-widget totals
-// rendered below this section use a different Rize aggregator and will not
-// match this view exactly; see the methodology footer at the bottom of the page.
-const lifetimeAsOf = '2026-05-19';
-const lifetimeTotalHours = 222;
-const lifetimeMonths: { label: string; year: number; month: number; hours: number }[] = [
-	{ label: 'Jan', year: 2026, month: 1, hours: 0 },
-	{ label: 'Feb', year: 2026, month: 2, hours: 150 },
-	{ label: 'Mar', year: 2026, month: 3, hours: 40 },
-	{ label: 'Apr', year: 2026, month: 4, hours: 0 },
-	{ label: 'May', year: 2026, month: 5, hours: 32 },
-];
+// Lifetime view: sourced from public/rize-lifetime.json, which is updated
+// whenever a new Rize Team Report export lands. The JSON file is also served
+// publicly at /rize-lifetime.json. The daily-widget totals rendered below
+// this section use a different Rize aggregator and will not match this view
+// exactly; see the methodology footer at the bottom of the page.
+type LifetimeMonth = { label: string; year: number; month: number; hours: number };
+const lifetimeAsOf: string = lifetimeData.asOf;
+const lifetimeTotalHours: number = lifetimeData.totalHours;
+const lifetimeMonths: LifetimeMonth[] = lifetimeData.months;
 const lifetimeMonthsMax = Math.max(1, ...lifetimeMonths.map((m) => m.hours));
 
 const parseFocusToMinutes = (s?: string): number => {
