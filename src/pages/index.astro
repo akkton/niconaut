@@ -8,7 +8,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const recentJournal = (await getCollection('journal', ({ data }) => !data.draft))
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-	.slice(0, 5);
+	.slice(0, 6);
 
 const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -20,110 +20,174 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: 0 auto;
-				padding: 1em;
+			.hero {
+				margin: 0 0 3.5em 0;
 			}
-			.intro {
-				margin: 1em 0 3em 0;
-				padding-bottom: 2em;
-				border-bottom: 1px solid rgb(var(--gray-light));
+			.hero h1 {
+				margin: 0 0 0.35em 0;
+				font-size: 2rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
 			}
-			.intro h1 {
-				margin: 0 0 0.5em 0;
-				font-family: var(--font-atkinson), system-ui, sans-serif;
-				line-height: 1.1;
+			.hero .tagline {
+				margin: 0 0 1em 0;
+				font-size: 1rem;
+				color: var(--ink-muted);
+				font-style: italic;
+				line-height: 1.45;
 			}
-			.intro p {
+			.hero p {
 				margin: 0;
-				color: rgb(var(--gray-dark));
-				font-size: 1.1rem;
-				line-height: 1.5;
+				color: var(--ink-muted);
+				font-size: 0.95rem;
+				line-height: 1.6;
+				max-width: 55ch;
 			}
+
 			section {
 				margin-bottom: 3em;
 			}
-			section h2 {
+			.section-head {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
 				margin: 0 0 1em 0;
-				font-family: var(--font-atkinson), system-ui, sans-serif;
-				font-size: 1.5rem;
+				padding-bottom: 0.4em;
+				border-bottom: 1px solid var(--rule);
 			}
-			section .all-link {
-				font-size: 0.9rem;
-				color: rgb(var(--gray));
-				margin-left: 0.5em;
-				font-weight: normal;
+			.section-head h2 {
+				margin: 0;
+				font-size: 0.78rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--ink-faint);
 			}
-			ul {
-				list-style-type: none;
+			.section-head .all-link {
+				font-size: 0.78rem;
+				color: var(--ink-faint);
+				text-decoration: none;
+				letter-spacing: 0.02em;
+			}
+			.section-head .all-link:hover {
+				color: var(--ink);
+			}
+
+			.journal-list,
+			.posts-list {
+				list-style: none;
 				margin: 0;
 				padding: 0;
 			}
 			.journal-list li {
-				padding: 0.75em 0;
-				border-bottom: 1px solid rgb(var(--gray-light));
+				padding: 0.6em 0;
+				border-bottom: 1px solid var(--rule);
+			}
+			.journal-list li:last-child {
+				border-bottom: none;
 			}
 			.journal-list a {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.5em 1.5em;
+				display: grid;
+				grid-template-columns: 5.5em 1fr auto;
+				gap: 0.75em 1em;
 				align-items: baseline;
+				color: var(--ink);
 				text-decoration: none;
-				color: inherit;
+				transition: opacity 0.12s ease;
 			}
-			.journal-list a:hover .j-summary {
-				color: rgb(var(--accent));
+			.journal-list a:hover {
+				opacity: 0.6;
 			}
 			.j-date {
-				min-width: 9ch;
-				font-family: var(--font-atkinson), system-ui, sans-serif;
-				font-weight: 700;
-				color: rgb(var(--black));
+				font-family: var(--font-stack-mono);
+				font-size: 12px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
+				white-space: nowrap;
 			}
 			.j-summary {
-				flex: 1;
-				min-width: 240px;
 				margin: 0;
-				color: rgb(var(--gray-dark));
+				font-size: 14px;
+				color: var(--ink);
+				line-height: 1.45;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
 			}
+			.j-hours {
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				white-space: nowrap;
+				letter-spacing: 0.02em;
+			}
+
 			.posts-list li {
 				padding: 1em 0;
-				border-bottom: 1px solid rgb(var(--gray-light));
+				border-bottom: 1px solid var(--rule);
+			}
+			.posts-list li:last-child {
+				border-bottom: none;
 			}
 			.posts-list a {
+				display: block;
+				color: var(--ink);
 				text-decoration: none;
-				color: inherit;
 			}
 			.posts-list a:hover .p-title {
-				color: rgb(var(--accent));
+				color: var(--link-hover);
 			}
 			.p-title {
-				margin: 0 0 0.25em 0;
-				font-size: 1.2rem;
+				margin: 0 0 0.2em 0;
+				font-size: 1rem;
+				font-weight: 600;
 			}
 			.p-date {
-				margin: 0 0 0.25em 0;
-				color: rgb(var(--gray));
-				font-size: 0.9rem;
+				margin: 0 0 0.35em 0;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
 			}
 			.p-desc {
 				margin: 0;
-				color: rgb(var(--gray-dark));
-				font-size: 0.95rem;
+				color: var(--ink-muted);
+				font-size: 14px;
+				line-height: 1.5;
 			}
 			.empty {
-				color: rgb(var(--gray));
+				color: var(--ink-faint);
 				font-style: italic;
+				font-size: 14px;
+				margin: 0;
+			}
+			@media (max-width: 540px) {
+				.journal-list a {
+					grid-template-columns: 4.5em 1fr;
+					grid-template-rows: auto auto;
+				}
+				.j-hours {
+					grid-column: 2 / 3;
+					grid-row: 2;
+					font-size: 10px;
+				}
+				.j-summary {
+					-webkit-line-clamp: 3;
+				}
+				.hero h1 {
+					font-size: 1.7rem;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section class="intro">
+			<section class="hero">
 				<h1>Nico Neumann</h1>
+				<p class="tagline">Curious about opportunity. Building things. Documenting the mess.</p>
 				<p>
 					I'm building products with AI agents, journaling the work in public, and figuring out
 					what an entrepreneurial life looks like in 2026. This is the log.
@@ -131,7 +195,10 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 			</section>
 
 			<section>
-				<h2>Recent journal<a href="/journal/" class="all-link">all entries &rarr;</a></h2>
+				<div class="section-head">
+					<h2>Recent journal</h2>
+					<a href="/journal/" class="all-link">all entries &rarr;</a>
+				</div>
 				{recentJournal.length === 0 ? (
 					<p class="empty">No entries yet.</p>
 				) : (
@@ -141,6 +208,7 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 								<a href={`/journal/${entry.id}/`}>
 									<span class="j-date"><FormattedDate date={entry.data.date} /></span>
 									<p class="j-summary">{entry.data.summary}</p>
+									<span class="j-hours">{entry.data.hoursWorked !== undefined ? `${entry.data.hoursWorked}h` : ''}</span>
 								</a>
 							</li>
 						))}
@@ -149,7 +217,10 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 			</section>
 
 			<section>
-				<h2>Recent posts<a href="/posts/" class="all-link">all posts &rarr;</a></h2>
+				<div class="section-head">
+					<h2>Recent posts</h2>
+					<a href="/posts/" class="all-link">all posts &rarr;</a>
+				</div>
 				{recentPosts.length === 0 ? (
 					<p class="empty">No long-form posts yet. Building-in-public writing lands here.</p>
 				) : (

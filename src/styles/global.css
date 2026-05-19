@@ -1,153 +1,222 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
+ * Modern minimal / index-driven palette + type scale.
+ * Personality lives in structure and density, not chromatic surface.
  */
 
 @import "tailwindcss";
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	/* New palette */
+	--bg: #ffffff;
+	--ink: #0f0f0f;
+	--ink-muted: #555555;
+	--ink-faint: #888888;
+	--rule: #eaeaea;
+	--rule-strong: #d0d0d0;
+	--code-bg: #f5f5f5;
+	--link-hover: #2337ff;
+
+	/* Legacy aliases (RGB triplets so existing rgb(var(--xxx)) callsites still work) */
+	--accent: var(--ink);
+	--accent-dark: var(--link-hover);
+	--black: 15, 15, 15;
+	--gray: 136, 136, 136;
+	--gray-light: 234, 234, 234;
+	--gray-dark: 85, 85, 85;
+
+	/* Typography stacks */
+	--font-stack-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-stack-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+	--font-stack-display: var(--font-inter), system-ui, sans-serif;
 }
+
+html,
 body {
-	font-family: var(--font-atkinson);
+	background: var(--bg);
+	color: var(--ink);
+}
+
+body {
 	margin: 0;
 	padding: 0;
+	font-family: var(--font-stack-sans);
+	font-size: 15px;
+	line-height: 1.55;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.55;
+	font-feature-settings: "ss01", "cv11";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
+
 main {
-	width: 720px;
+	width: 680px;
 	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
+	margin: 0 auto;
+	padding: 2.5em 1em 4em 1em;
 }
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
-	line-height: 1.2;
+	margin: 1.5em 0 0.5em 0;
+	color: var(--ink);
+	font-family: var(--font-stack-display);
+	line-height: 1.25;
+	letter-spacing: -0.01em;
 }
+
 h1 {
-	font-size: 3.052em;
+	font-size: 1.8rem;
+	font-weight: 700;
+	margin-top: 0;
 }
+
 h2 {
-	font-size: 2.441em;
+	font-size: 1.3rem;
+	font-weight: 600;
+	margin-top: 2em;
 }
+
 h3 {
-	font-size: 1.953em;
+	font-size: 1.05rem;
+	font-weight: 600;
 }
-h4 {
-	font-size: 1.563em;
+
+h4,
+h5,
+h6 {
+	font-size: 1rem;
+	font-weight: 600;
 }
-h5 {
-	font-size: 1.25em;
+
+p {
+	margin: 0 0 1em 0;
 }
+
 strong,
 b {
-	font-weight: 700;
+	font-weight: 600;
+	color: var(--ink);
 }
+
+em,
+i {
+	font-style: italic;
+}
+
 a {
-	color: var(--accent);
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: var(--rule-strong);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+	transition: text-decoration-color 0.12s ease;
 }
+
 a:hover {
-	color: var(--accent);
+	text-decoration-color: var(--link-hover);
 }
-p {
-	margin-bottom: 1em;
+
+ul,
+ol {
+	margin: 0 0 1em 0;
+	padding-left: 1.4em;
 }
-.prose p {
-	margin-bottom: 2em;
+
+li {
+	margin-bottom: 0.25em;
 }
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
-	width: 100%;
-}
+
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: 8px;
-}
-code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
-}
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-	background-color: #1e1e1e;
-	color: #f8f8f2;
-	overflow-x: auto;
-}
-pre > code {
-	all: unset;
-	color: inherit;
-}
-@media (prefers-color-scheme: dark) {
-	code {
-		background-color: rgba(255, 255, 255, 0.08);
-		color: #f8f8f2;
-	}
-}
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.333em;
-}
-hr {
-	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
-}
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
-	}
 }
 
-.sr-only {
-	border: 0;
+code {
+	font-family: var(--font-stack-mono);
+	font-size: 0.86em;
+	background: var(--code-bg);
+	padding: 1px 5px;
+	border-radius: 3px;
+	color: var(--ink);
+}
+
+pre {
+	margin: 1em 0;
+	padding: 0.9em 1em;
+	background: #0f0f0f;
+	border-radius: 4px;
+	overflow-x: auto;
+	font-size: 0.85rem;
+	line-height: 1.5;
+}
+
+pre > code {
+	background: transparent;
 	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
-	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
-	white-space: nowrap;
+	color: #f0f0f0;
+	font-size: inherit;
+}
+
+blockquote {
+	margin: 1.25em 0;
+	padding: 0.25em 0 0.25em 1em;
+	border-left: 2px solid var(--rule-strong);
+	color: var(--ink-muted);
+}
+
+hr {
+	margin: 2.5em 0;
+	border: 0;
+	border-top: 1px solid var(--rule);
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1em 0;
+	font-size: 0.95em;
+}
+
+th,
+td {
+	padding: 0.4em 0.8em;
+	border-bottom: 1px solid var(--rule);
+	text-align: left;
+}
+
+th {
+	font-weight: 600;
+	color: var(--ink);
+}
+
+textarea,
+input {
+	font: inherit;
+	font-size: 16px;
+}
+
+::selection {
+	background: #ffe600;
+	color: var(--ink);
+}
+
+@media (max-width: 720px) {
+	body {
+		font-size: 15px;
+	}
+	main {
+		padding: 1.75em 1em 3em 1em;
+	}
+	h1 {
+		font-size: 1.6rem;
+	}
+	h2 {
+		font-size: 1.2rem;
+	}
 }

@@ -15,50 +15,78 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+			a.back-link {
+				display: inline-block;
+				margin-bottom: 1.5em;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				text-decoration: none;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+			a.back-link:hover {
+				color: var(--ink);
 			}
 			.hero-image {
-				width: 100%;
+				margin: 0 0 2em 0;
 			}
 			.hero-image img {
 				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				width: 100%;
+				height: auto;
+				border: 1px solid var(--rule);
+				border-radius: 4px;
 			}
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
+				margin: 0 0 2em 0;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 1.9rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				line-height: 1.2;
 			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+			.title .desc {
+				margin: 0 0 1em 0;
+				color: var(--ink-muted);
+				font-size: 1rem;
+				line-height: 1.5;
 			}
-			.last-updated-on {
-				font-style: italic;
+			.meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4em 0.75em;
+				align-items: baseline;
+				font-family: var(--font-stack-mono);
+				font-size: 12px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
 			}
-			.tags {
-				margin-top: 0.75em;
-				font-size: 0.875em;
-				color: rgb(var(--gray));
+			.meta .sep {
+				color: var(--ink-faint);
 			}
-			.tags span {
-				margin-right: 0.5em;
+			.meta .updated {
+				color: var(--ink-faint);
+			}
+			.prose {
+				color: var(--ink);
+				font-size: 15px;
+				line-height: 1.65;
+			}
+			.prose :global(p) {
+				margin: 0 0 1.1em 0;
+			}
+			.prose :global(h2) {
+				margin-top: 2em;
+				font-size: 1.2rem;
+				font-weight: 600;
+			}
+			.prose :global(h3) {
+				margin-top: 1.5em;
+				font-size: 1.05rem;
+				font-weight: 600;
 			}
 		</style>
 	</head>
@@ -66,30 +94,27 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
 	<body>
 		<Header />
 		<main>
+			<a href="/posts/" class="back-link">&larr; all posts</a>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				{heroImage && (
+					<div class="hero-image">
+						<Image width={1020} height={510} src={heroImage} alt="" />
+					</div>
+				)}
+				<div class="title">
+					<h1>{title}</h1>
+					<p class="desc">{description}</p>
+					<div class="meta">
+						<span><FormattedDate date={pubDate} /></span>
+						{updatedDate && <span class="sep">·</span>}
+						{updatedDate && (
+							<span class="updated">updated <FormattedDate date={updatedDate} /></span>
+						)}
+						{tags && tags.length > 0 && <span class="sep">·</span>}
+						{tags && tags.length > 0 && <span>{tags.join(', ')}</span>}
+					</div>
 				</div>
 				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						{tags && tags.length > 0 && (
-							<div class="tags">
-								{tags.map((t: string) => <span>#{t}</span>)}
-							</div>
-						)}
-						<hr />
-					</div>
 					<slot />
 				</div>
 			</article>

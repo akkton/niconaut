@@ -76,55 +76,56 @@ const formatMinutes = (mins: number): string => {
 <style>
 	.rize-recap {
 		margin: 0 0 2em 0;
-		padding: 1em 1.25em;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 8px;
-		background: rgba(var(--gray-light), 0.35);
-		font-size: 0.92rem;
+		padding: 0.85em 1em;
+		border: 1px solid var(--rule);
+		background: transparent;
+		font-size: 13px;
 		line-height: 1.4;
-		color: rgb(var(--gray-dark));
+		color: var(--ink);
 	}
 	.rize-head {
 		display: flex;
 		align-items: baseline;
 		gap: 0.75em;
 		margin-bottom: 0.75em;
-		padding-bottom: 0.6em;
-		border-bottom: 1px solid rgb(var(--gray-light));
+		padding-bottom: 0.55em;
+		border-bottom: 1px solid var(--rule);
 	}
 	.rize-label {
-		font-family: var(--font-atkinson), system-ui, sans-serif;
-		font-size: 0.8rem;
+		font-family: var(--font-stack-sans);
+		font-size: 0.72rem;
+		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: rgb(var(--gray));
+		letter-spacing: 0.1em;
+		color: var(--ink-faint);
 	}
 	.rize-time {
-		font-family: var(--font-atkinson), system-ui, sans-serif;
-		font-size: 1.35rem;
-		font-weight: 700;
-		color: rgb(var(--black));
+		font-family: var(--font-stack-mono);
+		font-size: 1.05rem;
+		font-weight: 500;
+		color: var(--ink);
+		letter-spacing: -0.01em;
 	}
 	.rize-partial {
 		margin-left: auto;
 		padding: 0.15em 0.55em;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 999px;
-		background: white;
-		font-size: 0.72rem;
-		color: rgb(var(--gray));
+		border: 1px solid var(--rule);
+		background: var(--bg);
+		font-size: 10px;
+		color: var(--ink-faint);
 		text-transform: uppercase;
-		letter-spacing: 0.04em;
+		letter-spacing: 0.06em;
 	}
 	.rize-section + .rize-section {
 		margin-top: 0.85em;
 	}
 	.rize-section-label {
-		margin-bottom: 0.35em;
-		font-size: 0.72rem;
+		margin-bottom: 0.4em;
+		font-size: 0.7rem;
+		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: rgb(var(--gray));
+		letter-spacing: 0.08em;
+		color: var(--ink-faint);
 	}
 	.rize-list,
 	.rize-app-list {
@@ -137,67 +138,73 @@ const formatMinutes = (mins: number): string => {
 		grid-template-columns: minmax(5.5em, 1fr) minmax(0, 2fr) auto;
 		gap: 0.75em;
 		align-items: center;
-		padding: 0.18em 0;
+		padding: 0.2em 0;
 	}
 	.rize-row-name {
-		font-weight: 600;
-		color: rgb(var(--gray-dark));
-		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--ink);
+		font-size: 13px;
 	}
 	.rize-bar {
 		display: block;
-		height: 6px;
-		background: rgb(var(--gray-light));
-		border-radius: 3px;
+		height: 4px;
+		background: var(--rule);
 		overflow: hidden;
 	}
 	.rize-bar-fill {
 		display: block;
 		height: 100%;
-		background: var(--accent);
-		border-radius: 3px;
+		background: var(--ink);
 	}
 	.rize-row-meta {
+		font-family: var(--font-stack-mono);
 		font-variant-numeric: tabular-nums;
-		font-size: 0.82rem;
-		color: rgb(var(--gray));
+		font-size: 11px;
+		color: var(--ink-faint);
 		white-space: nowrap;
 	}
 	.rize-app-list {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 0.15em 1.25em;
+		gap: 0.15em 1.5em;
 	}
 	.rize-app {
 		display: flex;
 		justify-content: space-between;
 		align-items: baseline;
 		gap: 0.5em;
-		padding: 0.12em 0;
-		font-size: 0.88rem;
+		padding: 0.15em 0;
+		font-size: 12.5px;
 	}
 	.rize-app-name {
-		color: rgb(var(--gray-dark));
+		color: var(--ink);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 	.rize-app-time {
+		font-family: var(--font-stack-mono);
 		font-variant-numeric: tabular-nums;
-		color: rgb(var(--gray));
-		font-size: 0.82rem;
+		color: var(--ink-faint);
+		font-size: 11px;
 	}
 	.rize-foot {
 		margin-top: 0.85em;
 		padding-top: 0.55em;
-		border-top: 1px solid rgb(var(--gray-light));
-		font-size: 0.72rem;
-		color: rgb(var(--gray));
+		border-top: 1px solid var(--rule);
+		font-size: 10px;
+		color: var(--ink-faint);
 		text-align: right;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
 	}
 	.rize-foot a {
-		color: rgb(var(--gray));
+		color: var(--ink-faint);
 		text-decoration: underline;
+		text-decoration-color: var(--rule);
+	}
+	.rize-foot a:hover {
+		color: var(--ink);
 	}
 	@media (max-width: 540px) {
 		.rize-app-list {

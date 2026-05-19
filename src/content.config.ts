@@ -21,6 +21,7 @@ const journal = defineCollection({
 	schema: () =>
 		z.object({
 			date: z.coerce.date(),
+			writtenAt: z.string().optional(),
 			hoursWorked: z.number().optional(),
 			summary: z.string(),
 			tags: z.array(z.string()).default([]),
@@ -49,6 +50,14 @@ const journal = defineCollection({
 			wins: z.array(z.string()).optional(),
 			losses: z.array(z.string()).optional(),
 			lessons: z.array(z.string()).optional(),
+			updates: z
+				.array(
+					z.object({
+						at: z.string(),
+						note: z.string(),
+					}),
+				)
+				.optional(),
 		}),
 });
 

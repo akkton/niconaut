@@ -57,42 +57,52 @@ const hasAny =
 	.accountability {
 		margin: 2.5em 0 1em 0;
 		padding-top: 1.5em;
-		border-top: 1px solid rgb(var(--gray-light));
 	}
 	.block {
 		margin-bottom: 1.5em;
 	}
 	.block-label {
-		margin: 0 0 0.5em 0;
-		font-family: var(--font-atkinson), system-ui, sans-serif;
-		font-size: 0.78rem;
+		margin: 0 0 0.65em 0;
+		font-family: var(--font-stack-sans);
+		font-size: 0.72rem;
+		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: rgb(var(--gray));
+		letter-spacing: 0.1em;
+		color: var(--ink-faint);
 	}
 	.block ul {
 		margin: 0;
 		padding-left: 1.1em;
-		list-style-type: square;
+		list-style-type: none;
 	}
 	.block li {
-		margin-bottom: 0.35em;
-		line-height: 1.45;
-		color: rgb(var(--gray-dark));
-		font-size: 0.95rem;
+		position: relative;
+		margin-bottom: 0.4em;
+		padding-left: 0.5em;
+		line-height: 1.5;
+		color: var(--ink);
+		font-size: 13.5px;
+	}
+	.block li::before {
+		content: "·";
+		position: absolute;
+		left: -1.1em;
+		color: var(--ink-faint);
+		font-family: var(--font-stack-mono);
+		font-size: 0.85em;
 	}
 	.grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
-		gap: 1.5em;
+		gap: 1.75em;
 	}
-	.wins .block-label { color: #1b8a4a; }
-	.losses .block-label { color: #b03a3a; }
-	.lessons .block-label { color: rgb(var(--gray-dark)); }
+	.wins .block-label { color: #2a7548; }
+	.losses .block-label { color: #9c3636; }
+	.lessons .block-label { color: var(--ink-muted); }
 	@media (max-width: 720px) {
 		.grid {
 			grid-template-columns: 1fr;
-			gap: 1em;
+			gap: 1.25em;
 		}
 	}
 </style>

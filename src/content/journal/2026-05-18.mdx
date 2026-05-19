@@ -1,66 +1,88 @@
 ---
 date: 2026-05-18
-summary: Day 2. Shipped the design polish, replaced every Astro template placeholder with real content, wired Rize screen-time as a first-class journal feature, rendered a real OG image, and added two custom PostHog events. The blog is now real enough to put in my bios.
-tags: [blog, meta, design, tracking, rize]
-rizePartial: true
+writtenAt: "00:54"
+hoursWorked: 12
+summary: Build-heavy day. Split the agent system into its own compartmentalized workspace, scoped Handyman from a draft brief into a locked technical-scoping draft, shipped Day 2 of the blog. One break for Jiu Jitsu (second session, absolutely awesome). A pitch with Inoki that moved the needle in ways I did not see coming.
+tags: [handyman, blog, system-infra, agents, jiu-jitsu]
+focusTime: "12h 5m"
+rizePartial: false
+topCategories:
+  - { name: "Code", percent: 44, minutes: 319 }
+  - { name: "Learning", percent: 12, minutes: 90 }
+  - { name: "Meeting", percent: 7, minutes: 52 }
+  - { name: "Messaging", percent: 6, minutes: 45 }
+  - { name: "Sales", percent: 6, minutes: 43 }
+  - { name: "Product", percent: 5, minutes: 36 }
+topApps:
+  - { name: "Visual Studio Code", minutes: 287 }
+  - { name: "youtube.com", minutes: 71 }
+  - { name: "WhatsApp", minutes: 46 }
+  - { name: "oneproposal.app", minutes: 43 }
+  - { name: "lovable.dev", minutes: 36 }
+  - { name: "instagram.com", minutes: 28 }
 targets:
-  - Make the blog real enough to put in my Instagram + LinkedIn bios
-  - Wire Rize screen-time as a first-class journal feature, not a future maybe
-  - Land the design polish, OG image, and custom tracking events
-  - Backfill the Brazil-trip journal entries (May 13 to 16)
+  - Split the personal-apps workspace cleanly from agentic-ops so client work and personal product work stop contaminating each other
+  - Get Handyman from draft brief to a locked technical-scoping doc, ready to discuss with Dirk
+  - Ship Day 2 of the blog (Rize integration, accountability, real OG, custom events)
+  - Show up to Jiu Jitsu
 wins:
-  - Rize integration done end-to-end. Schema fields, reusable component, May 17 retrofitted with full data.
-  - Tagline locked after three rounds of pushback. "Curious about opportunity. Building things. Documenting the mess."
-  - OG image rendered programmatically via sharp + SVG. No design-tool dependency, regenerable any time.
-  - All Astro template junk gone. Footer, About, OG image. Zero em-dashes sitewide.
-  - Two custom PostHog events shipped (outbound_link_click, article_read_50).
-  - Accountability format wired into the journal schema, modeled on the Maker School logging ritual.
+  - Worked the entire day. One real break for Jiu Jitsu. Two short food breaks. The rest was heads-down build.
+  - Agent system finally split. Personal-apps and agentic-ops are now two separate VS Code instances with their own memory, their own commands, their own MCP servers. No more cross-bleed.
+  - Handyman scoping landed end-to-end. Brief refreshed through a 5-round clarification loop, technical-scoping draft written, advisor message to Dirk drafted lint-clean. Ready for the call.
+  - Blog Day 2 shipped. Rize integration, accountability schema, programmatic OG image, two custom PostHog events. The blog is real enough to put in my bios now.
+  - Jiu Jitsu session 2. Absolutely awesome. The most pure-fun hour of the day.
+  - The Inoki conversation moved the needle. Pitched Handyman, got the idea pitched back at me with new framing. He surfaced context I would never have thought to ask for.
 losses:
-  - Brazil-trip backfill (May 13 to 16) not all written. Came in piecemeal.
-  - Canva MCP path for OG image was a dead end. Two hours discovered the auth-permission wall.
-  - Custom events not behaviorally verified live yet. Needs a real user click and a 50% scroll.
-  - Tagline iteration took longer than the entire design-polish CSS pass.
+  - Still working at 1 AM. The reflection block below is going to read half-formed because I am too tired to think clearly about the day. I will pass over this with a clear head tomorrow.
+  - Got distracted by writing up the Inoki meeting recap mid-afternoon when I should have been heads-down on Handyman scope. In hindsight it paid back, but at the time it felt like drift.
+  - YouTube took 71 minutes that I did not plan for. Most of it was background noise while building, but some of it was real attention.
+  - Did not get the May 13 to 16 backfill entries done in their final voice. They are placeholder-flavored. Tomorrow.
 lessons:
-  - Sharp is already in the dependency tree. That is enough to render any v1 social card. Stop reaching for design tools.
-  - Behavioral verification beats build-passed every time. Grep the rendered HTML for the user-visible thing. Build-passing catches types, not rendering.
-  - Structured data in frontmatter is leverage. Today it renders nicely; in three months it powers a /stats page. Net cost today is zero.
-  - I am the taste, the model is the surface area. The tagline took three rounds because describing what was missing from each candidate worked better than trying to write it directly.
+  - Splitting the agent system into compartmentalized workspaces should have happened a week ago. The cost of cross-contamination across client work and personal work was a focus tax I could not see while paying it. I see it now.
+  - Listening tells before pitching. The Inoki call worked because the pitch then counter-pitch shape made him surface a domain context I would not have known to ask for. Cheap conversation framing, high information yield.
+  - Late-night reflection compounds badly. The 1 AM version of "what I learned today" is genuinely worse than the 9 AM version of "what I learned yesterday." The schema needs to support a same-entry update block I can fill in with a clear head.
 ---
 
-# Day 2: making the blog real
+# Build-heavy day
 
-Day 1 was "the thing is alive." Day 2 was "the thing is real enough to point people at without flinching." Different problem. A skeleton is honest about being a skeleton; a skeleton with Astro template placeholders in the footer is just sloppy.
+Five working sessions stacked back to back. The thing that holds them together is that they were all infrastructure on different layers: the agent harness got split into separate workspaces, the Handyman project got scoped from a draft into something I can hand to Dirk, the blog got the Day 2 polish that makes it real, and one quick conversation with Inoki pitched the whole Handyman thesis back at me with new framing.
 
-The goal for today was simple: by end of session, I wanted a blog state I was willing to drop into my Instagram bio and LinkedIn profile. That meant cleaning up the obvious tells (footer placeholders, line-height too loose, no real OG image), backfilling content (Brazil trip + Day 1 retrospective), and turning Rize screen-time into a load-bearing journal feature rather than a "maybe later" idea.
+## The agent system finally got split
 
-## What shipped
+For the last two months everything I do (client engagement work for Meji and Warme Wimmer, my own product work on OneProposal, the new personal blog) all lived in one Claude Code workspace. One MEMORY.md indexed everything. One CLAUDE.md described "the project," which was really five projects. Every session had to pay an attention tax to figure out what context applied.
 
-**Rize integration as a first-class journal feature.** Every journal entry now has structured frontmatter for `focusTime`, `topCategories`, and `topApps`. A reusable `<RizeRecap />` component renders this above the prose body. Entries without Rize data render unchanged (the schema is fully additive). This sets up a future `/work` or `/stats` page that aggregates focus time across all entries: proof-of-work compounding, not just stories.
+Today I cloned the workspace and stripped it: client work stays in `agentic-ops-main`, personal product and app work lives in `personal-apps-main`. Same harness, same skills, same hooks, but two independent memories. Two independent project registries. Two independent VS Code instances open in parallel when a session needs both.
 
-**Real OG image, generated programmatically.** Sharp was already in the Astro dependency tree, so I wrote a 20-line SVG-to-PNG script. The OG card is now royal blue (`#2337ff`), the tagline in serif, the URL up top, byline at the bottom. Lives at `scripts/build-og.mjs` and can be regenerated any time the design moves. No Canva account, no manual export, no PNG asset that nobody knows how to update.
+This is the kind of change I should have made a week ago. The cost of contamination was invisible because I was paying it continuously: a session about my blog would surface memories about a client incident, a session about OneProposal pricing would pull in patterns from a Make.com orchestrator I built for someone else. None of those misfires were big, individually. But they added up to a constant low-level "is this context applicable?" check that I was running in my head on top of every response.
 
-**Design polish.** Footer now actually says my name and links to my real socials (the Astro starter pointed at `@astrodotbuild` accounts on every link). Body line-height went from 1.7 to 1.55 because the looser version was reading slightly hollow at 20px. Code blocks got proper dark styling. Header gained a subtitle: *"Curious about opportunity. Building things. Documenting the mess."* That tagline took longer than the entire CSS pass.
+The split is now clean. The blog session I am writing this entry from did not load a single client-work memory.
 
-**Custom PostHog events.** Two beyond the default `$pageview`: `outbound_link_click` (fires on any external link), and `article_read_50` (scroll past halfway on a journal or post page). These exist so I can tell, when traffic eventually lands, whether anyone actually reads past the lede. Verified live before declaring done: `$pageview` was already landing in PostHog, 13 events today before this entry posted.
+## Handyman went from draft to scoping document in one session
 
-## The tagline took longer than the code
+Yesterday I had a 14-section pre-refresh brief for Handyman (a Brazilian-marketplace handyman platform, Pix and parcelado as the core differentiator, Upwork crossed with Uber as the design north star). Today I ran it through five rounds of clarification, locked the refresh, wrote a technical-scoping draft (~1100 words: architecture requirements, four stack candidates with disproof targets, payment-processor matrix, five milestones without timeframes), drafted an advisor message to Dirk, and updated the workspace registry.
 
-I went through three rounds with the agent before landing on the line. First pass leaned generic "small bets, ship daily, build in public" energy. I pushed back: it's *big* bets, not small. Second pass tried "experimenter / leverage" framing, closer but still tech-blog-coded. Third pass got the right ingredients in: curiosity (the through-line), opportunity (the entrepreneurial spirit without being mercantile), and "documenting the mess" (the honest part, this is a personal log of things that don't all work).
+The technical-scoping draft is explicitly *iteration target* not *locked architecture.* Dirk's input drops in as inline notes tomorrow on the call; the architecture decisions get locked in a dedicated session after that.
 
-The interesting part is that I couldn't write the tagline directly, but I could *describe what was missing from each candidate* and let the agent iterate against that signal. That's the actual workflow: I'm the taste, the model is the surface area.
+## Blog Day 2 shipped
 
-## What I learned today
+The structured version: Rize integration as a first-class journal feature (schema, reusable `RizeRecap` component, May 17 retrofitted). Real OG image rendered programmatically via sharp + SVG. Two custom PostHog events (`outbound_link_click`, `article_read_50`). Accountability footer modeled on the Maker School logging ritual. Footer cleaned up, tagline locked after three rounds of pushback, every Astro template placeholder gone.
 
-**Sharp is in your dependency tree whether you know it or not.** Astro ships with sharp for image optimization. That's enough to render an SVG to PNG, which is enough to programmatically generate any static social card I'll ever need. No reason to involve a design tool for v1 assets.
+The unstructured version: this blog is now real enough that I am willing to put it in my Instagram bio and my LinkedIn profile. That was the goal for today, and I hit it.
 
-**Behavioral verification beats "build passed".** Every time I ran the local build today, I also grepped the rendered HTML for specific markers: did the tagline appear on the homepage, did the footer have real names, did the `og:image` meta tag point at the new file. Build-passing means types compile. HTML grep means the user-visible thing actually showed up. The agent harness now treats those as separate gates, which catches a class of "compiles but doesn't render" failures I used to ship.
+## Jiu Jitsu session 2
 
-**Structured data in frontmatter compounds.** The Rize fields don't just show up nicely today. They're queryable across the whole `journal` collection at build time. The same `getCollection('journal')` call that lists entries on `/journal` will eventually power "total focus time this year," "top category by month," "what does my actual ratio of building-to-meetings look like." That kind of compounding is the whole point of putting the data in the schema instead of the prose.
+Absolutely awesome. The most pure-fun hour of the day. There is nothing in the build-loop that feels like that, which is a useful data point.
 
-## What's next
+## The Inoki conversation
 
-The Brazil-trip backfill (May 13 to 16) goes in once I get the day-by-day prose written. May 13 has no Rize data (I only started tracking halfway through May 14, so that day's Rize block will show a "partial day" badge). Today's Rize data goes into this entry's frontmatter once Rize finishes counting the day.
+I went over to the place where Inoki installs solar panels, intending to pitch Handyman. Instead, the conversation turned into a back-and-forth. I pitched Handyman, he engaged seriously, and then he pitched solar-panel investment back at me as "the only thing you should be putting money into in Brazil right now." That counter-pitch wasn't what I went in for, but it surfaced a whole domain context I would not have known to ask for: how the solar-installation business actually works here, what the margins look like, where the regulatory hooks are.
 
-After that: I update Instagram bio + LinkedIn profile to point here. No public announce post, informal sharing only for now. The blog goes from "I built this today" to "this is where I live online" by Friday.
+The Handyman thesis got sharper from his framing too. He has the local intuition for which problems are worth solving here, and his read on the marketplace pain matched mine.
+
+## What's holding tomorrow
+
+The Dirk call is on the schedule. Refreshed Handyman brief, technical-scoping draft, and the advisor message all land in front of him. The hope is that he pushes back on the architecture so the scoping doc gets sharper, not approved-as-is.
+
+Also: the May 13 to 16 backfill entries are still in placeholder voice. They need a pass tomorrow morning when I have a clear head.
 
 The thing is real. Tomorrow I keep showing up.

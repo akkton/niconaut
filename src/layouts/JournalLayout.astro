@@ -7,10 +7,16 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import RizeRecap from '../components/RizeRecap.astro';
 
-type Props = CollectionEntry<'journal'>['data'];
+type NavRef = { slug: string; date: Date; summary: string } | null;
+
+type Props = CollectionEntry<'journal'>['data'] & {
+	prev?: NavRef;
+	next?: NavRef;
+};
 
 const {
 	date,
+	writtenAt,
 	hoursWorked,
 	summary,
 	tags,
@@ -23,63 +29,67 @@ const {
 	wins,
 	losses,
 	lessons,
-} = Astro.props;
+	updates,
+	prev,
+	next,
+} = Astro.props as Props;
 const showRecap = focusTime !== undefined || (topCategories && topCategories.length > 0);
 const isoDate = date.toISOString().slice(0, 10);
+
+const shortTitle = (s: string) => {
+	const firstSentence = s.split(/(?<=[.!?])\s+/)[0];
+	return firstSentence.length > 60 ? firstSentence.slice(0, 60).trim() + '…' : firstSentence;
+};
+const shortDay = (d: Date) =>
+	d.toLocaleDateString('en-us', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={`Journal · ${date.toISOString().slice(0, 10)}`} description={summary} />
+		<BaseHead title={`Journal · ${isoDate}`} description={summary} />
 		<style>
-			main {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: 0 auto;
-				padding: 1em;
-			}
-			.meta {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.75em 1.25em;
-				align-items: baseline;
-				margin-bottom: 1.5em;
-				padding-bottom: 1em;
-				border-bottom: 1px solid rgb(var(--gray-light));
-			}
-			.date {
-				font-family: var(--font-atkinson), system-ui, sans-serif;
-				font-size: 1.5rem;
-				font-weight: 700;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.hours {
-				color: rgb(var(--gray));
-				font-size: 0.95rem;
-			}
-			.tags {
-				color: rgb(var(--gray));
-				font-size: 0.85rem;
-			}
-			.tags span {
-				margin-right: 0.5em;
-			}
-			.summary {
-				margin: 0 0 1.5em 0;
-				color: rgb(var(--gray-dark));
-				font-style: italic;
-				line-height: 1.5;
-			}
-			.body {
-				color: rgb(var(--gray-dark));
-			}
-			.back {
+			a.back-link {
 				display: inline-block;
 				margin-bottom: 1.5em;
-				font-size: 0.9em;
-				color: rgb(var(--gray));
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				text-decoration: none;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
 			}
+			a.back-link:hover {
+				color: var(--ink);
+			}
+			.meta {
+				margin: 0 0 1em 0;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4em 0.75em;
+				align-items: baseline;
+				font-family: var(--font-stack-mono);
+				font-size: 12px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
+			}
+			.meta .date {
+				color: var(--ink);
+				font-weight: 500;
+			}
+			.meta .sep {
+				color: var(--ink-faint);
+			}
+			.meta .tags {
+				color: var(--ink-faint);
+			}
+			.lede {
+				margin: 0 0 2em 0;
+				color: var(--ink-muted);
+				font-size: 1rem;
+				line-height: 1.55;
+				max-width: 60ch;
+			}
+
 			.screenshot {
 				margin: 0 0 2em 0;
 				padding: 0;
@@ -88,15 +98,132 @@ const isoDate = date.toISOString().slice(0, 10);
 				display: block;
 				width: 100%;
 				height: auto;
-				border: 1px solid rgb(var(--gray-light));
-				border-radius: 8px;
+				border: 1px solid var(--rule);
+				border-radius: 4px;
 			}
 			.screenshot figcaption {
 				margin-top: 0.5em;
-				font-size: 0.8rem;
-				color: rgb(var(--gray));
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
 				text-align: center;
 				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+
+			.body {
+				color: var(--ink);
+				font-size: 15px;
+				line-height: 1.65;
+			}
+			.body :global(p) {
+				margin: 0 0 1.1em 0;
+			}
+			.body :global(h2) {
+				margin-top: 2em;
+				font-size: 1.2rem;
+				font-weight: 600;
+			}
+			.body :global(h3) {
+				margin-top: 1.5em;
+				font-size: 1.05rem;
+				font-weight: 600;
+			}
+			.body :global(ul),
+			.body :global(ol) {
+				margin: 0 0 1.1em 0;
+				padding-left: 1.4em;
+			}
+			.body :global(li) {
+				margin-bottom: 0.4em;
+			}
+			.body :global(blockquote) {
+				margin: 1.5em 0;
+				padding: 0.25em 0 0.25em 1em;
+				border-left: 2px solid var(--rule-strong);
+				color: var(--ink-muted);
+			}
+
+			.updates {
+				margin: 2.5em 0 0 0;
+				padding: 1.25em 0 0 0;
+				border-top: 1px solid var(--rule);
+			}
+			.updates-label {
+				font-size: 0.78rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--ink-faint);
+				margin: 0 0 0.85em 0;
+			}
+			.update {
+				margin-bottom: 1.5em;
+				padding-left: 1em;
+				border-left: 2px solid var(--rule);
+			}
+			.update:last-child {
+				margin-bottom: 0;
+			}
+			.update-at {
+				display: block;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
+				margin-bottom: 0.35em;
+			}
+			.update-note {
+				color: var(--ink);
+				font-size: 14px;
+				line-height: 1.55;
+				white-space: pre-line;
+			}
+
+			.prevnext {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1em;
+				margin: 3em 0 0 0;
+				padding: 1.25em 0;
+				border-top: 1px solid var(--rule);
+				border-bottom: 1px solid var(--rule);
+			}
+			.prevnext a {
+				display: block;
+				color: var(--ink-muted);
+				text-decoration: none;
+				font-size: 13px;
+				line-height: 1.45;
+				transition: color 0.12s ease;
+			}
+			.prevnext a:hover {
+				color: var(--ink);
+			}
+			.prevnext .label {
+				display: block;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				margin-bottom: 0.25em;
+			}
+			.prevnext .right {
+				text-align: right;
+			}
+			.prevnext .placeholder {
+				color: var(--ink-faint);
+				font-style: italic;
+				font-size: 13px;
+			}
+			@media (max-width: 540px) {
+				.prevnext {
+					grid-template-columns: 1fr;
+				}
+				.prevnext .right {
+					text-align: left;
+				}
 			}
 		</style>
 	</head>
@@ -104,17 +231,19 @@ const isoDate = date.toISOString().slice(0, 10);
 	<body>
 		<Header />
 		<main>
-			<a href="/journal/" class="back">&larr; All journal entries</a>
+			<a href="/journal/" class="back-link">&larr; all journal</a>
 			<div class="meta">
 				<span class="date"><FormattedDate date={date} /></span>
-				{hoursWorked !== undefined && <span class="hours">{hoursWorked}h worked</span>}
+				{writtenAt && <span class="sep">·</span>}
+				{writtenAt && <span>written {writtenAt}</span>}
+				{hoursWorked !== undefined && <span class="sep">·</span>}
+				{hoursWorked !== undefined && <span>{hoursWorked}h worked</span>}
+				{tags && tags.length > 0 && <span class="sep">·</span>}
 				{tags && tags.length > 0 && (
-					<span class="tags">
-						{tags.map((t: string) => <span>#{t}</span>)}
-					</span>
+					<span class="tags">{tags.join(', ')}</span>
 				)}
 			</div>
-			<p class="summary">{summary}</p>
+			<p class="lede">{summary}</p>
 			{showRecap && (
 				<RizeRecap
 					focusTime={focusTime}
@@ -132,6 +261,39 @@ const isoDate = date.toISOString().slice(0, 10);
 			<div class="body">
 				<slot />
 			</div>
+			{updates && updates.length > 0 && (
+				<section class="updates" aria-label="Later updates to this entry">
+					<h2 class="updates-label">Later notes</h2>
+					{updates.map((u) => (
+						<div class="update">
+							<span class="update-at">{u.at}</span>
+							<div class="update-note">{u.note}</div>
+						</div>
+					))}
+				</section>
+			)}
+			<nav class="prevnext" aria-label="Journal navigation">
+				<div>
+					{prev ? (
+						<a href={`/journal/${prev.slug}/`}>
+							<span class="label">&larr; previous</span>
+							<span>{shortDay(prev.date)} · {shortTitle(prev.summary)}</span>
+						</a>
+					) : (
+						<span class="placeholder">No earlier entry</span>
+					)}
+				</div>
+				<div class="right">
+					{next ? (
+						<a href={`/journal/${next.slug}/`}>
+							<span class="label">next &rarr;</span>
+							<span>{shortDay(next.date)} · {shortTitle(next.summary)}</span>
+						</a>
+					) : (
+						<span class="placeholder">Latest entry</span>
+					)}
+				</div>
+			</nav>
 			<AccountabilityFooter
 				targets={targets}
 				wins={wins}
