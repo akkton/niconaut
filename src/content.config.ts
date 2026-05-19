@@ -23,7 +23,6 @@ const journal = defineCollection({
 			date: z.coerce.date(),
 			writtenAt: z.string().optional(),
 			title: z.string().optional(),
-			hoursWorked: z.number().optional(),
 			summary: z.string(),
 			tags: z.array(z.string()).default([]),
 			draft: z.boolean().default(false),

@@ -225,7 +225,7 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 										{entry.data.title && <p class="j-title">{entry.data.title}</p>}
 										<p class="j-summary">{entry.data.summary}</p>
 									</div>
-									<span class="j-hours">{entry.data.hoursWorked !== undefined ? `${entry.data.hoursWorked}h` : ''}</span>
+									<span class="j-hours">{entry.data.focusTime ?? ''}</span>
 								</a>
 							</li>
 						))}

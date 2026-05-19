@@ -18,7 +18,6 @@ const {
 	date,
 	writtenAt,
 	title,
-	hoursWorked,
 	summary,
 	tags,
 	focusTime,
@@ -274,8 +273,8 @@ const waHref = `https://wa.me/?text=${waText}`;
 				<span class="date"><FormattedDate date={date} weekday /></span>
 				{writtenAt && <span class="sep">·</span>}
 				{writtenAt && <span>written {writtenAt}</span>}
-				{hoursWorked !== undefined && <span class="sep">·</span>}
-				{hoursWorked !== undefined && <span>{hoursWorked}h worked</span>}
+				{focusTime && <span class="sep">·</span>}
+				{focusTime && <span>{focusTime} tracked</span>}
 				{tags && tags.length > 0 && <span class="sep">·</span>}
 				{tags && tags.length > 0 && (
 					<span class="tags">{tags.join(', ')}</span>

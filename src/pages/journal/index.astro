@@ -214,7 +214,7 @@ const weekdayLabel = (d: Date) =>
 											<a href={`/journal/${entry.id}/`}>
 												<span class="e-day">{weekdayLabel(entry.data.date)} {dayLabel(entry.data.date)}</span>
 												<span class="e-title">{entryLabel(entry)}</span>
-												<span class="e-hours">{entry.data.hoursWorked !== undefined ? `${entry.data.hoursWorked}h` : ''}</span>
+												<span class="e-hours">{entry.data.focusTime ?? ''}</span>
 												<span class="arrow" aria-hidden="true">&rarr;</span>
 											</a>
 										</li>

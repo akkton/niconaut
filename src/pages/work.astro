@@ -36,8 +36,6 @@ const formatHoursOnly = (mins: number): string => {
 };
 
 let totalFocusMinutes = 0;
-let totalHoursWorked = 0;
-let entriesWithHours = 0;
 let entriesWithFocus = 0;
 const categoryTotals: Record<string, number> = {};
 const appTotals: Record<string, number> = {};
@@ -47,10 +45,6 @@ for (const entry of allEntries) {
 	if (fmins > 0) {
 		totalFocusMinutes += fmins;
 		entriesWithFocus++;
-	}
-	if (typeof entry.data.hoursWorked === 'number') {
-		totalHoursWorked += entry.data.hoursWorked;
-		entriesWithHours++;
 	}
 	for (const cat of entry.data.topCategories ?? []) {
 		categoryTotals[cat.name] = (categoryTotals[cat.name] ?? 0) + cat.minutes;
@@ -330,7 +324,7 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 				<div class="stat">
 					<p class="label">Entries</p>
 					<p class="value">{allEntries.length}</p>
-					<p class="sub">{entriesWithHours} with hours logged</p>
+					<p class="sub">{entriesWithFocus} with Rize data</p>
 				</div>
 				<div class="stat">
 					<p class="label">Streak</p>
