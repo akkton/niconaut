@@ -1,0 +1,414 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const allEntries = (await getCollection('journal', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const parseFocusToMinutes = (s?: string): number => {
+	if (!s) return 0;
+	let total = 0;
+	const h = s.match(/(\d+)\s*h/);
+	const m = s.match(/(\d+)\s*m/);
+	if (h) total += parseInt(h[1], 10) * 60;
+	if (m) total += parseInt(m[1], 10);
+	return total;
+};
+
+const formatMinutes = (mins: number): string => {
+	if (mins <= 0) return '0m';
+	const h = Math.floor(mins / 60);
+	const m = mins % 60;
+	if (h === 0) return `${m}m`;
+	if (m === 0) return `${h}h`;
+	return `${h}h ${m}m`;
+};
+
+const formatHoursOnly = (mins: number): string => {
+	const h = mins / 60;
+	if (h >= 100) return `${Math.round(h)}h`;
+	if (h >= 10) return `${h.toFixed(1)}h`;
+	return `${h.toFixed(1)}h`;
+};
+
+let totalFocusMinutes = 0;
+let totalHoursWorked = 0;
+let entriesWithHours = 0;
+let entriesWithFocus = 0;
+const categoryTotals: Record<string, number> = {};
+const appTotals: Record<string, number> = {};
+
+for (const entry of allEntries) {
+	const fmins = parseFocusToMinutes(entry.data.focusTime);
+	if (fmins > 0) {
+		totalFocusMinutes += fmins;
+		entriesWithFocus++;
+	}
+	if (typeof entry.data.hoursWorked === 'number') {
+		totalHoursWorked += entry.data.hoursWorked;
+		entriesWithHours++;
+	}
+	for (const cat of entry.data.topCategories ?? []) {
+		categoryTotals[cat.name] = (categoryTotals[cat.name] ?? 0) + cat.minutes;
+	}
+	for (const app of entry.data.topApps ?? []) {
+		appTotals[app.name] = (appTotals[app.name] ?? 0) + app.minutes;
+	}
+}
+
+const topCategoriesAll = Object.entries(categoryTotals)
+	.sort((a, b) => b[1] - a[1])
+	.slice(0, 10);
+const topCategoriesMax = topCategoriesAll[0]?.[1] ?? 1;
+
+const topAppsAll = Object.entries(appTotals)
+	.sort((a, b) => b[1] - a[1])
+	.slice(0, 12);
+const topAppsMax = topAppsAll[0]?.[1] ?? 1;
+
+const trackedEntries = allEntries.filter((e) => parseFocusToMinutes(e.data.focusTime) > 0);
+const avgFocusPerDay = trackedEntries.length > 0 ? totalFocusMinutes / trackedEntries.length : 0;
+
+const dateKey = (d: Date) => d.toISOString().slice(0, 10);
+const entryByDate = new Map(allEntries.map((e) => [dateKey(e.data.date), e]));
+const sortedDates = allEntries.map((e) => e.data.date).sort((a, b) => b.valueOf() - a.valueOf());
+
+let streak = 0;
+if (sortedDates.length > 0) {
+	const cursor = new Date(sortedDates[0]);
+	while (entryByDate.has(dateKey(cursor))) {
+		streak++;
+		cursor.setUTCDate(cursor.getUTCDate() - 1);
+	}
+}
+
+const last7Days: { date: Date; minutes: number; slug: string | null }[] = [];
+if (allEntries.length > 0) {
+	const latest = new Date(allEntries[0].data.date);
+	for (let i = 0; i < 7; i++) {
+		const d = new Date(latest);
+		d.setUTCDate(latest.getUTCDate() - i);
+		const e = entryByDate.get(dateKey(d));
+		last7Days.push({
+			date: new Date(d),
+			minutes: e ? parseFocusToMinutes(e.data.focusTime) : 0,
+			slug: e ? e.id : null,
+		});
+	}
+}
+const last7Max = Math.max(1, ...last7Days.map((d) => d.minutes));
+
+const totalFocusLabel = formatHoursOnly(totalFocusMinutes);
+const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Work · ${SITE_TITLE}`} description="Cumulative focus time, top categories, and top apps across every tracked journal entry." />
+		<style>
+			.page-head {
+				margin: 0 0 3em 0;
+			}
+			.page-head h1 {
+				margin: 0 0 0.35em 0;
+				font-size: 2rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+			}
+			.page-head p {
+				margin: 0;
+				color: var(--ink-muted);
+				font-size: 0.95rem;
+				line-height: 1.55;
+				max-width: 60ch;
+			}
+
+			.summary-grid {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 1em;
+				margin: 0 0 3em 0;
+			}
+			.stat {
+				padding: 1em 0;
+				border-top: 1px solid var(--ink);
+			}
+			.stat .label {
+				font-size: 0.7rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				color: var(--ink-faint);
+				margin: 0 0 0.5em 0;
+			}
+			.stat .value {
+				font-family: var(--font-stack-mono);
+				font-size: 1.6rem;
+				font-weight: 600;
+				color: var(--ink);
+				letter-spacing: -0.01em;
+				line-height: 1;
+			}
+			.stat .sub {
+				margin: 0.4em 0 0 0;
+				font-size: 11.5px;
+				color: var(--ink-faint);
+			}
+
+			section.block {
+				margin: 0 0 3em 0;
+			}
+			.block-head {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				margin: 0 0 1em 0;
+				padding-bottom: 0.4em;
+				border-bottom: 1px solid var(--rule);
+			}
+			.block-head h2 {
+				margin: 0;
+				font-size: 0.78rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--ink-faint);
+			}
+			.block-head .meta {
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.04em;
+			}
+
+			ul.bars {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			ul.bars li {
+				display: grid;
+				grid-template-columns: minmax(7em, 1fr) minmax(0, 3fr) auto;
+				gap: 0.85em;
+				align-items: center;
+				padding: 0.35em 0;
+			}
+			.bar-name {
+				font-size: 13.5px;
+				color: var(--ink);
+			}
+			.bar-track {
+				height: 5px;
+				background: var(--rule);
+				overflow: hidden;
+			}
+			.bar-fill {
+				display: block;
+				height: 100%;
+				background: var(--ink);
+			}
+			.bar-meta {
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				white-space: nowrap;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.apps-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.3em 1.5em;
+			}
+			.app {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				padding: 0.3em 0;
+				border-bottom: 1px solid var(--rule);
+				font-size: 13px;
+			}
+			.app-name {
+				color: var(--ink);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.app-time {
+				font-family: var(--font-stack-mono);
+				font-variant-numeric: tabular-nums;
+				color: var(--ink-faint);
+				font-size: 11px;
+			}
+
+			.week-strip {
+				display: grid;
+				grid-template-columns: repeat(7, 1fr);
+				gap: 0.5em;
+				align-items: end;
+			}
+			.week-cell {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				gap: 0.35em;
+				text-decoration: none;
+				color: inherit;
+			}
+			.week-bar {
+				height: 80px;
+				background: var(--rule);
+				position: relative;
+			}
+			.week-bar-fill {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background: var(--ink);
+			}
+			.week-cell:hover .week-bar-fill { background: var(--link-hover); }
+			.week-cell.empty .week-bar-fill { background: var(--rule-strong); opacity: 0.35; }
+			.week-day {
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
+				text-align: center;
+			}
+			.week-min {
+				font-family: var(--font-stack-mono);
+				font-size: 10.5px;
+				color: var(--ink-faint);
+				text-align: center;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.empty {
+				color: var(--ink-faint);
+				font-style: italic;
+			}
+
+			@media (max-width: 720px) {
+				.summary-grid { grid-template-columns: 1fr 1fr; }
+				.apps-grid { grid-template-columns: 1fr; }
+				.week-bar { height: 60px; }
+			}
+			@media (max-width: 480px) {
+				.summary-grid { grid-template-columns: 1fr; }
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>Work</h1>
+				<p>
+					Cumulative focus time, top categories, and top apps. Built from every tracked
+					journal entry. Updates on every deploy. If a metric here drifts from
+					reality, the source of truth is the entries themselves.
+				</p>
+			</section>
+
+			<section class="summary-grid" aria-label="Headline stats">
+				<div class="stat">
+					<p class="label">Focus time</p>
+					<p class="value">{totalFocusLabel}</p>
+					<p class="sub">across {entriesWithFocus} tracked {entriesWithFocus === 1 ? 'day' : 'days'}</p>
+				</div>
+				<div class="stat">
+					<p class="label">Avg per day</p>
+					<p class="value">{avgFocusLabel}</p>
+					<p class="sub">tracked days only</p>
+				</div>
+				<div class="stat">
+					<p class="label">Entries</p>
+					<p class="value">{allEntries.length}</p>
+					<p class="sub">{entriesWithHours} with hours logged</p>
+				</div>
+				<div class="stat">
+					<p class="label">Streak</p>
+					<p class="value">{streak}</p>
+					<p class="sub">consecutive {streak === 1 ? 'day' : 'days'}</p>
+				</div>
+			</section>
+
+			<section class="block">
+				<div class="block-head">
+					<h2>Last 7 days</h2>
+					<span class="meta">focus time, latest first ←</span>
+				</div>
+				{last7Days.length === 0 ? (
+					<p class="empty">No entries yet.</p>
+				) : (
+					<div class="week-strip">
+						{last7Days.map((d) => {
+							const cell = (
+								<>
+									<div class="week-bar">
+										<div class="week-bar-fill" style={`height: ${d.minutes > 0 ? Math.max(4, (d.minutes / last7Max) * 100) : 0}%`}></div>
+									</div>
+									<span class="week-day">{d.date.toLocaleDateString('en-us', { weekday: 'short', timeZone: 'UTC' })}</span>
+									<span class="week-min">{d.minutes > 0 ? formatMinutes(d.minutes) : '·'}</span>
+								</>
+							);
+							return d.slug ? (
+								<a class="week-cell" href={`/journal/${d.slug}/`} aria-label={`Journal entry for ${dateKey(d.date)}`}>{cell}</a>
+							) : (
+								<div class="week-cell empty">{cell}</div>
+							);
+						})}
+					</div>
+				)}
+			</section>
+
+			<section class="block">
+				<div class="block-head">
+					<h2>Top categories</h2>
+					<span class="meta">summed across {entriesWithFocus} tracked {entriesWithFocus === 1 ? 'day' : 'days'}</span>
+				</div>
+				{topCategoriesAll.length === 0 ? (
+					<p class="empty">No category data yet.</p>
+				) : (
+					<ul class="bars">
+						{topCategoriesAll.map(([name, minutes]) => (
+							<li>
+								<span class="bar-name">{name}</span>
+								<span class="bar-track">
+									<span class="bar-fill" style={`width: ${(minutes / topCategoriesMax) * 100}%`}></span>
+								</span>
+								<span class="bar-meta">{formatMinutes(minutes)}</span>
+							</li>
+						))}
+					</ul>
+				)}
+			</section>
+
+			<section class="block">
+				<div class="block-head">
+					<h2>Top apps and sites</h2>
+					<span class="meta">across {entriesWithFocus} tracked {entriesWithFocus === 1 ? 'day' : 'days'}</span>
+				</div>
+				{topAppsAll.length === 0 ? (
+					<p class="empty">No app data yet.</p>
+				) : (
+					<div class="apps-grid">
+						{topAppsAll.map(([name, minutes]) => (
+							<div class="app">
+								<span class="app-name">{name}</span>
+								<span class="app-time">{formatMinutes(minutes)}</span>
+							</div>
+						))}
+					</div>
+				)}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
