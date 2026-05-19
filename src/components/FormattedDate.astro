@@ -1,18 +1,26 @@
 ---
 interface Props {
 	date: Date;
+	weekday?: boolean;
+	short?: boolean;
 }
 
-const { date } = Astro.props;
+const { date, weekday = false, short = false } = Astro.props;
+
+const options: Intl.DateTimeFormatOptions = {
+	timeZone: 'UTC',
+};
+if (short) {
+	options.month = 'short';
+	options.day = 'numeric';
+	if (weekday) options.weekday = 'short';
+} else {
+	options.year = 'numeric';
+	options.month = 'short';
+	options.day = 'numeric';
+	if (weekday) options.weekday = 'long';
+}
+const rendered = date.toLocaleDateString('en-us', options);
 ---
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-			timeZone: 'UTC',
-		})
-	}
-</time>
+<time datetime={date.toISOString()}>{rendered}</time>

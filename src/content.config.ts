@@ -22,6 +22,7 @@ const journal = defineCollection({
 		z.object({
 			date: z.coerce.date(),
 			writtenAt: z.string().optional(),
+			title: z.string().optional(),
 			hoursWorked: z.number().optional(),
 			summary: z.string(),
 			tags: z.array(z.string()).default([]),

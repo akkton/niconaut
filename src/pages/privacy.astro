@@ -1,0 +1,122 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Privacy · ${SITE_TITLE}`} description="What this blog tracks, what it doesn't, and how to opt out." />
+		<style>
+			.page-head {
+				margin: 0 0 2.5em 0;
+			}
+			.page-head h1 {
+				margin: 0 0 0.25em 0;
+				font-size: 2rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+			}
+			.page-head .lede {
+				margin: 0;
+				color: var(--ink-muted);
+				font-size: 1rem;
+				max-width: 60ch;
+			}
+			h2 {
+				margin: 2.25em 0 0.6em 0;
+				font-size: 1.05rem;
+				font-weight: 600;
+			}
+			p, li {
+				color: var(--ink);
+				font-size: 14.5px;
+				line-height: 1.6;
+			}
+			p { max-width: 62ch; margin: 0 0 1em 0; }
+			ul { margin: 0 0 1.25em 0; padding-left: 1.2em; }
+			.updated {
+				margin-top: 3em;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>Privacy</h1>
+				<p class="lede">
+					This is a personal blog. The privacy stance is short, opinionated, and meant
+					to outlast me reading legalese boilerplate I would not believe myself.
+				</p>
+			</section>
+
+			<h2>No third-party cookies</h2>
+			<p>
+				This site does not set any third-party cookies. No ad networks, no cross-site
+				identifiers, no Facebook pixel, no Google Analytics, no fingerprinting libraries.
+				If a browser extension tells you otherwise, please email me and I'll look.
+			</p>
+
+			<h2>What I do track</h2>
+			<p>
+				Anonymous pageview analytics through <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a>,
+				configured in <em>identified_only</em> mode. In plain English: PostHog is on, it counts visits
+				and a few interaction events (outbound link clicks, scroll past 50% of an article,
+				copy-link button presses), and it associates none of that with a real identity
+				unless you actively log in and tell me who you are. I do not log in.
+			</p>
+			<p>
+				The events I capture, end-to-end: <code>$pageview</code>, <code>outbound_link_click</code>,
+				<code>article_read_50</code>, <code>share_copy_link</code>. That's the full list. The point of
+				tracking is to know whether anyone actually reads what I post, not to build a profile.
+			</p>
+
+			<h2>Newsletter</h2>
+			<p>
+				If you sign up for email updates, your email address gets used to send you the
+				thing you signed up for. It does not get shared, sold, or cross-referenced anywhere
+				else. Unsubscribe at any time by replying to any email with the word "stop."
+			</p>
+
+			<h2>Comments and replies</h2>
+			<p>
+				There are no comments on this blog. Replies happen by email or on the social
+				accounts linked in the footer.
+			</p>
+
+			<h2>The source</h2>
+			<p>
+				This blog is open source. The full repository, including this privacy page, lives at
+				<a href="https://github.com/akkton/niconaut" target="_blank" rel="noopener">github.com/akkton/niconaut</a>.
+				If you find a leak between what this page says and what the site actually does, that's
+				a bug; please open an issue or email me.
+			</p>
+
+			<h2>Opt out</h2>
+			<p>
+				If you'd rather not be counted by PostHog at all, the simplest way is the
+				<a href="https://github.com/dnschneid/uBlock-Origin-list-uBOrAdblockTracker/blob/master/uBOrAdblockTracker.txt" target="_blank" rel="noopener">uBlock Origin</a>
+				or
+				<a href="https://privacybadger.org/" target="_blank" rel="noopener">Privacy Badger</a>
+				route. I'll keep working even if you do.
+			</p>
+
+			<h2>Contact</h2>
+			<p>
+				Email <a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
+				For data deletion requests, same address. I respond.
+			</p>
+
+			<p class="updated">Last updated 2026-05-19</p>
+		</main>
+		<Footer />
+	</body>
+</html>

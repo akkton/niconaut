@@ -1,0 +1,171 @@
+---
+// Newsletter signup stub. The form does not POST anywhere yet.
+// On submit, JS constructs a mailto: link to Nico with the email + preference
+// and opens it in the visitor's default mail client. Once a real provider is
+// wired (Buttondown / Resend), swap the submit handler.
+---
+
+<section class="newsletter" aria-label="Email subscribe">
+	<div class="head">
+		<h2 class="title">Get this in your inbox</h2>
+		<p class="sub">
+			One email when a new piece lands. No tracking pixels, no third-party tools.
+			Reply with "stop" any time to unsubscribe.
+		</p>
+	</div>
+	<form id="newsletter-form" novalidate>
+		<label class="email-label" for="newsletter-email">Email</label>
+		<input
+			id="newsletter-email"
+			type="email"
+			name="email"
+			placeholder="you@somewhere.com"
+			required
+		/>
+		<fieldset class="prefs">
+			<legend>I want notifications for…</legend>
+			<label>
+				<input type="radio" name="pref" value="both" checked />
+				<span>Both</span>
+			</label>
+			<label>
+				<input type="radio" name="pref" value="journal" />
+				<span>Journal only</span>
+			</label>
+			<label>
+				<input type="radio" name="pref" value="posts" />
+				<span>Long-form posts only</span>
+			</label>
+		</fieldset>
+		<button type="submit">Subscribe</button>
+		<p class="confirm" hidden>
+			Opening your mail client. Once the email window appears, just hit send.
+		</p>
+	</form>
+</section>
+
+<style>
+	.newsletter {
+		margin: 4em 0 2em 0;
+		padding: 1.5em 1.5em 1.75em 1.5em;
+		border: 1px solid var(--rule);
+	}
+	.head {
+		margin-bottom: 1.25em;
+	}
+	.title {
+		margin: 0 0 0.35em 0;
+		font-size: 1.05rem;
+		font-weight: 600;
+		color: var(--ink);
+	}
+	.sub {
+		margin: 0;
+		color: var(--ink-muted);
+		font-size: 13.5px;
+		line-height: 1.5;
+		max-width: 55ch;
+	}
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85em;
+	}
+	.email-label {
+		font-size: 0.7rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--ink-faint);
+	}
+	input[type="email"] {
+		padding: 0.5em 0.65em;
+		border: 1px solid var(--rule-strong);
+		background: var(--bg);
+		color: var(--ink);
+		font-size: 14px;
+		font-family: var(--font-stack-sans);
+		border-radius: 0;
+	}
+	input[type="email"]:focus {
+		outline: none;
+		border-color: var(--ink);
+	}
+	.prefs {
+		margin: 0;
+		padding: 0;
+		border: none;
+	}
+	.prefs legend {
+		font-size: 0.7rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--ink-faint);
+		margin-bottom: 0.4em;
+	}
+	.prefs label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		margin-right: 1.25em;
+		font-size: 13.5px;
+		color: var(--ink);
+		cursor: pointer;
+	}
+	.prefs input[type="radio"] {
+		accent-color: var(--ink);
+	}
+	button[type="submit"] {
+		align-self: flex-start;
+		padding: 0.55em 1.1em;
+		border: 1px solid var(--ink);
+		background: var(--ink);
+		color: var(--bg);
+		font-size: 13px;
+		font-weight: 600;
+		font-family: var(--font-stack-sans);
+		letter-spacing: 0.02em;
+		cursor: pointer;
+		transition: background 0.12s ease, color 0.12s ease;
+	}
+	button[type="submit"]:hover {
+		background: var(--bg);
+		color: var(--ink);
+	}
+	.confirm {
+		margin: 0;
+		color: var(--ink-muted);
+		font-size: 13px;
+		line-height: 1.45;
+	}
+	.confirm[hidden] { display: none; }
+</style>
+
+<script is:inline>
+	(function () {
+		var form = document.getElementById('newsletter-form');
+		if (!form) return;
+		form.addEventListener('submit', function (e) {
+			e.preventDefault();
+			var email = (form.querySelector('input[name="email"]') || {}).value || '';
+			var pref = (form.querySelector('input[name="pref"]:checked') || {}).value || 'both';
+			if (!email || email.indexOf('@') === -1) {
+				alert('Please enter a valid email.');
+				return;
+			}
+			var subject = encodeURIComponent('Newsletter signup: ' + pref);
+			var body = encodeURIComponent(
+				'Email: ' + email + '\nPreference: ' + pref + '\n\n' +
+				'(Sent from nicolasneumann.blog newsletter signup form.)',
+			);
+			var href = 'mailto:neumanic2@gmail.com?subject=' + subject + '&body=' + body;
+			window.location.href = href;
+			var confirm = form.querySelector('.confirm');
+			if (confirm) confirm.hidden = false;
+			if (window.posthog && typeof window.posthog.capture === 'function') {
+				window.posthog.capture('newsletter_signup_intent', { preference: pref });
+			}
+		});
+	})();
+</script>

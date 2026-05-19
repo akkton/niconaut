@@ -13,8 +13,8 @@ export async function getStaticPaths() {
 			params: { slug: entry.id },
 			props: {
 				entry,
-				prev: prev ? { slug: prev.id, date: prev.data.date, summary: prev.data.summary } : null,
-				next: next ? { slug: next.id, date: next.data.date, summary: next.data.summary } : null,
+				prev: prev ? { slug: prev.id, date: prev.data.date, summary: prev.data.summary, title: prev.data.title } : null,
+				next: next ? { slug: next.id, date: next.data.date, summary: next.data.summary, title: next.data.title } : null,
 			},
 		};
 	});
@@ -22,8 +22,8 @@ export async function getStaticPaths() {
 
 type Props = {
 	entry: CollectionEntry<'journal'>;
-	prev: { slug: string; date: Date; summary: string } | null;
-	next: { slug: string; date: Date; summary: string } | null;
+	prev: { slug: string; date: Date; summary: string; title?: string } | null;
+	next: { slug: string; date: Date; summary: string; title?: string } | null;
 };
 
 const { entry, prev, next } = Astro.props as Props;

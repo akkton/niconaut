@@ -1,77 +1,62 @@
 ---
 date: 2026-05-17
+title: "Day 4: scaffolding the blog, hiring math"
 hoursWorked: 4
-summary: Day 1. Scoped the blog, picked the stack, scaffolded Astro + MDX, set up content collections for journal + posts, wired PostHog, shipped the first build.
-tags: [blog, meta, astro]
-focusTime: 12h 3min
+summary: Sunday in Brazil. Built the first version of this blog end-to-end in four hours, picked the stack, scaffolded Astro + MDX + Cloudflare Pages + PostHog, shipped the first build. Quick evening call with a marketing candidate for OneProposal. Walked away thinking about employer risk.
+tags: [brazil, blog, oneproposal, hiring]
+focusTime: "12h 3m"
 screenshot: /journal-assets/rize-2026-05-17.png
 topCategories:
-  - { name: Code, percent: 43, minutes: 313 }
-  - { name: Productivity, percent: 16, minutes: 118 }
-  - { name: Product, percent: 11, minutes: 76 }
-  - { name: Sales, percent: 5, minutes: 38 }
-  - { name: Messaging, percent: 5, minutes: 33 }
+  - { name: "Code", percent: 43, minutes: 313 }
+  - { name: "Productivity", percent: 16, minutes: 118 }
+  - { name: "Product", percent: 11, minutes: 76 }
+  - { name: "Sales", percent: 5, minutes: 38 }
+  - { name: "Messaging", percent: 5, minutes: 33 }
 topApps:
-  - { name: Visual Studio Code, minutes: 307 }
-  - { name: lovable.dev, minutes: 58 }
-  - { name: oneproposal.app, minutes: 38 }
-  - { name: unpauseai.com, minutes: 37 }
-  - { name: WhatsApp, minutes: 33 }
-  - { name: instagram.com, minutes: 28 }
+  - { name: "Visual Studio Code", minutes: 307 }
+  - { name: "lovable.dev", minutes: 58 }
+  - { name: "oneproposal.app", minutes: 38 }
+  - { name: "unpauseai.com", minutes: 37 }
+  - { name: "WhatsApp", minutes: 33 }
+  - { name: "instagram.com", minutes: 28 }
 targets:
-  - Decide what the blog is for and pick the stack
-  - Get a working scaffold deployed end-to-end
-  - Write Day 1 entry to start the cadence
+  - Decide what this blog is for and pick the stack
+  - Get a working scaffold deployed end-to-end before the day is over
+  - Take the call with the marketing candidate for OneProposal
 wins:
-  - Blog live on the internet end-to-end in roughly 4 hours
+  - Blog live on the internet end-to-end in roughly four hours
   - Picked Astro + MDX + Cloudflare Pages without overthinking
   - Two clean content collections (journal + posts) instead of one mashed-together feed
+  - Took the hiring call, kept it warm, did not pull the trigger prematurely
 losses:
   - The domain naming question took longer than the entire engineering build
   - Real OG image punted to Day 2
   - About page left skeletal
   - PostHog key fill happened manually rather than through a documented env-setup flow
 lessons:
-  - Planning the scope before writing code saved at least an hour of rework. Forty minutes of upfront planning is cheap.
-  - Astro 6 template carries about 80% of the load. Customize the last 20%, don't rebuild the 80.
-  - Lovable for a content pipeline was the wrong shape. Sanity-checking the tool against the actual job killed a tempting detour.
+  - Forty minutes of upfront planning before any code saved at least an hour of rework.
+  - Astro 6 template carries about 80% of the load. Customize the last 20%, do not rebuild the 80.
+  - Hiring is a math problem under uncertainty. The variance on "they walk away after I have already invested time" is what makes it hard, not the cost of the time itself.
 ---
 
-# Day 1: the blog is alive
+Two things today.
 
-Today I built the thing you are reading. Four-ish hours, end-to-end, from "what should this even be" to "live on the internet."
+## The blog
 
-## Why a blog
+I built the thing you are reading. Four-ish hours, end-to-end, from "what should this even be" to "live on the internet."
 
-Three reasons stacked on top of each other:
+**Why a blog.** Three reasons stacked on top of each other. Proof-of-self for investors. Networking infrastructure (one URL I can share with friends, family, future clients, my grandparents). Writing forces understanding.
 
-1. **Proof-of-self for investors.** When the day comes that I am pitching, I want a link I can hand over that shows I show up, ship, and think clearly. A documented track record beats a deck of claims.
-2. **Networking infrastructure.** One URL I can share with friends, family, future clients, my grandparents. People who would otherwise lose track of me can keep tabs without me having to send 20 update emails.
-3. **Writing forces understanding.** Half the value is the entries themselves; the other half is what happens to my thinking when I am forced to write it down.
+**What I picked and why.** Astro + MDX, hosted on Cloudflare Pages, content authored through Claude Code. Astro means static markdown files in a git repo with the option to embed components later. Cloudflare Pages handles more traffic than I will plausibly produce, auto-deploys on every push, and Workers sit one step away if I ever need a tiny API. Claude Code as the authoring interface is the part that justifies the rest: the same agent harness I use to ship product also publishes the journal about shipping product.
 
-## What I picked and why
+I considered Lovable first. Honest sanity check killed it: Lovable builds apps, and a blog is a content pipeline, not an app. The wrong shape for a thing that needs to live for years.
 
-**Astro + MDX, hosted on Cloudflare Pages, content authored through Claude Code.** Three decisions, each load-bearing:
+**What I learned today.** The Astro 6 blog template gets you 80% of the way there: content collections, RSS, sitemap, Atkinson font, image optimization, all in by default. The customization work was renaming and adding a second collection, not building from scratch. Tailwind v4 + Astro is dead simple: one Vite plugin, one CSS import.
 
-- *Astro + MDX*: Static site, sub-second loads, content lives as markdown files in a git repo. MDX means I can embed React/Astro components inside posts later, so a "hours worked this week" sparkline or an interactive chart stays one step away. Zero JavaScript ships unless I ask for it.
-- *Cloudflare Pages*: Free tier handles more traffic than I will plausibly produce. Auto-deploys on every git push. If I ever need a contact form or a tiny API endpoint, Cloudflare Workers sits one step away.
-- *Claude Code as the authoring interface*: This is the part that justifies the rest. I do not want to hand-write markdown. I want to say "draft today's journal: worked four hours, set up the blog, here's what I learned" and have a draft appear, commit, push, and deploy itself. The same agent harness I use to ship product also publishes the journal about shipping product. Meta in the good way.
+## The hiring call
 
-I considered Lovable. It was my first instinct. The honest sanity check killed it: Lovable builds apps, and a blog is a content pipeline, not an app. I would have ended up building a custom CMS to host posts, which is the wrong shape for a thing that needs to live for years.
+Quick evening call with a marketing candidate for OneProposal. The frame I keep coming back to: how much time do I have to put into them before they are net-positive? And what is the variance on "they walk away after I have already invested the time"?
 
-## What I learned today
+It is a mathematical problem under uncertainty, and I am not yet at the stage where I can pre-compute the answer. The bottom line is employer risk: omnipresent until you have shipped a few hires that actually work out. Decided to keep the conversation warm but not pull the trigger yet. Tomorrow's build day is heavy enough that I should not be onboarding anyone mid-week.
 
-- **The Astro 6 blog template gets you about 80% of the way there.** Content collections, RSS, sitemap, Atkinson font, image optimization, all in by default. The customization work was mostly *renaming* and *adding a second collection*, not building from scratch.
-- **The right way to use the AI agent for setup is to plan first, execute second.** Going straight into "build me a blog" without scoping it would have produced something generic. Forty minutes of planning before any code saved at least an hour of rework.
-- **Tailwind v4 + Astro is dead simple.** A Vite plugin, one CSS import, done. The whole integration is two files.
-
-## What is still left
-
-- Domain ended up being `nicolasneumann.blog`, registered at Namecheap, DNS pointed at Cloudflare. The naming question took longer than the entire engineering build.
-- Connect the repo to Cloudflare Pages.
-- Real OG image (the placeholder is the Astro starter image).
-- A few more details on the about page once the dust settles.
-
-That is it. The thing is alive. Tomorrow I write entry two.
-
-*(Updated 2026-05-18: the deploy is wired, the OG image is real, the about page got fleshed out, and the design polish landed in Day 2. See [2026-05-18](/journal/2026-05-18) for the ship-day log.)*
+The naming question for the blog ended up being `nicolasneumann.blog`. That took longer than the engineering build. Tomorrow I write entry two and start the Brazil-trip backfill.

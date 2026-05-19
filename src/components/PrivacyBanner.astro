@@ -1,0 +1,110 @@
+---
+// "No third-party cookies" pride banner. Sticky bottom-right, dismissable.
+// Once dismissed, sets a localStorage flag to suppress on future visits.
+---
+
+<aside id="privacy-banner" class="privacy-banner" hidden aria-label="Privacy notice">
+	<div class="icon" aria-hidden="true">
+		<svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 1 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-4Zm0 4.2 5 2.5V11c0 3.7-2.4 7-5 8.2-2.6-1.2-5-4.5-5-8.2V7.7l5-2.5Zm-1 9.3 5-5-1.4-1.4L11 11.7l-1.6-1.6L8 11.5l3 3Z"/></svg>
+	</div>
+	<div class="text">
+		<strong>No third-party cookies on this site.</strong>
+		Only anonymous pageview analytics.
+		<a href="/privacy/">More</a>
+	</div>
+	<button class="dismiss" type="button" aria-label="Dismiss this notice">OK</button>
+</aside>
+
+<style>
+	.privacy-banner {
+		position: fixed;
+		bottom: 1em;
+		right: 1em;
+		left: auto;
+		max-width: 360px;
+		display: flex;
+		align-items: flex-start;
+		gap: 0.65em;
+		padding: 0.75em 0.9em;
+		background: var(--ink);
+		color: var(--bg);
+		font-size: 12.5px;
+		line-height: 1.45;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+		z-index: 50;
+	}
+	.privacy-banner[hidden] {
+		display: none;
+	}
+	.icon {
+		flex: 0 0 auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 0.1em;
+		color: var(--bg);
+		opacity: 0.85;
+	}
+	.text {
+		flex: 1 1 auto;
+		color: var(--bg);
+	}
+	.text strong {
+		display: inline;
+		color: var(--bg);
+		font-weight: 600;
+	}
+	.text a {
+		color: var(--bg);
+		text-decoration: underline;
+		text-decoration-color: rgba(255, 255, 255, 0.55);
+		margin-left: 0.35em;
+	}
+	.text a:hover {
+		text-decoration-color: var(--bg);
+	}
+	.dismiss {
+		flex: 0 0 auto;
+		padding: 0.25em 0.65em;
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		background: transparent;
+		color: var(--bg);
+		font-family: var(--font-stack-sans);
+		font-size: 11.5px;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		cursor: pointer;
+		transition: background 0.12s ease, color 0.12s ease;
+	}
+	.dismiss:hover {
+		background: var(--bg);
+		color: var(--ink);
+	}
+	@media (max-width: 540px) {
+		.privacy-banner {
+			bottom: 0;
+			right: 0;
+			left: 0;
+			max-width: 100%;
+		}
+	}
+</style>
+
+<script is:inline>
+	(function () {
+		var KEY = 'nbn-privacy-banner-dismissed';
+		var banner = document.getElementById('privacy-banner');
+		if (!banner) return;
+		try {
+			if (localStorage.getItem(KEY) === '1') return;
+		} catch (e) { /* localStorage blocked, show anyway */ }
+		banner.hidden = false;
+		var btn = banner.querySelector('.dismiss');
+		if (btn) {
+			btn.addEventListener('click', function () {
+				banner.hidden = true;
+				try { localStorage.setItem(KEY, '1'); } catch (e) {}
+			});
+		}
+	})();
+</script>

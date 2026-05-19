@@ -1,49 +1,52 @@
 ---
 date: 2026-05-16
-summary: OneProposal launch-prep day. Domain swap to oneproposal.app, Stripe live-mode flip, PostHog cookieless integration, credit-ledger fix. Late-evening walkthrough with a friend surfaced six previously-invisible UX bugs before the friends-and-family share message went out.
-tags: [brazil, rize, journal, oneproposal, launch-prep]
-focusTime: 9h 22min
+title: "Day 3: launch-prep, walkthrough, first feedback"
+summary: Saturday in Brazil. OneProposal launch-prep day. Domain swap to oneproposal.app, Stripe live-mode, PostHog cookieless, credit-ledger fix. Walkthrough with a friend surfaced six previously-invisible UX bugs. Friends-and-family share message sent before midnight. Side thread, a conversation with a Brazilian friend about another app idea I am keeping vague for now.
+tags: [brazil, oneproposal, launch-prep, jiu-jitsu]
+focusTime: "9h 22m"
 screenshot: /journal-assets/rize-2026-05-16.png
 topCategories:
-  - { name: Code, percent: 34, minutes: 191 }
-  - { name: Meeting, percent: 17, minutes: 96 }
-  - { name: Product, percent: 10, minutes: 55 }
-  - { name: Social Media, percent: 9, minutes: 50 }
-  - { name: Meetings, percent: 9, minutes: 50 }
+  - { name: "Code", percent: 34, minutes: 191 }
+  - { name: "Meeting", percent: 17, minutes: 96 }
+  - { name: "Product", percent: 10, minutes: 55 }
+  - { name: "Social Media", percent: 9, minutes: 50 }
+  - { name: "Meetings", percent: 9, minutes: 50 }
 topApps:
-  - { name: Visual Studio Code, minutes: 191 }
-  - { name: lovable.dev, minutes: 51 }
-  - { name: instagram.com, minutes: 50 }
-  - { name: oneproposal.app, minutes: 21 }
-  - { name: Microsoft Outlook, minutes: 18 }
-  - { name: Microsoft Edge, minutes: 14 }
-  - { name: WhatsApp, minutes: 14 }
+  - { name: "Visual Studio Code", minutes: 191 }
+  - { name: "lovable.dev", minutes: 51 }
+  - { name: "instagram.com", minutes: 50 }
+  - { name: "oneproposal.app", minutes: 21 }
+  - { name: "Microsoft Outlook", minutes: 18 }
+  - { name: "Microsoft Edge", minutes: 14 }
+  - { name: "WhatsApp", minutes: 14 }
 targets:
-  - Verify and fix the four launch-blocking bugs (A/B/C/D)
+  - Verify and fix the four launch-blocking bugs
   - Flip OneProposal to live Stripe mode and swap the domain to oneproposal.app
-  - Walk a friend through the product cold and ship a friends-and-family share message
+  - Walk a friend through the product cold and ship the friends-and-family share message
 wins:
   - oneproposal.app fully operational. Domain swap touched 19 files and worked end-to-end.
   - Stripe live-mode active. The product can actually accept money now.
-  - Friend walkthrough surfaced six previously-invisible UX bugs (K1 through K6). Best possible feedback at the lowest possible cost.
-  - Friends-and-family share message sent before midnight.
+  - Friend walkthrough surfaced six previously-invisible UX bugs. Best possible feedback at the lowest possible cost.
+  - Friends-and-family share message sent before midnight. First real feedback inside the hour.
+  - A conversation with a Brazilian friend about another app idea I am keeping vague for now. The conversation matters more than the idea at this stage.
 losses:
   - Verification theater on the bug audit. Said "Bug C fixed" without rendering the page. The friend caught it inside the first minute.
   - Said "shipped" several times when the right word was "committed-but-not-published-yet." That distinction matters more than it sounds.
-  - The agent harness's Stop hook over-fired roughly twelve times on Lovable-handoff turns. Tooling friction. Cost is real.
+  - The agent harness's Stop hook over-fired roughly twelve times on Lovable-handoff turns. Tooling friction.
 lessons:
   - Audit-without-render is the most expensive mistake class. Always click through.
   - Shipped has to mean live on prod and behavior-verified. Anything else needs a different word.
   - A real friend walkthrough catches things the agent harness cannot. The first six bugs were all visible in the first ten minutes of someone else using the product cold.
+  - Showing up to the mat means I am meeting Brazilian builders who think about problems from a side I do not. That is the second-order yield of jiu jitsu I did not see coming.
 ---
 
-# Day in Brazil 3
+Launch-prep day for OneProposal. By midnight the product had a real domain, real Stripe, real first users, and six real bugs the agent harness had not seen.
 
-Launch-prep day for OneProposal. By midnight the product had a real domain, real Stripe, real friends, and six real bugs the agent harness hadn't seen.
+The walkthrough was the day. Watching someone use the product cold, in real time, is unmatched. Every assumption I had been making about the flow surfaced inside ten minutes. None of them were technical. They were all "wait, what is supposed to happen here?" The bugs I named through the session are all things I would have shipped feeling proud, and all of them would have made the first real user bounce.
 
-The walkthrough was the day. Watching someone use the product cold, in real time, is unmatched. Every assumption I'd been making about the flow surfaced inside ten minutes. None of them were technical. They were all "wait, what's supposed to happen here?" The bugs I named K1 through K6 are all things I would have shipped feeling proud, and all of them would have made the first real user bounce.
+Then I sent the friends-and-family share message and real feedback started landing inside the hour. People click into the parts I underweighted, skip the parts I built two coats of polish onto. The feedback was good, by which I mean "actionable and slightly painful." Straight back to building.
 
-The categories tell the structural story. 34% Code, 17% Meeting. The meeting block is the friend walkthrough plus the prep and the follow-up. Instagram at 50 minutes is the friends-and-family share message getting drafted and sent. Outlook is the post-launch admin trail.
+Side thread today: a conversation with a friend I have been meeting at Jiu Jitsu, about another app idea. We are early enough that I am not going to put any of it on the public log yet. What is worth noting is that the conversation happened at all. Showing up to the mat is also showing up to the broader Brazilian builder community, and that part is paying back in ways I did not plan.
 
 The friction worth naming is the language one. I kept calling things "shipped" before they were live. That word has to mean live and verified. Everything else needs a different word.
 

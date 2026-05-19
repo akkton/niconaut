@@ -7,7 +7,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import RizeRecap from '../components/RizeRecap.astro';
 
-type NavRef = { slug: string; date: Date; summary: string } | null;
+type NavRef = { slug: string; date: Date; summary: string; title?: string } | null;
 
 type Props = CollectionEntry<'journal'>['data'] & {
 	prev?: NavRef;
@@ -17,6 +17,7 @@ type Props = CollectionEntry<'journal'>['data'] & {
 const {
 	date,
 	writtenAt,
+	title,
 	hoursWorked,
 	summary,
 	tags,
@@ -40,17 +41,23 @@ const shortTitle = (s: string) => {
 	const firstSentence = s.split(/(?<=[.!?])\s+/)[0];
 	return firstSentence.length > 60 ? firstSentence.slice(0, 60).trim() + '…' : firstSentence;
 };
-const shortDay = (d: Date) =>
-	d.toLocaleDateString('en-us', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 
 const entryUrl = `https://nicolasneumann.blog/journal/${isoDate}/`;
-const waShareText = encodeURIComponent(`${summary}\n\n${entryUrl}`);
-const waShareHref = `https://wa.me/?text=${waShareText}`;
+const headline = title ?? shortTitle(summary);
+const tweetText = `${headline} — nicolasneumann.blog`;
+const waText = encodeURIComponent(`${headline}\n\n${entryUrl}`);
+const xText = encodeURIComponent(tweetText);
+const xHref = `https://twitter.com/intent/tweet?text=${xText}&url=${encodeURIComponent(entryUrl)}`;
+const liHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(entryUrl)}`;
+const mailSubject = encodeURIComponent(`Nico's journal · ${headline}`);
+const mailBody = encodeURIComponent(`${summary}\n\n${entryUrl}`);
+const emailHref = `mailto:?subject=${mailSubject}&body=${mailBody}`;
+const waHref = `https://wa.me/?text=${waText}`;
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={`Journal · ${isoDate}`} description={summary} />
+		<BaseHead title={`Journal · ${title ?? isoDate}`} description={summary} />
 		<style>
 			a.back-link {
 				display: inline-block;
@@ -66,7 +73,7 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				color: var(--ink);
 			}
 			.meta {
-				margin: 0 0 1em 0;
+				margin: 0 0 0.75em 0;
 				display: flex;
 				flex-wrap: wrap;
 				gap: 0.4em 0.75em;
@@ -80,11 +87,14 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				color: var(--ink);
 				font-weight: 500;
 			}
-			.meta .sep {
-				color: var(--ink-faint);
-			}
-			.meta .tags {
-				color: var(--ink-faint);
+			.meta .sep { color: var(--ink-faint); }
+			.entry-title {
+				margin: 0 0 0.5em 0;
+				font-size: 1.9rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				line-height: 1.18;
+				color: var(--ink);
 			}
 			.lede {
 				margin: 0 0 2em 0;
@@ -120,27 +130,17 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				font-size: 15px;
 				line-height: 1.65;
 			}
-			.body :global(p) {
-				margin: 0 0 1.1em 0;
+			.body :global(p) { margin: 0 0 1.1em 0; }
+			.body :global(h1) {
+				margin: 2em 0 0.5em 0;
+				font-size: 1.4rem;
+				font-weight: 700;
 			}
-			.body :global(h2) {
-				margin-top: 2em;
-				font-size: 1.2rem;
-				font-weight: 600;
-			}
-			.body :global(h3) {
-				margin-top: 1.5em;
-				font-size: 1.05rem;
-				font-weight: 600;
-			}
+			.body :global(h2) { margin-top: 2em; font-size: 1.2rem; font-weight: 600; }
+			.body :global(h3) { margin-top: 1.5em; font-size: 1.05rem; font-weight: 600; }
 			.body :global(ul),
-			.body :global(ol) {
-				margin: 0 0 1.1em 0;
-				padding-left: 1.4em;
-			}
-			.body :global(li) {
-				margin-bottom: 0.4em;
-			}
+			.body :global(ol) { margin: 0 0 1.1em 0; padding-left: 1.4em; }
+			.body :global(li) { margin-bottom: 0.4em; }
 			.body :global(blockquote) {
 				margin: 1.5em 0;
 				padding: 0.25em 0 0.25em 1em;
@@ -166,9 +166,7 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				padding-left: 1em;
 				border-left: 2px solid var(--rule);
 			}
-			.update:last-child {
-				margin-bottom: 0;
-			}
+			.update:last-child { margin-bottom: 0; }
 			.update-at {
 				display: block;
 				font-family: var(--font-stack-mono);
@@ -186,26 +184,48 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 
 			.share {
 				margin: 2.5em 0 0 0;
-				display: flex;
-				justify-content: flex-end;
 			}
-			.share-link {
+			.share-label {
+				font-size: 0.72rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				color: var(--ink-faint);
+				margin: 0 0 0.65em 0;
+			}
+			.share-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5em;
+			}
+			.share-row a,
+			.share-row button {
 				display: inline-flex;
 				align-items: center;
-				gap: 0.45em;
-				padding: 0.4em 0.85em;
+				gap: 0.4em;
+				padding: 0.4em 0.75em;
 				border: 1px solid var(--rule);
 				background: var(--bg);
 				color: var(--ink-muted);
+				font: inherit;
 				font-size: 12px;
 				text-decoration: none;
+				cursor: pointer;
 				letter-spacing: 0.01em;
-				transition: color 0.12s ease, border-color 0.12s ease;
+				transition: color 0.12s ease, border-color 0.12s ease, background 0.12s ease;
 			}
-			.share-link:hover {
-				color: #25d366;
-				border-color: #25d366;
+			.share-row a:hover,
+			.share-row button:hover {
+				color: var(--ink);
+				border-color: var(--ink);
 			}
+			.share-row .wa:hover { color: #25d366; border-color: #25d366; }
+			.share-row .copied {
+				color: var(--ink);
+				border-color: var(--ink);
+				background: #f5f5f5;
+			}
+
 			.prevnext {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
@@ -223,9 +243,7 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				line-height: 1.45;
 				transition: color 0.12s ease;
 			}
-			.prevnext a:hover {
-				color: var(--ink);
-			}
+			.prevnext a:hover { color: var(--ink); }
 			.prevnext .label {
 				display: block;
 				font-family: var(--font-stack-mono);
@@ -235,21 +253,16 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				text-transform: uppercase;
 				margin-bottom: 0.25em;
 			}
-			.prevnext .right {
-				text-align: right;
-			}
+			.prevnext .right { text-align: right; }
 			.prevnext .placeholder {
 				color: var(--ink-faint);
 				font-style: italic;
 				font-size: 13px;
 			}
 			@media (max-width: 540px) {
-				.prevnext {
-					grid-template-columns: 1fr;
-				}
-				.prevnext .right {
-					text-align: left;
-				}
+				.prevnext { grid-template-columns: 1fr; }
+				.prevnext .right { text-align: left; }
+				.entry-title { font-size: 1.55rem; }
 			}
 		</style>
 	</head>
@@ -259,7 +272,7 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 		<main>
 			<a href="/journal/" class="back-link">&larr; all journal</a>
 			<div class="meta">
-				<span class="date"><FormattedDate date={date} /></span>
+				<span class="date"><FormattedDate date={date} weekday /></span>
 				{writtenAt && <span class="sep">·</span>}
 				{writtenAt && <span>written {writtenAt}</span>}
 				{hoursWorked !== undefined && <span class="sep">·</span>}
@@ -269,6 +282,7 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 					<span class="tags">{tags.join(', ')}</span>
 				)}
 			</div>
+			{title && <h1 class="entry-title">{title}</h1>}
 			<p class="lede">{summary}</p>
 			{showRecap && (
 				<RizeRecap
@@ -298,20 +312,37 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 					))}
 				</section>
 			)}
-			<div class="share">
-				<a class="share-link" href={waShareHref} target="_blank" rel="noopener">
-					<svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14">
-						<path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885zM20.52 3.449C18.24 1.245 15.24.044 12.045.044 5.463.044.104 5.402.101 11.987c0 2.096.546 4.142 1.588 5.945L0 24l6.184-1.621a11.882 11.882 0 0 0 5.683 1.448h.005c6.585 0 11.946-5.358 11.949-11.945 0-3.193-1.24-6.196-3.501-8.453z"/>
-					</svg>
-					Share to WhatsApp
-				</a>
-			</div>
+			<section class="share" aria-label="Share this entry">
+				<div class="share-label">Share</div>
+				<div class="share-row">
+					<a class="wa" href={waHref} target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885zM20.52 3.449C18.24 1.245 15.24.044 12.045.044 5.463.044.104 5.402.101 11.987c0 2.096.546 4.142 1.588 5.945L0 24l6.184-1.621a11.882 11.882 0 0 0 5.683 1.448h.005c6.585 0 11.946-5.358 11.949-11.945 0-3.193-1.24-6.196-3.501-8.453z"/></svg>
+						WhatsApp
+					</a>
+					<a class="x" href={xHref} target="_blank" rel="noopener" aria-label="Share on X">
+						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+						X
+					</a>
+					<a class="li" href={liHref} target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.56c0-1.32-.02-3.02-1.84-3.02-1.85 0-2.13 1.44-2.13 2.93v5.65H9.38V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+						LinkedIn
+					</a>
+					<a class="em" href={emailHref} aria-label="Share via email">
+						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.24-8 4.99-8-4.99V6l8 4.99L20 6v2.24z"/></svg>
+						Email
+					</a>
+					<button class="cp" data-url={entryUrl} aria-label="Copy link to this entry">
+						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M10.59 13.41a1 1 0 0 1 0-1.41l3-3a1 1 0 0 1 1.41 1.41l-3 3a1 1 0 0 1-1.41 0zm-3.59 5.59a3 3 0 0 1-2.12-5.12l3-3a3 3 0 0 1 4.24 0 1 1 0 1 1-1.41 1.41 1 1 0 0 0-1.41 0l-3 3a1 1 0 0 0 1.41 1.41l1.59-1.59a1 1 0 0 1 1.41 1.41l-1.59 1.59a3 3 0 0 1-2.12.89zm10-10a3 3 0 0 1-2.12 5.12 1 1 0 0 1-.71-.29 1 1 0 0 1 0-1.41 1 1 0 0 0 0-1.41 1 1 0 0 0-1.41 0l-3 3a1 1 0 0 1-1.41-1.41l3-3a3 3 0 0 1 4.24 0 3 3 0 0 1 1.41 1.41z"/></svg>
+						<span class="cp-label">Copy link</span>
+					</button>
+				</div>
+			</section>
 			<nav class="prevnext" aria-label="Journal navigation">
 				<div>
 					{prev ? (
 						<a href={`/journal/${prev.slug}/`}>
 							<span class="label">&larr; previous</span>
-							<span>{shortDay(prev.date)} · {shortTitle(prev.summary)}</span>
+							<span><FormattedDate date={prev.date} short weekday /> · {prev.title ?? shortTitle(prev.summary)}</span>
 						</a>
 					) : (
 						<span class="placeholder">No earlier entry</span>
@@ -321,7 +352,7 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 					{next ? (
 						<a href={`/journal/${next.slug}/`}>
 							<span class="label">next &rarr;</span>
-							<span>{shortDay(next.date)} · {shortTitle(next.summary)}</span>
+							<span><FormattedDate date={next.date} short weekday /> · {next.title ?? shortTitle(next.summary)}</span>
 						</a>
 					) : (
 						<span class="placeholder">Latest entry</span>
@@ -357,6 +388,36 @@ const waShareHref = `https://wa.me/?text=${waShareText}`;
 				}
 				window.addEventListener('scroll', check, { passive: true });
 				window.addEventListener('load', check);
+
+				// Copy-link share button
+				document.querySelectorAll('button.cp').forEach(function (btn) {
+					btn.addEventListener('click', function () {
+						var url = btn.getAttribute('data-url');
+						if (!url) return;
+						var done = function () {
+							var label = btn.querySelector('.cp-label');
+							if (label) label.textContent = 'Copied';
+							btn.classList.add('copied');
+							setTimeout(function () {
+								if (label) label.textContent = 'Copy link';
+								btn.classList.remove('copied');
+							}, 1500);
+						};
+						if (navigator.clipboard && navigator.clipboard.writeText) {
+							navigator.clipboard.writeText(url).then(done, function () {});
+						} else {
+							var ta = document.createElement('textarea');
+							ta.value = url;
+							document.body.appendChild(ta);
+							ta.select();
+							try { document.execCommand('copy'); done(); } catch (e) {}
+							document.body.removeChild(ta);
+						}
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('share_copy_link', { path: window.location.pathname });
+						}
+					});
+				});
 			})();
 		</script>
 	</body>
