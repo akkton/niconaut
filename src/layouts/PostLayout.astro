@@ -2,13 +2,15 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import FeedbackBlock from '../components/FeedbackBlock.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
-type Props = CollectionEntry<'posts'>['data'];
+type Props = CollectionEntry<'posts'>['data'] & { slug: string };
 
-const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, slug } = Astro.props;
+const postPath = `/posts/${slug}/`;
 ---
 
 <html lang="en">
@@ -117,6 +119,11 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
 				<div class="prose">
 					<slot />
 				</div>
+				<FeedbackBlock
+					headline={title}
+					articleType="post"
+					path={postPath}
+				/>
 			</article>
 		</main>
 		<Footer />

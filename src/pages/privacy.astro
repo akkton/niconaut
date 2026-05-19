@@ -75,8 +75,12 @@ import { SITE_TITLE } from '../consts';
 			</p>
 			<p>
 				The events I capture, end-to-end: <code>$pageview</code>, <code>outbound_link_click</code>,
-				<code>article_read_50</code>, <code>share_copy_link</code>. That's the full list. The point of
-				tracking is to know whether anyone actually reads what I post, not to build a profile.
+				<code>article_read_25</code>, <code>article_read_50</code>, <code>article_read_75</code>,
+				<code>article_read_100</code>, <code>share_whatsapp</code>, <code>share_x</code>,
+				<code>share_linkedin</code>, <code>share_email</code>, <code>share_copy_link</code>,
+				<code>newsletter_signup_intent</code>, <code>feedback_reaction</code> (with the reaction value),
+				<code>feedback_open</code>, <code>feedback_page_submit_intent</code>. That's the full list. The
+				point of tracking is to know whether anyone actually reads what I post, not to build a profile.
 			</p>
 
 			<h2>Newsletter</h2>
@@ -86,10 +90,15 @@ import { SITE_TITLE } from '../consts';
 				else. Unsubscribe at any time by replying to any email with the word "stop."
 			</p>
 
-			<h2>Comments and replies</h2>
+			<h2>Comments, reactions, and replies</h2>
 			<p>
-				There are no comments on this blog. Replies happen by email or on the social
-				accounts linked in the footer.
+				There is no traditional comments section. At the bottom of every post and journal
+				entry there are three reaction buttons ("resonates" / "didn't land" / "want to say more")
+				and a standalone <a href="/feedback/">/feedback</a> page with a textarea. The two
+				one-tap reactions fire an anonymous PostHog event with the entry path and the reaction
+				value. The "want to say more" button and the /feedback form both open your email client
+				with a pre-filled message that lands in my inbox — they do not POST anywhere on this
+				site. Replies still happen by email or on the social accounts linked in the footer.
 			</p>
 
 			<h2>The source</h2>
@@ -116,6 +125,9 @@ import { SITE_TITLE } from '../consts';
 			</p>
 
 			<p class="updated">Last updated 2026-05-19</p>
+
+			<!-- Note: updated 2026-05-19 evening to add the feedback events and reflect the new feedback feature. -->
+
 		</main>
 		<Footer />
 	</body>

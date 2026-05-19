@@ -1,0 +1,126 @@
+---
+type Props = {
+	headline: string;
+	articleType: 'journal' | 'post';
+	path: string;
+};
+
+const { headline, articleType, path } = Astro.props as Props;
+
+const mailSubject = `Re: ${headline}`;
+const mailBody = `\n\n----\nIn response to: https://nicolasneumann.blog${path}`;
+---
+
+<section class="feedback" aria-label="Feedback on this entry" data-path={path} data-article-type={articleType}>
+	<div class="feedback-prompt">How did this land?</div>
+	<div class="feedback-buttons">
+		<button class="fb fb-resonates" type="button" data-reaction="resonates">resonates</button>
+		<button class="fb fb-didnt" type="button" data-reaction="didnt_land">didn't land</button>
+		<button class="fb fb-more" type="button" data-subject={mailSubject} data-body={mailBody}>want to say more</button>
+	</div>
+	<div class="feedback-thanks" hidden>noted, thanks for the read.</div>
+</section>
+
+<style>
+	.feedback {
+		margin: 2.5em 0 0 0;
+		padding: 1.25em 0 0 0;
+		border-top: 1px solid var(--rule);
+	}
+	.feedback-prompt {
+		font-size: 0.72rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--ink-faint);
+		margin: 0 0 0.65em 0;
+	}
+	.feedback-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+	button.fb {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.4em 0.85em;
+		border: 1px solid var(--rule);
+		background: var(--bg);
+		color: var(--ink-muted);
+		font: inherit;
+		font-size: 12px;
+		cursor: pointer;
+		letter-spacing: 0.01em;
+		transition: color 0.12s ease, border-color 0.12s ease, background 0.12s ease, opacity 0.2s ease;
+	}
+	button.fb:hover {
+		color: var(--ink);
+		border-color: var(--ink);
+	}
+	button.fb.reacted {
+		color: var(--ink);
+		border-color: var(--ink);
+		background: #f5f5f5;
+		cursor: default;
+	}
+	button.fb.faded {
+		opacity: 0.3;
+		pointer-events: none;
+	}
+	.feedback-thanks {
+		margin-top: 0.85em;
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-faint);
+		letter-spacing: 0.04em;
+	}
+</style>
+
+<script is:inline>
+	(function () {
+		document.querySelectorAll('section.feedback').forEach(function (section) {
+			var path = section.getAttribute('data-path') || window.location.pathname;
+			var articleType = section.getAttribute('data-article-type') || 'unknown';
+			var buttons = section.querySelectorAll('button.fb');
+			var thanks = section.querySelector('.feedback-thanks');
+			var reacted = false;
+
+			buttons.forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					var reaction = btn.getAttribute('data-reaction');
+
+					if (reaction === 'resonates' || reaction === 'didnt_land') {
+						if (reacted) return;
+						reacted = true;
+						btn.classList.add('reacted');
+						buttons.forEach(function (other) {
+							if (other !== btn && other.getAttribute('data-reaction') !== null) {
+								other.classList.add('faded');
+							}
+						});
+						if (thanks) thanks.hidden = false;
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('feedback_reaction', {
+								path: path,
+								article_type: articleType,
+								reaction: reaction,
+							});
+						}
+					} else {
+						// "want to say more" — open mailto, fire intent event
+						var subj = btn.getAttribute('data-subject') || '';
+						var body = btn.getAttribute('data-body') || '';
+						var href = 'mailto:neumanic2@gmail.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+						window.location.href = href;
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('feedback_open', {
+								path: path,
+								article_type: articleType,
+							});
+						}
+					}
+				});
+			});
+		});
+	})();
+</script>

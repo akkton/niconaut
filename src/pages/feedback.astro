@@ -1,0 +1,233 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Feedback · ${SITE_TITLE}`} description="Send a thought, ask a question, push back. Anything you've got." />
+		<style>
+			.page-head {
+				margin: 0 0 2em 0;
+			}
+			.page-head h1 {
+				margin: 0 0 0.4em 0;
+				font-size: 2rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+			}
+			.page-head p {
+				margin: 0;
+				color: var(--ink-muted);
+				font-size: 0.95rem;
+				line-height: 1.55;
+				max-width: 58ch;
+			}
+
+			form.feedback-form {
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 1.25em;
+			}
+			label.field-label {
+				display: block;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				font-weight: 600;
+				color: var(--ink-faint);
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				margin: 0 0 0.5em 0;
+			}
+			textarea.fb-message {
+				display: block;
+				width: 100%;
+				min-height: 180px;
+				padding: 0.85em 1em;
+				border: 1px solid var(--rule-strong);
+				background: var(--bg);
+				color: var(--ink);
+				font: inherit;
+				font-size: 15px;
+				line-height: 1.55;
+				resize: vertical;
+				box-sizing: border-box;
+			}
+			textarea.fb-message:focus {
+				outline: none;
+				border-color: var(--ink);
+			}
+			input.fb-email {
+				display: block;
+				width: 100%;
+				padding: 0.65em 1em;
+				border: 1px solid var(--rule-strong);
+				background: var(--bg);
+				color: var(--ink);
+				font: inherit;
+				font-size: 14px;
+				box-sizing: border-box;
+			}
+			input.fb-email:focus {
+				outline: none;
+				border-color: var(--ink);
+			}
+			.field-hint {
+				margin: 0.4em 0 0 0;
+				font-size: 11.5px;
+				color: var(--ink-faint);
+				line-height: 1.45;
+			}
+			.actions {
+				display: flex;
+				gap: 0.75em;
+				align-items: center;
+				flex-wrap: wrap;
+			}
+			button.fb-submit {
+				display: inline-flex;
+				align-items: center;
+				padding: 0.65em 1.4em;
+				border: 1px solid var(--ink);
+				background: var(--ink);
+				color: var(--bg);
+				font: inherit;
+				font-size: 13px;
+				font-weight: 500;
+				letter-spacing: 0.02em;
+				cursor: pointer;
+				transition: opacity 0.12s ease;
+			}
+			button.fb-submit:hover {
+				opacity: 0.85;
+			}
+			button.fb-submit:disabled {
+				opacity: 0.4;
+				cursor: not-allowed;
+			}
+			.fallback {
+				font-size: 12px;
+				color: var(--ink-faint);
+				line-height: 1.5;
+			}
+			.fallback a {
+				color: var(--ink-muted);
+			}
+			.fallback a:hover {
+				color: var(--ink);
+			}
+
+			.confirm {
+				margin-top: 2em;
+				padding: 1.25em;
+				border: 1px solid var(--rule-strong);
+				background: #f5f5f5;
+				font-size: 14px;
+				line-height: 1.6;
+				color: var(--ink);
+			}
+			.confirm strong {
+				font-weight: 600;
+			}
+			.confirm a {
+				color: var(--ink);
+				text-decoration: underline;
+			}
+			.confirm[hidden] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>Feedback</h1>
+				<p>
+					Send a thought, ask a question, push back. Anything you have got. The form opens
+					your email client so you can hit send from your own address. No accounts,
+					no third-party form provider.
+				</p>
+			</section>
+
+			<form class="feedback-form" id="feedback-form" novalidate>
+				<div>
+					<label class="field-label" for="fb-message">Your thought</label>
+					<textarea
+						id="fb-message"
+						class="fb-message"
+						placeholder="Type away. Plain text is fine."
+						required
+					></textarea>
+				</div>
+
+				<div>
+					<label class="field-label" for="fb-email">Your email <span style="text-transform: none; letter-spacing: 0; font-weight: 400;">(optional)</span></label>
+					<input
+						id="fb-email"
+						class="fb-email"
+						type="email"
+						placeholder="you@example.com"
+						autocomplete="email"
+					/>
+					<p class="field-hint">Only if you want a reply. Otherwise leave blank.</p>
+				</div>
+
+				<div class="actions">
+					<button class="fb-submit" type="submit" id="fb-submit-btn">Send</button>
+					<span class="fallback">
+						If your email client does not open, copy the message and write directly to
+						<a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
+					</span>
+				</div>
+			</form>
+
+			<div class="confirm" id="fb-confirm" hidden>
+				<strong>Your email client should have opened.</strong>
+				If nothing happened, paste your message and write directly to
+				<a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
+			</div>
+		</main>
+		<Footer />
+
+		<script is:inline>
+			(function () {
+				var form = document.getElementById('feedback-form');
+				if (!form) return;
+				var submitBtn = document.getElementById('fb-submit-btn');
+				var confirmBox = document.getElementById('fb-confirm');
+				form.addEventListener('submit', function (e) {
+					e.preventDefault();
+					var msg = document.getElementById('fb-message');
+					var emailEl = document.getElementById('fb-email');
+					var text = msg && msg.value ? msg.value.trim() : '';
+					var email = emailEl && emailEl.value ? emailEl.value.trim() : '';
+					if (!text) {
+						if (msg) msg.focus();
+						return;
+					}
+					var body = text;
+					if (email) {
+						body += '\n\n----\nReply to: ' + email;
+					}
+					var subject = '[Blog feedback]';
+					var href = 'mailto:neumanic2@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+					window.location.href = href;
+					if (confirmBox) confirmBox.hidden = false;
+					if (submitBtn) submitBtn.disabled = true;
+					if (window.posthog && typeof window.posthog.capture === 'function') {
+						window.posthog.capture('feedback_page_submit_intent', {
+							path: window.location.pathname,
+							has_email: !!email,
+							message_length: text.length,
+						});
+					}
+				});
+			})();
+		</script>
+	</body>
+</html>
