@@ -1,0 +1,106 @@
+---
+title: "222 hours of focus since February"
+description: I started tracking my work on Rize on Feb 1, 2026. Five months in, the lifetime view says 222 hours and the daily widgets say 50. Both numbers are true at the same time. Here is what the gap, and the data underneath both, actually says.
+pubDate: 2026-05-19
+tags: [rize, focus, time-tracking, journal]
+draft: false
+---
+
+I started tracking my work with Rize on Feb 1, 2026.
+
+Five months later, the lifetime view of the tool says 222 hours. The daily widgets across the last six days I tracked, summed together, say 50. Both numbers are true at the same time. They use different aggregators on the same underlying data, and they disagree on purpose. Most of the interesting thing about screen-time data is what happens in the gap.
+
+Here is the data, what it taught me, and what I would change instrumentally if I were starting over.
+
+## The reactivation arc
+
+Five months by month:
+
+| Month | Hours tracked |
+|-------|---------------|
+| January | 0 |
+| February | 150 |
+| March | 40 |
+| April | 0 |
+| May (to date) | 32 |
+
+Feb is the headline. I was scoping and building the OneProposal engine end-to-end. 150 hours in 28 days is roughly 5h 20m of tracked focus per calendar day, which lines up with what I remember.
+
+Mar drops to 40. The activation tax of "I'll open Rize after this one thing" took over, and by the third week I had stopped checking it most days.
+
+Apr is zero. I was in Berlin, off the laptop for stretches of days, helping with a family thing, and then in transit to Brazil. Not a tracking failure. A real off-laptop month.
+
+May (so far): 32 hours from one Rize aggregator, 50 from another, depending on which view you read. The reactivation happened on May 14, the day I sat at the new desk in Brazil. The first action of the day was turning the tracker back on. The decision was just that one decision.
+
+The shape: two months on, one month off, one month off, reactivated. Whatever I want to believe about consistency, the chart says the truth.
+
+## Where the time actually goes
+
+The five tracked May days, one row each:
+
+| Day | Focus time | Top category | Top app |
+|-----|-----------|--------------|---------|
+| May 14 (Day 1) | 6h 17m | Code 40% | VS Code 2h 29m |
+| May 15 (Day 2) | 8h 52m | Code 37% | VS Code 3h 15m |
+| May 16 (Day 3) | 9h 22m | Code 34% | VS Code 3h 11m |
+| May 17 (Day 4) | 12h 3m | Code 43% | VS Code 5h 7m |
+| May 18 (Day 5) | 14h 4m | Code 44% | VS Code 5h 32m |
+
+The thing that holds these days together is that Code dominates every one. The "Code" bucket is 30 to 44 percent of every tracked day in May. The variance is in what fills the other 60 percent.
+
+Day 1 had a quarter of the day in "Productivity" (the Rize bucket for admin, system setup, paperwork) because it was an arrival day. Day 2 had Messaging at 14 percent because the client work was remote and synchronous. Day 3 had Meeting and Social Media spiking because it was OneProposal launch-prep, which is half product work and half distribution work. Day 4 had Sales appearing for the first time, the day OneProposal went live. Day 5 was the widest spread of any day, an "infrastructure on every layer" day across three projects at once.
+
+The shape of the day shows up in the bar.
+
+## The long tail of apps
+
+VS Code dominates the app picture, around 19 hours across five days. That is the foreground. The second-order time is more interesting:
+
+- **Lovable** at about 4 hours and 12 minutes. The scaffold-it-fast runway. Most rapid iteration starts here.
+- **WhatsApp** at about 3 hours and 14 minutes. Messaging is part of work in Brazil, not a context switch.
+- **Instagram** at about 2 hours. Not casual scroll. Content distribution and product positioning.
+- **oneproposal.app** at about 1 hour and 49 minutes. Time spent in the product I am building, watching it work.
+- **YouTube** at 1 hour and 11 minutes on a single day (May 18). Background noise while building, plus some real attention. Honest about this.
+- **Rize** itself at 26 minutes. The tool measuring itself.
+- **nicolasneumann.blog** at 29 minutes. The blog tracking the blog tracking itself.
+
+The third-order surface is the long tail. namecheap.com for 21 minutes on Day 2 (domain purchase). posthog.com for 17 minutes (instrumentation). upwork.com for 19 minutes (the client thread). claude.ai for 23 minutes one day, 2 minutes another. Each one is an actual decision left in the log.
+
+## The 14-hour day and the 0-hour month
+
+Both are honest.
+
+The 14-hour day on May 18 was a build-heavy session split across three projects, with a Jiu Jitsu break in the middle and the Inoki conversation in the afternoon. I was at the laptop for most of the waking day. Some of those 14 hours were real deep work. Some of it was the kind of presence that is technically work but emotionally not. The tool does not distinguish.
+
+The 0-hour month in April was a real off-laptop month. I was helping family, traveling, in transit, in airports, in different time zones. The tool did not fail. I just was not at a screen for stretches long enough to leave a track.
+
+Two truths from the same instrument. The point is the tool only knows what is in front of the camera.
+
+## What I would change instrumentally
+
+A few things, after a few weeks back in the routine:
+
+- A **deep-work classifier**, where three or more continuous minutes in VS Code with no app-switch counts as deep work and an under-three-minute span counts as "flow attempted but did not catch." The current Code category is a single bucket that conflates these.
+- Better **granularity in the Product bucket**, which currently conflates spec writing, design, scoping, and product walkthrough. They all show up the same. They are different.
+- **Auto-pause when the laptop closes for more than five minutes**, which is currently a manual action and easy to forget.
+- An **expected-vs-actual overlay** for daily targets. The journal entries each carry a `targets` list. The Rize data does not yet know about that list. Pulling them together would let the end-of-day reflection do its work without me having to do the cross-reference manually.
+
+These are wish-list items, not complaints. The tool is already doing more than I knew to ask for.
+
+## The 50-hour and the 222-hour figure, reconciled
+
+The 50-hour number is the sum of daily widgets across the six tracked entries in May. The daily widget aggregator includes manually-added in-person time (a workshop, a meeting at a desk, an entry I logged after the fact).
+
+The 222-hour number comes from Rize's annual Team Report PDF export. That aggregator is stricter and does not include the manual-add layer. It also weights time differently across categories where the SDK does not have direct attribution.
+
+Same data, two views. The methodology footer at the bottom of [`/work`](/work) walks through this in more detail.
+
+## What the data confirmed
+
+Less than what it surprised me with.
+
+The build days are when Code goes wide. The meeting days are when Code goes thin and Messaging or Social Media takes the slot. The travel weeks are zero. The first day back is half what a real working day looks like. The fifth day back is double.
+
+The chart confirms what I already suspect about the shape of my own work. The thing it does that intuition does not is hold me to the truth when I am tempted to round up. That is the entire point.
+
+The instrument keeps showing up. I will keep coming back to it.

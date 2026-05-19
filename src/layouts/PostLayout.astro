@@ -122,22 +122,27 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
 		<Footer />
 		<script is:inline>
 			(function () {
-				var fired = false;
+				var thresholds = [0.25, 0.5, 0.75, 1.0];
+				var labels = { 0.25: 'article_read_25', 0.5: 'article_read_50', 0.75: 'article_read_75', 1.0: 'article_read_100' };
+				var fired = {};
 				function check() {
-					if (fired) return;
 					var scrolled = window.scrollY + window.innerHeight;
 					var total = document.documentElement.scrollHeight;
 					if (total <= 0) return;
-					if (scrolled / total >= 0.5) {
-						fired = true;
-						if (window.posthog && typeof window.posthog.capture === 'function') {
-							window.posthog.capture('article_read_50', {
-								path: window.location.pathname,
-								article_type: 'post',
-							});
+					var ratio = scrolled / total;
+					for (var i = 0; i < thresholds.length; i++) {
+						var t = thresholds[i];
+						if (!fired[t] && ratio >= t) {
+							fired[t] = true;
+							if (window.posthog && typeof window.posthog.capture === 'function') {
+								window.posthog.capture(labels[t], {
+									path: window.location.pathname,
+									article_type: 'post',
+								});
+							}
 						}
-						window.removeEventListener('scroll', check);
 					}
+					if (fired[1.0]) window.removeEventListener('scroll', check);
 				}
 				window.addEventListener('scroll', check, { passive: true });
 				window.addEventListener('load', check);

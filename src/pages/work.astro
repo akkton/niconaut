@@ -108,6 +108,34 @@ if (allEntries.length > 0) {
 }
 const last7Max = Math.max(1, ...last7Days.map((d) => d.minutes));
 
+const dowOrder: { key: number; label: string }[] = [
+	{ key: 1, label: 'Mon' },
+	{ key: 2, label: 'Tue' },
+	{ key: 3, label: 'Wed' },
+	{ key: 4, label: 'Thu' },
+	{ key: 5, label: 'Fri' },
+	{ key: 6, label: 'Sat' },
+	{ key: 0, label: 'Sun' },
+];
+const dowTotals: Record<number, { minutes: number; days: number }> = {
+	0: { minutes: 0, days: 0 },
+	1: { minutes: 0, days: 0 },
+	2: { minutes: 0, days: 0 },
+	3: { minutes: 0, days: 0 },
+	4: { minutes: 0, days: 0 },
+	5: { minutes: 0, days: 0 },
+	6: { minutes: 0, days: 0 },
+};
+for (const entry of allEntries) {
+	const fmins = parseFocusToMinutes(entry.data.focusTime);
+	if (fmins > 0) {
+		const dow = entry.data.date.getUTCDay();
+		dowTotals[dow].minutes += fmins;
+		dowTotals[dow].days += 1;
+	}
+}
+const dowMax = Math.max(1, ...Object.values(dowTotals).map((v) => v.minutes));
+
 const totalFocusLabel = formatHoursOnly(totalFocusMinutes);
 const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 ---
@@ -298,6 +326,13 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 			.empty {
 				color: var(--ink-faint);
 				font-style: italic;
+			}
+			.dow-caption {
+				margin: 1em 0 0 0;
+				color: var(--ink-muted);
+				font-size: 13px;
+				line-height: 1.55;
+				max-width: 60ch;
 			}
 
 			.lifetime {
@@ -514,6 +549,34 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 						))}
 					</div>
 				)}
+			</section>
+
+			<section class="block">
+				<div class="block-head">
+					<h2>By day of week</h2>
+					<span class="meta">aggregated across {entriesWithFocus} tracked {entriesWithFocus === 1 ? 'day' : 'days'}</span>
+				</div>
+				<div class="week-strip">
+					{dowOrder.map((d) => {
+						const t = dowTotals[d.key];
+						const hasData = t.days > 0;
+						return (
+							<div class:list={["week-cell", { empty: !hasData }]}>
+								<div class="week-bar">
+									<div
+										class="week-bar-fill"
+										style={`height: ${hasData ? Math.max(4, (t.minutes / dowMax) * 100) : 0}%`}
+									></div>
+								</div>
+								<span class="week-day">{d.label}</span>
+								<span class="week-min">{hasData ? formatMinutes(t.minutes) : '·'}</span>
+							</div>
+						);
+					})}
+				</div>
+				<p class="dow-caption">
+					Hours of tracked focus summed by weekday across every tracked entry. Sparse early; gets richer as the log grows.
+				</p>
 			</section>
 
 			<section class="lifetime" aria-label="Lifetime tracking">

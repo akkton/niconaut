@@ -42,15 +42,17 @@ const shortTitle = (s: string) => {
 };
 
 const entryUrl = `https://nicolasneumann.blog/journal/${isoDate}/`;
+const shareUrl = (source: string) => `${entryUrl}?utm_source=share_${source}&utm_medium=share`;
 const headline = title ?? shortTitle(summary);
-const tweetText = `${headline} — nicolasneumann.blog`;
-const waText = encodeURIComponent(`${headline}\n\n${entryUrl}`);
+const tweetText = `${headline}, nicolasneumann.blog`;
+const waText = encodeURIComponent(`${headline}\n\n${shareUrl('whatsapp')}`);
 const xText = encodeURIComponent(tweetText);
-const xHref = `https://twitter.com/intent/tweet?text=${xText}&url=${encodeURIComponent(entryUrl)}`;
-const liHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(entryUrl)}`;
+const xHref = `https://twitter.com/intent/tweet?text=${xText}&url=${encodeURIComponent(shareUrl('x'))}`;
+const liHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl('linkedin'))}`;
 const mailSubject = `Nico's journal · ${headline}`;
-const mailBody = `${summary}\n\n${entryUrl}`;
+const mailBody = `${summary}\n\n${shareUrl('email')}`;
 const waHref = `https://wa.me/?text=${waText}`;
+const copyUrl = shareUrl('copylink');
 ---
 
 <html lang="en">
@@ -316,7 +318,7 @@ const waHref = `https://wa.me/?text=${waText}`;
 						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.24-8 4.99-8-4.99V6l8 4.99L20 6v2.24z"/></svg>
 						Email
 					</button>
-					<button class="cp" data-url={entryUrl} aria-label="Copy link to this entry">
+					<button class="cp" data-url={copyUrl} aria-label="Copy link to this entry">
 						<svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13"><path fill="currentColor" d="M10.59 13.41a1 1 0 0 1 0-1.41l3-3a1 1 0 0 1 1.41 1.41l-3 3a1 1 0 0 1-1.41 0zm-3.59 5.59a3 3 0 0 1-2.12-5.12l3-3a3 3 0 0 1 4.24 0 1 1 0 1 1-1.41 1.41 1 1 0 0 0-1.41 0l-3 3a1 1 0 0 0 1.41 1.41l1.59-1.59a1 1 0 0 1 1.41 1.41l-1.59 1.59a3 3 0 0 1-2.12.89zm10-10a3 3 0 0 1-2.12 5.12 1 1 0 0 1-.71-.29 1 1 0 0 1 0-1.41 1 1 0 0 0 0-1.41 1 1 0 0 0-1.41 0l-3 3a1 1 0 0 1-1.41-1.41l3-3a3 3 0 0 1 4.24 0 3 3 0 0 1 1.41 1.41z"/></svg>
 						<span class="cp-label">Copy link</span>
 					</button>
@@ -354,22 +356,27 @@ const waHref = `https://wa.me/?text=${waText}`;
 		<Footer />
 		<script is:inline>
 			(function () {
-				var fired = false;
+				var thresholds = [0.25, 0.5, 0.75, 1.0];
+				var labels = { 0.25: 'article_read_25', 0.5: 'article_read_50', 0.75: 'article_read_75', 1.0: 'article_read_100' };
+				var fired = {};
 				function check() {
-					if (fired) return;
 					var scrolled = window.scrollY + window.innerHeight;
 					var total = document.documentElement.scrollHeight;
 					if (total <= 0) return;
-					if (scrolled / total >= 0.5) {
-						fired = true;
-						if (window.posthog && typeof window.posthog.capture === 'function') {
-							window.posthog.capture('article_read_50', {
-								path: window.location.pathname,
-								article_type: 'journal',
-							});
+					var ratio = scrolled / total;
+					for (var i = 0; i < thresholds.length; i++) {
+						var t = thresholds[i];
+						if (!fired[t] && ratio >= t) {
+							fired[t] = true;
+							if (window.posthog && typeof window.posthog.capture === 'function') {
+								window.posthog.capture(labels[t], {
+									path: window.location.pathname,
+									article_type: 'journal',
+								});
+							}
 						}
-						window.removeEventListener('scroll', check);
 					}
+					if (fired[1.0]) window.removeEventListener('scroll', check);
 				}
 				window.addEventListener('scroll', check, { passive: true });
 				window.addEventListener('load', check);
