@@ -10,6 +10,17 @@ const allEntries = (await getCollection('journal', ({ data }) => !data.draft)).s
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
+const workflowPosts = (
+	await getCollection('posts', ({ data }) => !data.draft && data.tags.includes('workflow'))
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const postDateFormat = new Intl.DateTimeFormat('en-us', {
+	month: 'short',
+	day: 'numeric',
+	year: 'numeric',
+	timeZone: 'UTC',
+});
+
 // Lifetime view: sourced from public/rize-lifetime.json, which is updated
 // whenever a new Rize Team Report export lands. The JSON file is also served
 // publicly at /rize-lifetime.json. The daily-widget totals rendered below
@@ -433,6 +444,57 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 			}
 			.methodology strong { color: var(--ink-muted); font-weight: 600; }
 
+			.workflow-intro {
+				margin: 0 0 1.25em 0;
+				color: var(--ink-muted);
+				font-size: 13.5px;
+				line-height: 1.55;
+				max-width: 60ch;
+			}
+			ul.workflow-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			ul.workflow-list li {
+				padding: 0.9em 0;
+				border-bottom: 1px solid var(--rule);
+			}
+			ul.workflow-list li:last-child {
+				border-bottom: none;
+			}
+			.workflow-link {
+				display: grid;
+				grid-template-columns: 1fr auto;
+				gap: 0.4em 1em;
+				align-items: baseline;
+				text-decoration: none;
+				color: inherit;
+			}
+			.workflow-link:hover .workflow-title {
+				color: var(--link-hover);
+			}
+			.workflow-title {
+				font-size: 15px;
+				font-weight: 600;
+				color: var(--ink);
+				letter-spacing: -0.005em;
+			}
+			.workflow-date {
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				font-variant-numeric: tabular-nums;
+				white-space: nowrap;
+			}
+			.workflow-desc {
+				grid-column: 1 / -1;
+				margin: 0.25em 0 0 0;
+				color: var(--ink-muted);
+				font-size: 13px;
+				line-height: 1.5;
+			}
+
 			@media (max-width: 720px) {
 				.summary-grid { grid-template-columns: 1fr 1fr; }
 				.apps-grid { grid-template-columns: 1fr; }
@@ -578,6 +640,29 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 					Hours of tracked focus summed by weekday across every tracked entry. Sparse early; gets richer as the log grows.
 				</p>
 			</section>
+
+			{workflowPosts.length > 0 && (
+				<section class="block" aria-label="How I work">
+					<div class="block-head">
+						<h2>How I work</h2>
+						<span class="meta">{workflowPosts.length} {workflowPosts.length === 1 ? 'post' : 'posts'}</span>
+					</div>
+					<p class="workflow-intro">
+						Longer posts about the tools and habits behind the hours above.
+					</p>
+					<ul class="workflow-list">
+						{workflowPosts.map((post) => (
+							<li>
+								<a class="workflow-link" href={`/posts/${post.id}/`}>
+									<span class="workflow-title">{post.data.title}</span>
+									<span class="workflow-date">{postDateFormat.format(post.data.pubDate)}</span>
+									<p class="workflow-desc">{post.data.description}</p>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			)}
 
 			<section class="lifetime" aria-label="Lifetime tracking">
 				<div class="lifetime-head">
