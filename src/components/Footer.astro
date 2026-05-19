@@ -4,7 +4,7 @@ const today = new Date();
 
 <footer>
 	<div class="inner">
-		<div class="copy">&copy; {today.getFullYear()} Nicolas Neumann</div>
+		<div class="copy">&copy; {today.getFullYear()} Nicolas Neumann · <a class="rss" href="/rss.xml">RSS</a></div>
 		<div class="social-links">
 			<a href="https://www.linkedin.com/in/nicolas-neumann-520736286/" target="_blank" rel="noopener" aria-label="Nico on LinkedIn">
 				<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
@@ -48,6 +48,14 @@ const today = new Date();
 	.copy {
 		color: var(--ink-faint);
 		letter-spacing: 0.01em;
+	}
+	.copy a.rss {
+		color: var(--ink-faint);
+		text-decoration: underline;
+		text-decoration-color: var(--rule);
+	}
+	.copy a.rss:hover {
+		color: var(--ink);
 	}
 	.social-links {
 		display: flex;
