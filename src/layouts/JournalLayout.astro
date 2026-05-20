@@ -393,11 +393,11 @@ const copyUrl = shareUrl('copylink');
 					btn.addEventListener('click', function () {
 						var subj = btn.getAttribute('data-subject') || '';
 						var body = btn.getAttribute('data-body') || '';
-						var href = 'mailto:?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-						window.location.href = href;
 						if (window.posthog && typeof window.posthog.capture === 'function') {
 							window.posthog.capture('share_email', { path: window.location.pathname });
 						}
+						var href = 'mailto:?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+						window.location.href = href;
 					});
 				});
 

@@ -127,14 +127,14 @@ const mailBody = `\n\n----\nIn response to: https://nicolasneumann.blog${path}`;
 						// "want to say more" — open mailto, fire intent event
 						var subj = btn.getAttribute('data-subject') || '';
 						var body = btn.getAttribute('data-body') || '';
-						var href = 'mailto:neumanic2@gmail.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-						window.location.href = href;
 						if (window.posthog && typeof window.posthog.capture === 'function') {
 							window.posthog.capture('feedback_open', {
 								path: path,
 								article_type: articleType,
 							});
 						}
+						var href = 'mailto:neumanic2@gmail.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+						window.location.href = href;
 					}
 				});
 			});

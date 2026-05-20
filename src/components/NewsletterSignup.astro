@@ -159,13 +159,13 @@
 				'Email: ' + email + '\nPreference: ' + pref + '\n\n' +
 				'(Sent from nicolasneumann.blog newsletter signup form.)',
 			);
-			var href = 'mailto:neumanic2@gmail.com?subject=' + subject + '&body=' + body;
-			window.location.href = href;
-			var confirm = form.querySelector('.confirm');
-			if (confirm) confirm.hidden = false;
 			if (window.posthog && typeof window.posthog.capture === 'function') {
 				window.posthog.capture('newsletter_signup_intent', { preference: pref });
 			}
+			var confirm = form.querySelector('.confirm');
+			if (confirm) confirm.hidden = false;
+			var href = 'mailto:neumanic2@gmail.com?subject=' + subject + '&body=' + body;
+			window.location.href = href;
 		});
 	})();
 </script>
