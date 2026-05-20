@@ -10,11 +10,11 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { personSchema } from '../lib/jsonld';
 import aboutImg from '../assets/blog-placeholder-about.jpg';
 
-const recentJournal = (await getCollection('journal', ({ data }) => !data.draft))
+const recentJournal = (await getCollection('journal', ({ data }) => !data.draft && data.lang === 'en'))
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 	.slice(0, 6);
 
-const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
+const recentPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3);
 ---

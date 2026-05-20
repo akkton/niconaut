@@ -1,0 +1,97 @@
+---
+title: "Wie mein Agenten-System wirklich funktioniert"
+description: "Ein Live-Durchlauf, den ich heute einer Kundin gegeben habe, aufgeschrieben. Was wo sitzt, warum ein leerer Arbeitsbereich plus KI nicht das System ist, und ein Start-Prompt zum Einfügen für deinen eigenen Anfang."
+pubDate: 2026-05-19
+tags: [workflow, agents, claude-code, vs-code, n8n]
+draft: false
+lang: de
+translationKey: "how-the-agentic-system-works"
+---
+
+Eine Kundin hat mich heute gefragt, wie mein Setup funktioniert.
+
+Sie hat eine Aufgabe zu automatisieren (Bug-Eingang aus Sentry, Triage mit einem LLM, Ticket-Erstellung in Jira, Benachrichtigung in Slack) und wollte wissen, wie ich das bauen würde. Wir haben am Ende eine Stunde am Bildschirm verbracht. Mir wurde klar, dass ich dasselbe erklärte, wonach ich jede Woche gefragt werde.
+
+Hier ist die schriftliche Version.
+
+## Die drei Teile
+
+Es gibt drei Komponenten. Keine davon ist für sich genommen clever. Die Arbeit steckt darin, wie sie nebeneinander sitzen.
+
+1. **Ein IDE.** Ich nutze VS Code. Jeder Editor mit Agenten-Integration funktioniert. Das IDE ist dort, wo die Dateien leben, wo die Änderungen passieren, wo der Agent tatsächlich etwas tun kann, statt nur darüber zu reden.
+2. **Ein Agent im IDE.** Ich nutze Claude Code. Der Agent liest und schreibt Dateien, führt Befehle aus und spricht über Werkzeuge mit externen Systemen. Es ist kein Chatbot. Es ist ein Prozess mit Händen.
+3. **Orchestratoren auf der anderen Seite.** n8n, Make, eigener Code auf einem Server. Der Agent verbindet sich mit ihnen und konfiguriert sie, damit die langlaufenden Automationen ohne mich laufen.
+
+Das Muster ist immer dasselbe. Du sitzt im IDE. Der Agent liest dein Projekt, stellt Fragen, bearbeitet Dateien, ruft APIs auf und meldet zurück. Wenn du etwas willst, das draußen in der Welt von allein läuft, geht der Agent hin und verdrahtet es im Orchestrator.
+
+## Warum ein leerer Arbeitsbereich plus KI nicht das System ist
+
+Das ist der Teil, den die meisten beim ersten Versuch übersehen.
+
+Du kannst Claude in einem Browser-Tab öffnen und es bitten, eine Automation zu bauen. Du kannst Claude Code in einem leeren Ordner öffnen und es ein Projekt aufsetzen lassen. Beides funktioniert ein bisschen und bricht schnell. Der Grund ist, dass das Modell keine Ahnung hat, wie deine Arbeit aussieht.
+
+Die Hälfte dessen, was ich jeden Tag mache, ist, die Hülle zu verbessern, in der der Agent sitzt. Eine Beschreibung, wie meine Projekte aufgebaut sind. Regeln, was zu tun ist, bevor er mir eine Frage stellt. Fähigkeiten, die in bestimmten Situationen geladen werden. Speicher, der über Sitzungen hinweg überlebt. Fest verdrahtete Prüfungen, die genau die Fehler abfangen, die der Agent vorher gemacht hat.
+
+Wenn mein Agent in etwas gut ist, liegt es meist daran, dass diese Hülle von zwanzig Sitzungen voller Fehler geformt wurde. Das Modell ist dasselbe Modell. Was sich geändert hat, ist die Hülle.
+
+Wenn du die Hülle überspringst und den Agenten auf reines Bauchgefühl laufen lässt, bekommst du das Ergebnis, das du von jedem Auftragnehmer ohne Kontext bekämst. Sie produzieren etwas. Es sieht vernünftig aus. Es ist auf subtile Weise falsch, auf eine Art, die du erst später bemerkst.
+
+## Wie ich ein neues Projekt tatsächlich beginne
+
+Die Kurzfassung: Ich lege eine einzige Markdown-Datei in den neuen Ordner, richte den Agenten darauf aus und lasse ihn den Rest aufsetzen.
+
+Die Datei beschreibt die Form des Projekts. Was es ist. Welches Problem es löst. Wie das Layout aussieht. Welche Regeln der Agent befolgen soll. Was "fertig" für eine typische Änderung bedeutet. Es sind zwei Seiten, nicht zehn.
+
+Der Agent liest die Datei, stellt seine Fragen und beginnt, die Struktur zu bauen. Die nächsten dreißig Minuten verbringe ich damit, das Aufgesetzte zu kritisieren. Die Kritik geht als neue Regeln zurück in die Markdown-Datei. Die nächste Sitzung ist schärfer, weil die vorige aufgeschrieben wurde.
+
+Nach sechs Monaten habe ich eine Hülle, die meine Stimme kennt, meine Projekte, meine Werkzeuge, meine Fehlerquellen. Die Arbeit daran summiert sich. Die Arbeit, die ich beim zwanzigsten Mal mit demselben Fehler gehabt hätte, nicht.
+
+## Die Falle
+
+Die Falle ist, den Agenten auf einer Infrastruktur laufen zu lassen, die du nicht verstehst.
+
+Er wird Dinge produzieren. Dateien tauchen auf. Workflows werden konfiguriert. APIs werden aufgerufen. Wenn du nicht lesen kannst, was er geschrieben hat, besitzt du nicht, was er gebaut hat. Beim ersten Mal, wenn etwas bricht, hast du nichts, woraus du debuggen kannst. Die Spur ist die Hülle plus der Code plus dein Verständnis von beidem. Nimm eines der drei weg, und du mietest nur ein Ergebnis.
+
+Die ehrliche Version von "mit KI schneller liefern" lautet: Du gibst die Zeit, die du sparst, dafür aus, das System zu bauen, das dir erlaubt, der Geschwindigkeit zu vertrauen. Das ist ein fairer Tausch. Kein kostenloser.
+
+## Ein Start-Prompt zum Einfügen
+
+Wenn du das heute ausprobieren willst, leg das Folgende in eine `CLAUDE.md`-Datei im Wurzelverzeichnis eines leeren Ordners, öffne sie in Claude Code und sag dem Agenten, er soll die Datei lesen und ein Gerüst vorschlagen. Bearbeite die Datei unterwegs. Sie soll wachsen.
+
+```markdown
+# Project
+
+What this is: [one sentence]
+Why it exists: [one sentence]
+What done looks like: [one sentence per milestone]
+
+## Stack
+
+Language: [e.g. TypeScript / Python / Go]
+Frameworks: [e.g. Astro, FastAPI, Hono]
+Hosting: [e.g. Cloudflare Pages, Railway, Vercel]
+External services: [e.g. Stripe, Supabase, Sentry, N8N]
+
+## How I work with the agent
+
+- Before asking me a question, try the obvious thing first.
+- After two failed attempts at the same fix, stop and explain what is happening.
+- Never run destructive commands without confirming.
+- When you make a change, tell me which files changed and why.
+- When you finish a task, summarize in one sentence.
+
+## House rules
+
+- No emojis in code or commits.
+- No em-dashes in any prose output.
+- Match the voice of existing files.
+- If a pattern exists in the codebase, reuse it instead of inventing a new one.
+```
+
+Diese Datei ist der Samen. Sie ist absichtlich kurz. Du ergänzt sie jedes Mal, wenn der Agent etwas tut, das du nicht wolltest, und jedes Mal, wenn er etwas tut, das du behalten willst.
+
+Das System ist nicht der Agent. Es ist das, was du darüber aufschreibst, wie du arbeitest, damit der Agent aufhört zu raten.
+
+---
+
+Wenn du mehr als den Samen willst, habe ich eine ausführlichere Version mit Installationsanleitung und der Struktur, die um diese Datei herum wächst, zusammengestellt. Siehe [richte deinen eigenen Agenten-Arbeitsbereich ein](/de/posts/set-up-your-own-agentic-workspace/) für die Anleitung und den Download.

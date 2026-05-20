@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Header from '../../../components/Header.astro';
+import { SITE_TITLE } from '../../../consts';
+import { LOCALES, useTranslations, type Locale } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+	return LOCALES.filter((l) => l !== 'en').map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+
+const blurb: Record<string, string> = {
+	pt: 'Textos mais longos sobre construir, aprender e empreender.',
+	de: 'Längere Beiträge über Bauen, Lernen und Unternehmertum.',
+};
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === lang)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t.headings.posts} · ${SITE_TITLE}`} description={blurb[lang]} />
+		<style>
+			.page-head { margin: 0 0 2.5em 0; }
+			.page-head h1 { margin: 0 0 0.35em 0; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+			.page-head p { margin: 0; color: var(--ink-muted); font-size: 0.95rem; line-height: 1.5; max-width: 55ch; }
+			ul.posts-list { list-style: none; margin: 0; padding: 0; }
+			ul.posts-list li { padding: 1em 0; border-bottom: 1px solid var(--rule); }
+			ul.posts-list li:last-child { border-bottom: none; }
+			ul.posts-list a { display: block; color: var(--ink); text-decoration: none; }
+			ul.posts-list a:hover .p-title { color: var(--link-hover); }
+			.p-title { margin: 0 0 0.2em 0; font-size: 1rem; font-weight: 600; }
+			.p-date { margin: 0 0 0.35em 0; font-family: var(--font-stack-mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.02em; }
+			.p-desc { margin: 0; color: var(--ink-muted); font-size: 14px; line-height: 1.5; }
+			.empty { color: var(--ink-faint); font-style: italic; }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>{t.headings.posts}</h1>
+				<p>{blurb[lang]}</p>
+			</section>
+			{posts.length === 0 ? (
+				<p class="empty">{t.labels.noPosts}</p>
+			) : (
+				<ul class="posts-list">
+					{posts.map((post) => (
+						<li>
+							<a href={`/${lang}/posts/${post.data.translationKey ?? post.id}/`}>
+								<h2 class="p-title">{post.data.title}</h2>
+								<p class="p-date"><FormattedDate date={post.data.pubDate} /></p>
+								<p class="p-desc">{post.data.description}</p>
+							</a>
+						</li>
+					))}
+				</ul>
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>

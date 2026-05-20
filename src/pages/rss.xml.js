@@ -3,8 +3,9 @@ import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 export async function GET(context) {
-	const posts = await getCollection('posts', ({ data }) => !data.draft);
-	const journal = await getCollection('journal', ({ data }) => !data.draft);
+	// English feed only. Localized variants live under /pt and /de.
+	const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en');
+	const journal = await getCollection('journal', ({ data }) => !data.draft && data.lang === 'en');
 
 	const postItems = posts.map((post) => ({
 		title: post.data.title,

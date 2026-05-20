@@ -7,11 +7,15 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { blogPostingSchema } from '../lib/jsonld';
+import { useTranslations, type Locale } from '../i18n/ui';
 
-type Props = CollectionEntry<'posts'>['data'] & { slug: string };
+type Props = CollectionEntry<'posts'>['data'] & { slug: string; lang?: Locale };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, slug } = Astro.props;
-const postPath = `/posts/${slug}/`;
+const { title, description, pubDate, updatedDate, heroImage, tags, slug, lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
+const base = lang === 'en' ? '' : `/${lang}`;
+const postsIndexPath = `${base}/posts/`;
+const postPath = `${base}/posts/${slug}/`;
 
 const postUrl = new URL(postPath, Astro.site).href;
 const ogImage = heroImage
@@ -29,7 +33,7 @@ const postJsonLd = blogPostingSchema({
 });
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<BaseHead title={title} description={description} image={heroImage} jsonLd={postJsonLd} />
 		<style>
@@ -131,7 +135,7 @@ const postJsonLd = blogPostingSchema({
 	<body>
 		<Header />
 		<main>
-			<a href="/posts/" class="back-link">&larr; all posts</a>
+			<a href={postsIndexPath} class="back-link">&larr; {t.labels.backPosts}</a>
 			<article>
 				{heroImage && (
 					<div class="hero-image">

@@ -1,0 +1,97 @@
+---
+title: "Como meu sistema de agentes realmente funciona"
+description: "Um passo a passo ao vivo que dei a uma cliente hoje, posto no papel. O que fica onde, por que um espaço em branco mais IA não é o sistema, e um prompt inicial que você pode colar para começar o seu."
+pubDate: 2026-05-19
+tags: [workflow, agents, claude-code, vs-code, n8n]
+draft: false
+lang: pt
+translationKey: "how-the-agentic-system-works"
+---
+
+Uma cliente me perguntou hoje como funciona o meu setup.
+
+Ela tem uma tarefa para automatizar (entrada de bugs do Sentry, triagem com um LLM, criação de tickets no Jira, notificação no Slack) e queria saber como eu construiria isso. Acabamos passando uma hora na tela. Percebi que estava explicando a mesma coisa sobre a qual me perguntam toda semana.
+
+Aqui está a versão escrita.
+
+## As três peças
+
+São três componentes. Nenhum deles é genial sozinho. O trabalho está em como eles ficam um ao lado do outro.
+
+1. **Um IDE.** Eu uso o VS Code. Qualquer editor com integração de agente serve. O IDE é onde os arquivos vivem, onde as edições acontecem, onde o agente pode de fato fazer algo em vez de só falar sobre isso.
+2. **Um agente dentro do IDE.** Eu uso o Claude Code. O agente lê e escreve arquivos, roda comandos e conversa com sistemas externos através de ferramentas. Não é um chatbot. É um processo com mãos.
+3. **Orquestradores do outro lado.** n8n, Make, código próprio num servidor. O agente se conecta a eles e os configura para que as automações de longa duração rodem sem mim no meio.
+
+O padrão é sempre o mesmo. Você fica no IDE. O agente lê o seu projeto, faz perguntas, edita arquivos, chama APIs e reporta de volta. Quando você quer algo rodando sozinho lá fora no mundo, o agente vai e conecta tudo no orquestrador.
+
+## Por que um espaço em branco mais IA não é o sistema
+
+Essa é a parte que a maioria das pessoas não percebe quando tenta pela primeira vez.
+
+Você pode abrir o Claude numa aba do navegador e pedir que ele construa uma automação. Você pode abrir o Claude Code numa pasta vazia e mandar ele montar um projeto. Os dois funcionam um pouco e quebram rápido. A razão é que o modelo não faz ideia de como o seu trabalho é.
+
+Metade do que eu faço todo dia é melhorar o invólucro em que o agente fica. Uma descrição de como meus projetos são estruturados. Regras sobre o que fazer antes de me perguntar algo. Habilidades que carregam em situações específicas. Memória que sobrevive entre sessões. Verificações fixas que pegam o tipo de erro que o agente já cometeu antes.
+
+Quando meu agente é bom em algo, normalmente é porque esse invólucro foi moldado por vinte sessões de erro. O modelo é o mesmo modelo. O que mudou foi o invólucro.
+
+Se você pula o invólucro e roda o agente no impulso puro, você tem o resultado que teria de qualquer prestador trabalhando sem contexto. Eles vão produzir algo. Vai parecer razoável. Vai estar sutilmente errado de jeitos que você só percebe mais tarde.
+
+## Como eu de fato começo um projeto novo
+
+A versão curta: eu coloco um único arquivo markdown na pasta nova, aponto o agente para ele e deixo que monte o resto.
+
+O arquivo descreve a forma do projeto. O que é. Que problema resolve. Como é o layout. Que regras o agente deve seguir. O que significa "pronto" para uma mudança típica. São duas páginas, não dez.
+
+O agente lê o arquivo, faz as perguntas que tem, e começa a montar a estrutura. Passo os trinta minutos seguintes criticando o que ele montou. A crítica volta para o arquivo markdown como novas regras. A próxima sessão é mais afiada porque a anterior foi anotada.
+
+Depois de seis meses fazendo isso, tenho um invólucro que conhece a minha voz, meus projetos, minhas ferramentas, meus modos de falha. O trabalho que faço sobre ele acumula. O trabalho que eu teria feito corrigindo o mesmo erro pela vigésima vez, não.
+
+## A armadilha
+
+A armadilha é rodar o agente numa infraestrutura que você não entende.
+
+Ele vai produzir coisas. Arquivos aparecem. Workflows são configurados. APIs são chamadas. Se você não consegue ler o que ele escreveu, você não é dono do que ele construiu. Na primeira vez que algo quebrar, você não terá nada para depurar. A trilha de auditoria é o invólucro mais o código mais o seu entendimento dos dois. Tire qualquer um dos três e você está alugando um resultado.
+
+A versão honesta de "use IA para entregar mais rápido" é: você vai gastar o tempo que economizou construindo o sistema que te permite confiar na velocidade. É uma troca justa. Não é uma troca de graça.
+
+## Um prompt inicial que você pode colar
+
+Se você quer testar isto hoje, coloque o que está abaixo num arquivo `CLAUDE.md` na raiz de uma pasta vazia, abra no Claude Code e mande o agente ler o arquivo e propor uma estrutura. Edite o arquivo conforme avança. Ele é feito para crescer.
+
+```markdown
+# Project
+
+What this is: [one sentence]
+Why it exists: [one sentence]
+What done looks like: [one sentence per milestone]
+
+## Stack
+
+Language: [e.g. TypeScript / Python / Go]
+Frameworks: [e.g. Astro, FastAPI, Hono]
+Hosting: [e.g. Cloudflare Pages, Railway, Vercel]
+External services: [e.g. Stripe, Supabase, Sentry, N8N]
+
+## How I work with the agent
+
+- Before asking me a question, try the obvious thing first.
+- After two failed attempts at the same fix, stop and explain what is happening.
+- Never run destructive commands without confirming.
+- When you make a change, tell me which files changed and why.
+- When you finish a task, summarize in one sentence.
+
+## House rules
+
+- No emojis in code or commits.
+- No em-dashes in any prose output.
+- Match the voice of existing files.
+- If a pattern exists in the codebase, reuse it instead of inventing a new one.
+```
+
+Esse arquivo é a semente. Ele é curto de propósito. Você acrescenta a ele toda vez que o agente faz algo que você não queria, e toda vez que ele faz algo que você quer e quer continuar fazendo.
+
+O sistema não é o agente. É o que você anota sobre como trabalha, para que o agente pare de adivinhar.
+
+---
+
+Se você quer mais do que a semente, montei uma versão mais completa com um guia de instalação e a estrutura que cresce em volta deste arquivo. Veja [monte seu próprio espaço de trabalho com agentes](/pt/posts/set-up-your-own-agentic-workspace/) para o passo a passo e o download.

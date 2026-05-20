@@ -1,0 +1,58 @@
+---
+title: "Monte seu próprio espaço de trabalho com agentes"
+description: "Um kit inicial para baixar, um CLAUDE.md mais a estrutura que cresce em volta dele, e um guia de instalação de dez minutos para você rodar o mesmo setup que eu uso."
+pubDate: 2026-05-20
+tags: [workflow, claude-code, vs-code, agents, starter-kit]
+draft: false
+lang: pt
+translationKey: "set-up-your-own-agentic-workspace"
+---
+
+Há um tempo escrevi sobre [como meu sistema de agentes realmente funciona](/pt/posts/how-the-agentic-system-works/). Aquele texto é o porquê. Este é o como, mais um arquivo que você pode baixar e usar hoje.
+
+A coisa em que as pessoas travam não é a ideia. É a página em branco. Você abre o agente numa pasta vazia e não sabe o que colocar na frente dele. Então aqui está o menor ponto de partida útil, empacotado.
+
+## Baixe o kit
+
+<p>
+  <a href="/downloads/agentic-starter-kit.zip" download data-ph-event="agentic_kit_download"><strong>Baixar o kit inicial (zip)</strong></a>
+</p>
+
+Dentro do zip:
+
+- **`CLAUDE.md`** é o arquivo que você de fato usa. É o invólucro: uma descrição de duas páginas do seu projeto e de como o agente deve trabalhar nele. Essa é a parte que importa.
+- **`README.md`** é o guia de instalação e uma página de notas duramente aprendidas.
+- **`.claude/`** mostra a estrutura que cresce em volta do invólucro: onde os comandos ficam, um modelo de comando de exemplo, e um hook de segurança real que impede o agente de editar os seus segredos.
+- **`.mcp.json.example`** mostra a forma de conectar uma ferramenta externa, sem nenhuma chave dentro.
+
+O kit é genérico de propósito. Não é o meu sistema. O meu sistema são seis meses de correções empilhadas sobre um arquivo como esse. A ideia é te entregar a semente, não a árvore.
+
+## Instale (cerca de dez minutos)
+
+1. **Tenha um IDE com agente.** Eu uso o VS Code com o Claude Code. Instale o Claude Code, faça login. Qualquer editor com integração de agente funciona do mesmo jeito.
+2. **Abra uma pasta.** Um projeto de verdade, ou uma vazia para algo novo.
+3. **Coloque o `CLAUDE.md` na raiz.** Copie a pasta `.claude/` também se quiser os exemplos por perto.
+4. **Edite o `CLAUDE.md`** para que ele descreva o seu projeto real: o que é, o stack, o layout, as regras que importam para você. Duas páginas, não dez.
+5. **Aponte o agente para ele.** Abra a pasta no Claude Code e diga: *"Leia o CLAUDE.md e proponha uma estrutura. Pergunte o que você precisa antes de construir."*
+6. **Critique o que ele faz** pela meia hora seguinte. Cada correção que você der vira uma nova linha no `CLAUDE.md`. Esse é o ciclo inteiro, e é o único passo que acumula.
+
+Se você quer que o agente alcance fora do repositório (um banco de dados, uma ferramenta de automação, um produto de análise), é para isso que serve o MCP. Copie o `.mcp.json.example` para `.mcp.json`, preencha os valores reais, nunca faça commit dele, e reinicie o IDE por completo para a conexão carregar. Depois rode um pequeno teste antes de construir qualquer coisa real em cima.
+
+## Por que a versão em branco não funciona
+
+Você pode abrir o agente numa pasta vazia e mandar ele construir. Ele vai. O resultado parece razoável e está sutilmente errado, porque o modelo não faz ideia de como o seu trabalho é. É um prestador sem briefing.
+
+O invólucro é o briefing. Quando meu agente é bom em algo, o modelo não ficou mais esperto. O `CLAUDE.md` foi moldado por vinte sessões de erro. Essa é a diferença entre um agente puro e um sistema: o puro adivinha toda vez, o sistema lembra o que você já decidiu.
+
+## Algumas notas de quem faz isto todo dia
+
+- **Carregue o contexto de uma vez, não em conta-gotas.** Dê ao agente o quadro inteiro de uma só vez. A qualidade da saída acompanha a qualidade da entrada, e um briefing longo vence dez prompts pequenos.
+- **Empurre-o a fazer mais sozinho.** Agentes te entregam trabalho que poderiam fazer. Pergunte "você consegue fazer essa parte sozinho?" mais do que parece natural. O teto da automação sobe toda vez.
+- **Você é o verificador de sanidade.** Você não precisa saber como o modelo funciona por dentro. Você precisa ler o que ele produziu e julgar. Se você não consegue ler o que ele escreveu, você não é dono do que ele construiu.
+- **Faça checkpoint antes de o contexto encher.** Deixar a janela se comprimir sozinha descarta detalhe em silêncio. Um resumo curto mais um registro de atritos mantém o fio.
+- **Depois conserte o design, não só o bug.** A cada poucos checkpoints, pergunte se o mesmo tipo de erro volta porque o design está errado. Consertar isso é o que encerra o ciclo.
+- **Sincronize com o git o tempo todo.** O invólucro é o ativo. Perder a pasta é perder meses.
+
+A versão honesta de "entregar mais rápido com IA" é esta: você gasta o tempo que economiza construindo o sistema que te permite confiar na velocidade. Troca justa. Não é de graça.
+
+O kit é a primeira hora dessa troca, feita por você. O resto é seu.

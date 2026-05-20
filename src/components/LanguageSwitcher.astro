@@ -1,0 +1,41 @@
+---
+import { LOCALES, LOCALE_LABELS, localizedPath, getLangFromUrl } from '../i18n/ui';
+
+const current = getLangFromUrl(Astro.url);
+const path = Astro.url.pathname;
+---
+
+<div class="lang-switch" role="group" aria-label="Language">
+	{LOCALES.map((loc) => (
+		<a
+			href={localizedPath(path, loc)}
+			hreflang={loc}
+			class:list={['lang', { active: loc === current }]}
+			aria-current={loc === current ? 'true' : undefined}
+		>{LOCALE_LABELS[loc]}</a>
+	))}
+</div>
+
+<style>
+	.lang-switch {
+		display: inline-flex;
+		gap: 0.4em;
+		align-items: center;
+	}
+	.lang-switch .lang {
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		color: var(--ink-faint);
+		text-decoration: none;
+		padding: 0.1em 0.15em;
+		transition: color 0.12s ease;
+	}
+	.lang-switch .lang:hover {
+		color: var(--ink);
+	}
+	.lang-switch .lang.active {
+		color: var(--ink);
+		font-weight: 600;
+	}
+</style>

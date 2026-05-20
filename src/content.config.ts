@@ -13,6 +13,8 @@ const posts = defineCollection({
 			heroImage: z.optional(image()),
 			tags: z.array(z.string()).default([]),
 			draft: z.boolean().default(false),
+			lang: z.enum(['en', 'pt', 'de']).default('en'),
+			translationKey: z.string().optional(),
 		}),
 });
 
@@ -46,6 +48,8 @@ const journal = defineCollection({
 				.optional(),
 			rizePartial: z.boolean().optional(),
 			screenshot: z.string().optional(),
+			lang: z.enum(['en', 'pt', 'de']).default('en'),
+			translationKey: z.string().optional(),
 			targets: z.array(z.string()).optional(),
 			wins: z.array(z.string()).optional(),
 			losses: z.array(z.string()).optional(),

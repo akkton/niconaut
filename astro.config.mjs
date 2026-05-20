@@ -8,7 +8,22 @@ import { defineConfig, fontProviders } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://nicolasneumann.blog',
-	integrations: [mdx(), sitemap()],
+	i18n: {
+		locales: ['en', 'pt', 'de'],
+		defaultLocale: 'en',
+		routing: {
+			prefixDefaultLocale: false,
+		},
+	},
+	integrations: [
+		mdx(),
+		sitemap({
+			i18n: {
+				defaultLocale: 'en',
+				locales: { en: 'en', pt: 'pt-BR', de: 'de-DE' },
+			},
+		}),
+	],
 	vite: {
 		plugins: [tailwindcss()],
 		build: {

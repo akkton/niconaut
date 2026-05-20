@@ -1,24 +1,37 @@
 ---
-// Newsletter signup, wired to Buttondown.
+// Newsletter signup, wired to Buttondown, locale-aware.
 // On submit: fire the PostHog newsletter_signup_intent event (before anything else),
 // then POST the email + preference (as a Buttondown tag) to the embed-subscribe
-// endpoint via fetch (no-cors keeps the visitor on-site). Buttondown sends the
-// double-opt-in confirmation email. Username lives in consts.ts (BUTTONDOWN_USERNAME).
+// endpoint via fetch (no-cors keeps the visitor on-site). Copy comes from the i18n
+// dictionary based on the current locale (derived from the URL, or a `lang` prop).
 import { BUTTONDOWN_USERNAME } from '../consts';
+import { getLangFromUrl, useTranslations, type Locale } from '../i18n/ui';
 
+interface Props {
+	lang?: Locale;
+}
+
+const lang = Astro.props.lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(lang).newsletter;
 const subscribeAction = `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`;
 ---
 
 <section class="newsletter" aria-label="Email subscribe">
 	<div class="head">
-		<h2 class="title">Get this in your inbox</h2>
-		<p class="sub">
-			One email when a new piece lands. Sent through Buttondown, with a one-click
-			unsubscribe in every email. No tracking pixels.
-		</p>
+		<h2 class="title">{t.title}</h2>
+		<p class="sub">{t.sub}</p>
 	</div>
-	<form id="newsletter-form" data-action={subscribeAction} novalidate>
-		<label class="email-label" for="newsletter-email">Email</label>
+	<form
+		id="newsletter-form"
+		data-action={subscribeAction}
+		data-msg-success={t.success}
+		data-msg-invalid={t.invalid}
+		data-msg-error={t.error}
+		data-label-subscribe={t.subscribe}
+		data-label-subscribing={t.subscribing}
+		novalidate
+	>
+		<label class="email-label" for="newsletter-email">{t.emailLabel}</label>
 		<input
 			id="newsletter-email"
 			type="email"
@@ -27,21 +40,21 @@ const subscribeAction = `https://buttondown.com/api/emails/embed-subscribe/${BUT
 			required
 		/>
 		<fieldset class="prefs">
-			<legend>I want…</legend>
+			<legend>{t.want}</legend>
 			<label>
 				<input type="radio" name="pref" value="both" checked />
-				<span>Both</span>
+				<span>{t.both}</span>
 			</label>
 			<label>
 				<input type="radio" name="pref" value="journal" />
-				<span>Journal only</span>
+				<span>{t.journalOnly}</span>
 			</label>
 			<label>
 				<input type="radio" name="pref" value="posts" />
-				<span>Long-form posts only</span>
+				<span>{t.postsOnly}</span>
 			</label>
 		</fieldset>
-		<button type="submit">Subscribe</button>
+		<button type="submit">{t.subscribe}</button>
 		<p class="confirm" role="status" hidden></p>
 	</form>
 </section>
@@ -157,6 +170,11 @@ const subscribeAction = `https://buttondown.com/api/emails/embed-subscribe/${BUT
 		if (!form) return;
 		var action = form.getAttribute('data-action');
 		var status = form.querySelector('.confirm');
+		var msgSuccess = form.getAttribute('data-msg-success');
+		var msgInvalid = form.getAttribute('data-msg-invalid');
+		var msgError = form.getAttribute('data-msg-error');
+		var labelSubscribe = form.getAttribute('data-label-subscribe');
+		var labelSubscribing = form.getAttribute('data-label-subscribing');
 
 		function show(msg, isError) {
 			if (!status) return;
@@ -174,17 +192,16 @@ const subscribeAction = `https://buttondown.com/api/emails/embed-subscribe/${BUT
 			var email = (form.querySelector('input[name="email"]') || {}).value || '';
 			var pref = (form.querySelector('input[name="pref"]:checked') || {}).value || 'both';
 			if (!email || email.indexOf('@') === -1) {
-				show('Please enter a valid email.', true);
+				show(msgInvalid, true);
 				return;
 			}
 
-			// Fire the intent event first, before any navigation or async work.
 			if (window.posthog && typeof window.posthog.capture === 'function') {
 				window.posthog.capture('newsletter_signup_intent', { preference: pref });
 			}
 
 			var btn = form.querySelector('button[type="submit"]');
-			if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
+			if (btn) { btn.disabled = true; btn.textContent = labelSubscribing; }
 
 			var body = new URLSearchParams();
 			body.append('email', email);
@@ -193,14 +210,14 @@ const subscribeAction = `https://buttondown.com/api/emails/embed-subscribe/${BUT
 
 			fetch(action, { method: 'POST', mode: 'no-cors', body: body })
 				.then(function () {
-					show('Check your inbox. Click the confirmation link and you are in.', false);
+					show(msgSuccess, false);
 					form.reset();
 				})
 				.catch(function () {
-					show('Something went wrong. Try again, or email me at neumanic2@gmail.com.', true);
+					show(msgError, true);
 				})
 				.then(function () {
-					if (btn) { btn.disabled = false; btn.textContent = 'Subscribe'; }
+					if (btn) { btn.disabled = false; btn.textContent = labelSubscribe; }
 				});
 		});
 	})();

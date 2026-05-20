@@ -1,18 +1,28 @@
 ---
 import HeaderLink from './HeaderLink.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+// Translated sections get a locale prefix; en stays at the root (no trailing slash,
+// so HeaderLink active-state matching keeps working). Utility pages stay English.
+const sec = (seg: string) => (lang === 'en' ? `/${seg}` : `/${lang}/${seg}`);
+const home = lang === 'en' ? '/' : `/${lang}/`;
 ---
 
 <header>
 	<nav>
-		<a class="brand" href="/">nicolasneumann.blog</a>
+		<a class="brand" href={home}>nicolasneumann.blog</a>
 		<div class="internal-links">
-			<HeaderLink href="/journal">Journal</HeaderLink>
-			<HeaderLink href="/posts">Posts</HeaderLink>
-			<HeaderLink href="/building">Building</HeaderLink>
-			<HeaderLink href="/work">Work</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-			<HeaderLink href="/feedback">Feedback</HeaderLink>
+			<HeaderLink href={sec('journal')}>{t.nav.journal}</HeaderLink>
+			<HeaderLink href={sec('posts')}>{t.nav.posts}</HeaderLink>
+			<HeaderLink href="/building">{t.nav.building}</HeaderLink>
+			<HeaderLink href="/work">{t.nav.work}</HeaderLink>
+			<HeaderLink href={sec('about')}>{t.nav.about}</HeaderLink>
+			<HeaderLink href="/feedback">{t.nav.feedback}</HeaderLink>
 			<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◐</button>
+			<LanguageSwitcher />
 		</div>
 	</nav>
 </header>
