@@ -83,6 +83,16 @@ import { SITE_TITLE } from '../consts';
 				point of tracking is to know whether anyone actually reads what I post, not to build a profile.
 			</p>
 
+			<h2>Session replay</h2>
+			<p>
+				I record anonymous session replays through PostHog, with every piece of text and every
+				input field masked. In plain English: I can see the shape of a visit, where a layout
+				breaks, where people click and how far they scroll, but not what any text on the page
+				says and not anything you type. Replays are tied to the same anonymous identifier as the
+				analytics above, never to a real identity. The opt-out button below switches replays off
+				along with everything else.
+			</p>
+
 			<h2>Newsletter</h2>
 			<p>
 				If you sign up for email updates, your email address gets used to send you the
@@ -97,7 +107,7 @@ import { SITE_TITLE } from '../consts';
 				and a standalone <a href="/feedback/">/feedback</a> page with a textarea. The two
 				one-tap reactions fire an anonymous PostHog event with the entry path and the reaction
 				value. The "want to say more" button and the /feedback form both open your email client
-				with a pre-filled message that lands in my inbox — they do not POST anywhere on this
+				with a pre-filled message that lands in my inbox, they do not POST anywhere on this
 				site. Replies still happen by email or on the social accounts linked in the footer.
 			</p>
 
@@ -111,9 +121,9 @@ import { SITE_TITLE } from '../consts';
 
 			<h2>Opt out</h2>
 			<p>
-				One click below tells PostHog to stop capturing events from this browser. The flag is
-				stored in this browser's localStorage, so it persists across visits on this device.
-				Clear your site data and it resets to opted-in.
+				One click below tells PostHog to stop capturing events and session replays from this
+				browser. The flag is stored in this browser's localStorage, so it persists across visits
+				on this device. Clear your site data and it resets to opted-in.
 			</p>
 			<div class="opt-out-box">
 				<button id="opt-out-btn" type="button">Opt out of analytics on this site</button>
