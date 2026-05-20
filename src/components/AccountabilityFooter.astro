@@ -93,16 +93,32 @@ const hasAny =
 	}
 	.grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		gap: 1.75em;
+		grid-template-columns: 1fr;
+		gap: 1em;
 	}
+	.grid .block {
+		margin: 0;
+		padding: 0.9em 1.1em 1em 1.1em;
+		border: 1px solid var(--rule);
+		border-left: 3px solid var(--rule-strong);
+		border-radius: 4px;
+	}
+	.grid .block ul {
+		padding-left: 1.1em;
+	}
+	.wins { border-left-color: #2a7548; }
+	.losses { border-left-color: #9c3636; }
+	.lessons { border-left-color: var(--ink-faint); }
 	.wins .block-label { color: #2a7548; }
 	.losses .block-label { color: #9c3636; }
 	.lessons .block-label { color: var(--ink-muted); }
-	@media (max-width: 720px) {
+	@media (min-width: 721px) {
 		.grid {
-			grid-template-columns: 1fr;
-			gap: 1.25em;
+			grid-template-columns: 1fr 1fr;
+			gap: 1em;
+		}
+		.lessons {
+			grid-column: 1 / -1;
 		}
 	}
 </style>

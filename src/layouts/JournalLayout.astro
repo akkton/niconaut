@@ -300,6 +300,12 @@ const copyUrl = shareUrl('copylink');
 					))}
 				</div>
 			)}
+			<AccountabilityFooter
+				targets={targets}
+				wins={wins}
+				losses={losses}
+				lessons={lessons}
+			/>
 			<section class="share" aria-label="Share this entry">
 				<div class="share-label">Share</div>
 				<div class="share-row">
@@ -352,12 +358,6 @@ const copyUrl = shareUrl('copylink');
 					)}
 				</div>
 			</nav>
-			<AccountabilityFooter
-				targets={targets}
-				wins={wins}
-				losses={losses}
-				lessons={lessons}
-			/>
 		</main>
 		<Footer />
 		<script is:inline>
