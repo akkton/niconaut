@@ -6,16 +6,32 @@ import FeedbackBlock from '../components/FeedbackBlock.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { blogPostingSchema } from '../lib/jsonld';
 
 type Props = CollectionEntry<'posts'>['data'] & { slug: string };
 
 const { title, description, pubDate, updatedDate, heroImage, tags, slug } = Astro.props;
 const postPath = `/posts/${slug}/`;
+
+const postUrl = new URL(postPath, Astro.site).href;
+const ogImage = heroImage
+	? new URL(heroImage.src, Astro.site).href
+	: new URL('/og-default.png', Astro.site).href;
+
+const postJsonLd = blogPostingSchema({
+	title,
+	description,
+	url: postUrl,
+	datePublished: pubDate,
+	dateModified: updatedDate,
+	image: ogImage,
+	tags,
+});
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} image={heroImage} jsonLd={postJsonLd} />
 		<style>
 			a.back-link {
 				display: inline-block;

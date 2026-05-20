@@ -10,11 +10,12 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image } = Astro.props;
+const { title, description, image, jsonLd } = Astro.props;
 
 const ogImageURL = image
 	? new URL(image.src, Astro.url)
@@ -81,6 +82,11 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={ogImageURL} />
+
+<!-- Structured data (schema.org) -->
+{jsonLd && (
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+)}
 
 {posthogKey && (
 	<script is:inline define:vars={{ posthogKey, posthogHost }}>
