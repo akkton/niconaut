@@ -6,12 +6,12 @@ import Header from '../components/Header.astro';
 import { SITE_TITLE } from '../consts';
 import lifetimeData from '../../public/rize-lifetime.json';
 
-const allEntries = (await getCollection('journal', ({ data }) => !data.draft)).sort(
+const allEntries = (await getCollection('journal', ({ data }) => !data.draft && data.lang === 'en')).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
 const workflowPosts = (
-	await getCollection('posts', ({ data }) => !data.draft && data.tags.includes('workflow'))
+	await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en' && data.tags.includes('workflow'))
 ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const postDateFormat = new Intl.DateTimeFormat('en-us', {
