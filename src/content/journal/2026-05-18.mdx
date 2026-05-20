@@ -2,7 +2,7 @@
 date: 2026-05-18
 writtenAt: "01:15"
 title: "Day 5: infrastructure on every layer"
-summary: Monday in Brazil. Build-heavy. Split the agent system into its own compartmentalized workspace, scoped Handyman from a draft brief into a locked technical-scoping draft, shipped Day 2 of the blog. One break for Jiu Jitsu, second session, absolutely awesome. A pitch with Inoki that moved the needle in ways I did not see coming.
+summary: Monday in Brazil. Build-heavy. Split the agent system into its own compartmentalized workspace, scoped Handyman from a draft brief into a locked technical-scoping draft, shipped Day 2 of the blog. One break for Jiu Jitsu, second session, absolutely awesome. A pitch with a local installer that moved the needle in ways I did not see coming.
 tags: [handyman, blog, system-infra, agents, jiu-jitsu]
 focusTime: "14h 4m"
 rizePartial: false
@@ -26,24 +26,24 @@ topApps:
   - { name: "Rize", minutes: 26 }
 targets:
   - Split the personal-apps workspace cleanly from agentic-ops so client work and personal product work stop contaminating each other
-  - Get Handyman from draft brief to a locked technical-scoping doc, ready to discuss with Dirk
+  - Get Handyman from draft brief to a locked technical-scoping doc, ready to discuss with my advisor
   - Ship Day 2 of the blog (Rize integration, accountability, real OG, custom events)
   - Show up to Jiu Jitsu
 wins:
   - Worked the entire day. One real break for Jiu Jitsu. Two short food breaks. The rest was heads-down build.
   - Agent system finally split. Personal-apps and agentic-ops are now two separate VS Code instances with their own memory, their own commands, their own MCP servers. No more cross-bleed.
-  - Handyman scoping landed end-to-end. Brief refreshed through a 5-round clarification loop, technical-scoping draft written, advisor message to Dirk drafted lint-clean. Ready for the call.
+  - Handyman scoping landed end-to-end. Brief refreshed through a 5-round clarification loop, technical-scoping draft written, advisor message drafted lint-clean. Ready for the call.
   - Blog Day 2 shipped. Rize integration, accountability schema, programmatic OG image, two custom PostHog events. The blog is real enough to put in my bios now.
   - Jiu Jitsu session 2. Absolutely awesome. The most pure-fun hour of the day.
-  - The Inoki conversation moved the needle. Pitched Handyman, got the idea pitched back at me with new framing. He surfaced context I would never have thought to ask for.
+  - The conversation with a local installer moved the needle. Pitched Handyman, got the idea pitched back at me with new framing. He surfaced context I would never have thought to ask for.
 losses:
   - Still working at 1 AM. The reflection block below is going to read half-formed because I am too tired to think clearly about the day. I will pass over this with a clear head tomorrow.
-  - Got distracted by writing up the Inoki meeting recap mid-afternoon when I should have been heads-down on Handyman scope. In hindsight it paid back, but at the time it felt like drift.
+  - Got distracted by writing up the meeting recap mid-afternoon when I should have been heads-down on Handyman scope. In hindsight it paid back, but at the time it felt like drift.
   - YouTube took 71 minutes that I did not plan for. Most of it was background noise while building, but some of it was real attention.
   - Did not get the May 13 to 16 backfill entries done in their final voice. They are placeholder-flavored. Tomorrow.
 lessons:
   - Splitting the agent system into compartmentalized workspaces should have happened a week ago. The cost of cross-contamination across client work and personal work was a focus tax I could not see while paying it. I see it now.
-  - Listening tells before pitching. The Inoki call worked because the pitch then counter-pitch shape made him surface a domain context I would not have known to ask for. Cheap conversation framing, high information yield.
+  - Listening tells before pitching. The call worked because the pitch then counter-pitch shape made him surface a domain context I would not have known to ask for. Cheap conversation framing, high information yield.
   - Late-night reflection compounds badly. The 1 AM version of "what I learned today" is genuinely worse than the 9 AM version of "what I learned yesterday." The schema needs to support a same-entry update block I can fill in with a clear head.
 updates:
   - at: "2026-05-19 next-day clear-head"
@@ -59,11 +59,11 @@ updates:
       The texture I want this journal to have is that the day stays as the unit, but the day grows over time. A brain dump at the end of the day, then a clear-head pass the next morning, maybe an afternoon update if something landed. Each its own timestamp, each its own message. Not a polished narrative.
 ---
 
-Five working sessions stacked back to back. The thing that holds them together is that they were all infrastructure on different layers: the agent harness got split into separate workspaces, the Handyman project got scoped from a draft into something I can hand to Dirk, the blog got the Day 2 polish that makes it real, and one quick conversation with Inoki pitched the whole Handyman thesis back at me with new framing.
+Five working sessions stacked back to back. The thing that holds them together is that they were all infrastructure on different layers: the agent harness got split into separate workspaces, the Handyman project got scoped from a draft into something I can hand to my advisor, the blog got the Day 2 polish that makes it real, and one quick conversation with a local installer pitched the whole Handyman thesis back at me with new framing.
 
 ## The agent system finally got split
 
-For the last two months everything I do (client engagement work for Meji and Warme Wimmer, my own product work on OneProposal, the new personal blog) all lived in one Claude Code workspace. One MEMORY.md indexed everything. One CLAUDE.md described "the project," which was really five projects. Every session had to pay an attention tax to figure out what context applied.
+For the last two months everything I do (client engagement work for two clients, my own product work on OneProposal, the new personal blog) all lived in one Claude Code workspace. One MEMORY.md indexed everything. One CLAUDE.md described "the project," which was really five projects. Every session had to pay an attention tax to figure out what context applied.
 
 Today I cloned the workspace and stripped it: client work stays in `agentic-ops-main`, personal product and app work lives in `personal-apps-main`. Same harness, same skills, same hooks, but two independent memories. Two independent project registries. Two independent VS Code instances open in parallel when a session needs both.
 
@@ -73,9 +73,9 @@ The split is now clean. The blog session I am writing this entry from did not lo
 
 ## Handyman went from draft to scoping document in one session
 
-Yesterday I had a 14-section pre-refresh brief for Handyman (a Brazilian-marketplace handyman platform, Pix and parcelado as the core differentiator, Upwork crossed with Uber as the design north star). Today I ran it through five rounds of clarification, locked the refresh, wrote a technical-scoping draft (~1100 words: architecture requirements, four stack candidates with disproof targets, payment-processor matrix, five milestones without timeframes), drafted an advisor message to Dirk, and updated the workspace registry.
+Yesterday I had a 14-section pre-refresh brief for Handyman (a Brazilian-marketplace handyman platform, Pix and parcelado as the core differentiator, Upwork crossed with Uber as the design north star). Today I ran it through five rounds of clarification, locked the refresh, wrote a technical-scoping draft (~1100 words: architecture requirements, four stack candidates with disproof targets, payment-processor matrix, five milestones without timeframes), drafted an advisor message, and updated the workspace registry.
 
-The technical-scoping draft is explicitly *iteration target* not *locked architecture.* Dirk's input drops in as inline notes tomorrow on the call; the architecture decisions get locked in a dedicated session after that.
+The technical-scoping draft is explicitly *iteration target* not *locked architecture.* My advisor's input drops in as inline notes tomorrow on the call; the architecture decisions get locked in a dedicated session after that.
 
 ## Blog Day 2 shipped
 
@@ -87,15 +87,15 @@ The unstructured version: this blog is now real enough that I am willing to put 
 
 Absolutely awesome. The most pure-fun hour of the day. There is nothing in the build-loop that feels like that, which is a useful data point.
 
-## The Inoki conversation
+## The installer conversation
 
-I went over to the place where Inoki installs solar panels, intending to pitch Handyman. Instead, the conversation turned into a back-and-forth. I pitched Handyman, he engaged seriously, and then he pitched solar-panel investment back at me as "the only thing you should be putting money into in Brazil right now." That counter-pitch wasn't what I went in for, but it surfaced a whole domain context I would not have known to ask for: how the solar-installation business actually works here, what the margins look like, where the regulatory hooks are.
+I went over to a local solar-panel installer's place, intending to pitch Handyman. Instead, the conversation turned into a back-and-forth. I pitched Handyman, he engaged seriously, and then he pitched solar-panel investment back at me as "the only thing you should be putting money into in Brazil right now." That counter-pitch wasn't what I went in for, but it surfaced a whole domain context I would not have known to ask for: how the solar-installation business actually works here, what the margins look like, where the regulatory hooks are.
 
 The Handyman thesis got sharper from his framing too. He has the local intuition for which problems are worth solving here, and his read on the marketplace pain matched mine.
 
 ## What's holding tomorrow
 
-The Dirk call is on the schedule. Refreshed Handyman brief, technical-scoping draft, and the advisor message all land in front of him. The hope is that he pushes back on the architecture so the scoping doc gets sharper, not approved-as-is.
+The advisor call is on the schedule. Refreshed Handyman brief, technical-scoping draft, and the advisor message all land in front of him. The hope is that he pushes back on the architecture so the scoping doc gets sharper, not approved-as-is.
 
 Also: the May 13 to 16 backfill entries are still in placeholder voice. They need a pass tomorrow morning when I have a clear head.
 
