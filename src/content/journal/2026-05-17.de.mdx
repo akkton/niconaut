@@ -1,0 +1,63 @@
+---
+date: 2026-05-17
+title: "Tag 4: das Blog aufbauen, Einstellungs-Mathematik"
+summary: "Sonntag in Brasilien. Die erste Version dieses Blogs in vier Stunden von Anfang bis Ende gebaut, den Stack gewählt, Astro + MDX + Cloudflare Pages + PostHog aufgesetzt, den ersten Build ausgeliefert. Kurzes Abendgespräch mit einer Marketing-Kandidatin für OneProposal. Ging mit Gedanken über Arbeitgeber-Risiko weg."
+tags: [brazil, blog, oneproposal, hiring]
+focusTime: "12h 3m"
+screenshot: /journal-assets/rize-2026-05-17.png
+lang: de
+translationKey: "2026-05-17"
+topCategories:
+  - { name: "Code", percent: 43, minutes: 313 }
+  - { name: "Productivity", percent: 16, minutes: 118 }
+  - { name: "Product", percent: 11, minutes: 76 }
+  - { name: "Sales", percent: 5, minutes: 38 }
+  - { name: "Messaging", percent: 5, minutes: 33 }
+topApps:
+  - { name: "Visual Studio Code", minutes: 307 }
+  - { name: "lovable.dev", minutes: 58 }
+  - { name: "oneproposal.app", minutes: 38 }
+  - { name: "unpauseai.com", minutes: 37 }
+  - { name: "WhatsApp", minutes: 33 }
+  - { name: "instagram.com", minutes: 28 }
+targets:
+  - Entscheiden, wofür dieses Blog da ist, und den Stack wählen
+  - Ein funktionierendes Gerüst von Anfang bis Ende live bekommen, bevor der Tag vorbei ist
+  - Das Gespräch mit der Marketing-Kandidatin für OneProposal führen
+wins:
+  - Blog in etwa vier Stunden von Anfang bis Ende live im Internet
+  - Astro + MDX + Cloudflare Pages ohne Überdenken gewählt
+  - Zwei saubere Content-Collections (Tagebuch + Beiträge) statt eines zusammengematschten Feeds
+  - Das Einstellungs-Gespräch geführt, warm gehalten, nicht vorschnell zugeschlagen
+losses:
+  - Die Frage der Domain-Benennung dauerte länger als der gesamte Engineering-Build
+  - Echtes OG-Bild auf Tag 2 verschoben
+  - Über-mich-Seite skelettartig gelassen
+  - Das Eintragen des PostHog-Schlüssels passierte manuell statt über einen dokumentierten Env-Setup-Flow
+lessons:
+  - Vierzig Minuten Vorausplanung vor jeglichem Code sparten mindestens eine Stunde Nacharbeit.
+  - Das Astro-6-Template trägt etwa 80 % der Last. Passe die letzten 20 % an, baue die 80 nicht neu.
+  - Einstellen ist ein Mathematik-Problem unter Unsicherheit. Die Varianz bei "sie gehen, nachdem ich schon Zeit investiert habe" macht es schwer, nicht die Kosten der Zeit selbst.
+---
+
+Zwei Dinge heute.
+
+## Das Blog
+
+Ich habe das gebaut, was du gerade liest. Etwa vier Stunden, von Anfang bis Ende, von "was soll das überhaupt sein" bis "live im Internet".
+
+**Warum ein Blog.** Drei Gründe übereinandergestapelt. Beweis über mich selbst für Investoren. Networking-Infrastruktur (eine URL, die ich mit Freunden, Familie, künftigen Kunden, meinen Großeltern teilen kann). Schreiben erzwingt Verständnis.
+
+**Was ich gewählt habe und warum.** Astro + MDX, gehostet auf Cloudflare Pages, Inhalte über Claude Code geschrieben. Astro bedeutet statische Markdown-Dateien in einem Git-Repository mit der Option, später Komponenten einzubetten. Cloudflare Pages bewältigt mehr Verkehr, als ich plausibel erzeugen werde, deployt bei jedem Push automatisch, und Workers sind einen Schritt entfernt, falls ich je eine kleine API brauche. Claude Code als Autoren-Schnittstelle ist der Teil, der den Rest rechtfertigt: dasselbe Agenten-Harness, mit dem ich Produkt ausliefere, veröffentlicht auch das Tagebuch über das Ausliefern von Produkt.
+
+Ich habe zuerst Lovable erwogen. Ein ehrlicher Sanity-Check beendete es: Lovable baut Apps, und ein Blog ist eine Content-Pipeline, keine App. Die falsche Form für etwas, das jahrelang leben soll.
+
+**Was ich heute gelernt habe.** Das Astro-6-Blog-Template bringt dich 80 % des Weges: Content-Collections, RSS, Sitemap, Atkinson-Schrift, Bildoptimierung, alles standardmäßig dabei. Die Anpassungsarbeit war Umbenennen und das Hinzufügen einer zweiten Collection, nicht das Bauen von Grund auf. Tailwind v4 + Astro ist kinderleicht: ein Vite-Plugin, ein CSS-Import.
+
+## Das Einstellungs-Gespräch
+
+Kurzes Abendgespräch mit einer Marketing-Kandidatin für OneProposal. Der Rahmen, zu dem ich immer wieder zurückkomme: wie viel Zeit muss ich in sie investieren, bevor sie netto-positiv sind? Und wie hoch ist die Varianz bei "sie gehen, nachdem ich die Zeit schon investiert habe"?
+
+Es ist ein mathematisches Problem unter Unsicherheit, und ich bin noch nicht im Stadium, in dem ich die Antwort vorab berechnen kann. Das Fazit ist Arbeitgeber-Risiko: allgegenwärtig, bis man ein paar Einstellungen ausgeliefert hat, die tatsächlich funktionieren. Entschieden, das Gespräch warm zu halten, aber noch nicht zuzuschlagen. Der Build-Tag von morgen ist schwer genug, dass ich niemanden mitten in der Woche einarbeiten sollte.
+
+Die Benennungsfrage für das Blog endete bei `nicolasneumann.blog`. Das dauerte länger als der Engineering-Build. Morgen schreibe ich Eintrag zwei und beginne den Brasilien-Reise-Backfill.

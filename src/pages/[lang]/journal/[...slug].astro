@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import JournalLayout from '../../../layouts/JournalLayout.astro';
+import { LOCALES } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+	const localized = LOCALES.filter((l) => l !== 'en');
+	const paths = [];
+	const key = (e) => e.data.translationKey ?? e.id;
+	for (const lang of localized) {
+		const all = (await getCollection('journal', ({ data }) => !data.draft && data.lang === lang)).sort(
+			(a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
+		);
+		all.forEach((entry, idx) => {
+			const prev = idx > 0 ? all[idx - 1] : null;
+			const next = idx < all.length - 1 ? all[idx + 1] : null;
+			paths.push({
+				params: { lang, slug: key(entry) },
+				props: {
+					entry,
+					prev: prev ? { slug: key(prev), date: prev.data.date, summary: prev.data.summary, title: prev.data.title } : null,
+					next: next ? { slug: key(next), date: next.data.date, summary: next.data.summary, title: next.data.title } : null,
+				},
+			});
+		});
+	}
+	return paths;
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<JournalLayout {...entry.data} prev={prev} next={next} lang={entry.data.lang}>
+	<Content />
+</JournalLayout>

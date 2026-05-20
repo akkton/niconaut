@@ -14,8 +14,7 @@ export const LOCALE_LABELS: Record<Locale, string> = {
 
 // Paths (after stripping any locale prefix) that have localized versions.
 // The language switcher maps these; anything else falls back to the locale home.
-// 'journal' is added once the localized journal routes ship.
-export const TRANSLATABLE_PREFIXES = ['', 'about', 'posts'];
+export const TRANSLATABLE_PREFIXES = ['', 'about', 'posts', 'journal'];
 
 type Dict = {
 	nav: { journal: string; posts: string; building: string; work: string; about: string; feedback: string };
@@ -167,4 +166,77 @@ function ensureTrailingSlash(p: string): string {
 // files set translationKey explicitly to the en id.
 export function translationKeyOf(entry: { id: string; data: { translationKey?: string } }): string {
 	return entry.data.translationKey ?? entry.id;
+}
+
+// Journal-specific chrome: layout labels, accountability headings, Rize recap labels.
+type JournalDict = {
+	back: string;
+	written: string;
+	tracked: string;
+	pageTitle: string;
+	pageSub: string;
+	prev: string;
+	next: string;
+	noEarlier: string;
+	latest: string;
+	share: string;
+	dayCaptured: string;
+	entriesCount: (n: number) => string;
+	acc: { targets: string; wins: string; losses: string; lessons: string };
+	rize: { onScreen: string; partialDay: string; topCategories: string; topApps: string; trackedWith: string };
+};
+
+export const journalUi: Record<Locale, JournalDict> = {
+	en: {
+		back: 'all journal',
+		written: 'written',
+		tracked: 'tracked',
+		pageTitle: 'Journal',
+		pageSub: "Daily log: hours, what shipped, what didn't, what I learned. Newest first.",
+		prev: 'previous',
+		next: 'next',
+		noEarlier: 'No earlier entry',
+		latest: 'Latest entry',
+		share: 'Share',
+		dayCaptured: 'Day captured in Rize',
+		entriesCount: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
+		acc: { targets: 'Targets', wins: 'Wins', losses: 'Losses', lessons: 'Lessons' },
+		rize: { onScreen: 'On screen', partialDay: 'partial day', topCategories: 'Top categories', topApps: 'Top apps & sites', trackedWith: 'Tracked with' },
+	},
+	pt: {
+		back: 'todo o diário',
+		written: 'escrito',
+		tracked: 'registrado',
+		pageTitle: 'Diário',
+		pageSub: 'Registro diário: horas, o que foi entregue, o que não foi, o que aprendi. Mais recente primeiro.',
+		prev: 'anterior',
+		next: 'próximo',
+		noEarlier: 'Nenhuma entrada anterior',
+		latest: 'Entrada mais recente',
+		share: 'Compartilhar',
+		dayCaptured: 'Dia capturado no Rize',
+		entriesCount: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
+		acc: { targets: 'Metas', wins: 'Vitórias', losses: 'Derrotas', lessons: 'Lições' },
+		rize: { onScreen: 'Na tela', partialDay: 'dia parcial', topCategories: 'Principais categorias', topApps: 'Principais apps e sites', trackedWith: 'Registrado com' },
+	},
+	de: {
+		back: 'alle Einträge',
+		written: 'geschrieben',
+		tracked: 'erfasst',
+		pageTitle: 'Tagebuch',
+		pageSub: 'Tägliches Log: Stunden, was fertig wurde, was nicht, was ich gelernt habe. Neueste zuerst.',
+		prev: 'vorheriger',
+		next: 'nächster',
+		noEarlier: 'Kein früherer Eintrag',
+		latest: 'Neuester Eintrag',
+		share: 'Teilen',
+		dayCaptured: 'Tag in Rize erfasst',
+		entriesCount: (n) => `${n} ${n === 1 ? 'Eintrag' : 'Einträge'}`,
+		acc: { targets: 'Ziele', wins: 'Erfolge', losses: 'Rückschläge', lessons: 'Lektionen' },
+		rize: { onScreen: 'Auf dem Bildschirm', partialDay: 'Teiltag', topCategories: 'Top-Kategorien', topApps: 'Top-Apps & Seiten', trackedWith: 'Erfasst mit' },
+	},
+};
+
+export function useJournal(lang: Locale): JournalDict {
+	return journalUi[lang] ?? journalUi[DEFAULT_LOCALE];
 }

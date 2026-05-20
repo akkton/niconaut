@@ -3,7 +3,7 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import JournalLayout from '../../layouts/JournalLayout.astro';
 
 export async function getStaticPaths() {
-	const all = (await getCollection('journal', ({ data }) => !data.draft)).sort(
+	const all = (await getCollection('journal', ({ data }) => !data.draft && data.lang === 'en')).sort(
 		(a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
 	);
 	return all.map((entry, idx) => {

@@ -1,0 +1,63 @@
+---
+date: 2026-05-17
+title: "Dia 4: montando o blog, matemática de contratação"
+summary: "Domingo no Brasil. Construí a primeira versão deste blog de ponta a ponta em quatro horas, escolhi o stack, montei Astro + MDX + Cloudflare Pages + PostHog, entreguei o primeiro build. Ligação rápida à noite com um candidato de marketing para o OneProposal. Saí pensando em risco de empregador."
+tags: [brazil, blog, oneproposal, hiring]
+focusTime: "12h 3m"
+screenshot: /journal-assets/rize-2026-05-17.png
+lang: pt
+translationKey: "2026-05-17"
+topCategories:
+  - { name: "Code", percent: 43, minutes: 313 }
+  - { name: "Productivity", percent: 16, minutes: 118 }
+  - { name: "Product", percent: 11, minutes: 76 }
+  - { name: "Sales", percent: 5, minutes: 38 }
+  - { name: "Messaging", percent: 5, minutes: 33 }
+topApps:
+  - { name: "Visual Studio Code", minutes: 307 }
+  - { name: "lovable.dev", minutes: 58 }
+  - { name: "oneproposal.app", minutes: 38 }
+  - { name: "unpauseai.com", minutes: 37 }
+  - { name: "WhatsApp", minutes: 33 }
+  - { name: "instagram.com", minutes: 28 }
+targets:
+  - Decidir para que serve este blog e escolher o stack
+  - Ter um scaffold funcionando, no ar de ponta a ponta antes de o dia acabar
+  - Conduzir a ligação com o candidato de marketing para o OneProposal
+wins:
+  - Blog no ar na internet de ponta a ponta em cerca de quatro horas
+  - Escolhi Astro + MDX + Cloudflare Pages sem pensar demais
+  - Duas coleções de conteúdo limpas (diário + artigos) em vez de um feed só, tudo misturado
+  - Conduzi a ligação de contratação, mantive morna, não puxei o gatilho cedo demais
+losses:
+  - A questão de nomear o domínio levou mais tempo do que o build de engenharia inteiro
+  - Imagem OG de verdade adiada para o Dia 2
+  - Página "sobre" deixada esquelética
+  - O preenchimento da chave do PostHog foi manual, não por um fluxo documentado de setup de ambiente
+lessons:
+  - Quarenta minutos de planejamento antecipado, antes de qualquer código, pouparam pelo menos uma hora de retrabalho.
+  - O template do Astro 6 carrega cerca de 80% do peso. Customize os últimos 20%, não reconstrua os 80.
+  - Contratar é um problema de matemática sob incerteza. A variância de "eles vão embora depois de eu já ter investido tempo" é o que torna isso difícil, não o custo do tempo em si.
+---
+
+Duas coisas hoje.
+
+## O blog
+
+Construí a coisa que você está lendo. Umas quatro horas, de ponta a ponta, de "o que isso deveria ser" a "no ar na internet".
+
+**Por que um blog.** Três razões empilhadas uma sobre a outra. Prova-de-si para investidores. Infraestrutura de networking (uma URL que posso compartilhar com amigos, família, futuros clientes, meus avós). Escrever força o entendimento.
+
+**O que escolhi e por quê.** Astro + MDX, hospedado no Cloudflare Pages, conteúdo escrito através do Claude Code. Astro significa arquivos markdown estáticos num repositório git com a opção de embutir componentes depois. O Cloudflare Pages aguenta mais tráfego do que eu plausivelmente vou produzir, faz deploy automático a cada push, e os Workers ficam a um passo se eu algum dia precisar de uma API pequena. Claude Code como interface de autoria é a parte que justifica o resto: o mesmo harness de agentes que uso para entregar produto também publica o diário sobre entregar produto.
+
+Considerei o Lovable primeiro. Um sanity check honesto matou a ideia: o Lovable constrói apps, e um blog é um pipeline de conteúdo, não um app. A forma errada para uma coisa que precisa viver por anos.
+
+**O que aprendi hoje.** O template de blog do Astro 6 te leva 80% do caminho: coleções de conteúdo, RSS, sitemap, fonte Atkinson, otimização de imagens, tudo incluso por padrão. O trabalho de customização foi renomear e adicionar uma segunda coleção, não construir do zero. Tailwind v4 + Astro é simples demais: um plugin de Vite, um import de CSS.
+
+## A ligação de contratação
+
+Ligação rápida à noite com um candidato de marketing para o OneProposal. O enquadramento ao qual eu sempre volto: quanto tempo tenho que investir neles antes de serem líquido-positivos? E qual é a variância de "eles vão embora depois de eu já ter investido o tempo"?
+
+É um problema matemático sob incerteza, e ainda não estou no estágio em que consigo pré-calcular a resposta. O resultado é risco de empregador: onipresente até você ter feito algumas contratações que de fato deram certo. Decidi manter a conversa morna mas não puxar o gatilho ainda. O dia de build de amanhã é pesado o suficiente para eu não estar integrando ninguém no meio da semana.
+
+A questão de nomear o blog acabou em `nicolasneumann.blog`. Isso levou mais tempo do que o build de engenharia. Amanhã escrevo a entrada dois e começo o backfill da viagem ao Brasil.

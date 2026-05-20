@@ -1,0 +1,55 @@
+---
+date: 2026-05-16
+title: "Tag 3: Launch-Vorbereitung, Walkthrough, erstes Feedback"
+summary: "Samstag in Brasilien. Launch-Vorbereitungstag für OneProposal. Domain-Wechsel zu oneproposal.app, Stripe im Live-Modus, PostHog ohne Cookies, Kredit-Ledger-Fix. Ein Walkthrough mit einem Freund brachte sechs zuvor unsichtbare UX-Bugs ans Licht. Freunde-und-Familie-Nachricht vor Mitternacht verschickt. Nebenstrang, ein Gespräch mit einem brasilianischen Freund über eine andere App-Idee, die ich vorerst vage halte."
+tags: [brazil, oneproposal, launch-prep, jiu-jitsu]
+focusTime: "9h 22m"
+screenshot: /journal-assets/rize-2026-05-16.png
+lang: de
+translationKey: "2026-05-16"
+topCategories:
+  - { name: "Code", percent: 34, minutes: 191 }
+  - { name: "Meeting", percent: 17, minutes: 96 }
+  - { name: "Product", percent: 10, minutes: 55 }
+  - { name: "Social Media", percent: 9, minutes: 50 }
+  - { name: "Meetings", percent: 9, minutes: 50 }
+topApps:
+  - { name: "Visual Studio Code", minutes: 191 }
+  - { name: "lovable.dev", minutes: 51 }
+  - { name: "instagram.com", minutes: 50 }
+  - { name: "oneproposal.app", minutes: 21 }
+  - { name: "Microsoft Outlook", minutes: 18 }
+  - { name: "Microsoft Edge", minutes: 14 }
+  - { name: "WhatsApp", minutes: 14 }
+targets:
+  - Die vier launch-blockierenden Bugs verifizieren und beheben
+  - OneProposal in den Stripe-Live-Modus schalten und die Domain auf oneproposal.app wechseln
+  - Einen Freund kalt durch das Produkt führen und die Freunde-und-Familie-Nachricht verschicken
+wins:
+  - oneproposal.app voll funktionsfähig. Der Domain-Wechsel berührte 19 Dateien und funktionierte von Anfang bis Ende.
+  - Stripe-Live-Modus aktiv. Das Produkt kann jetzt tatsächlich Geld annehmen.
+  - Der Walkthrough mit einem Freund brachte sechs zuvor unsichtbare UX-Bugs ans Licht. Bestmögliches Feedback zu niedrigstmöglichen Kosten.
+  - Freunde-und-Familie-Nachricht vor Mitternacht verschickt. Erstes echtes Feedback innerhalb der Stunde.
+  - Ein Gespräch mit einem brasilianischen Freund über eine andere App-Idee, die ich vorerst vage halte. Das Gespräch zählt in diesem Stadium mehr als die Idee.
+losses:
+  - "Verifizierungs-Theater bei der Bug-Prüfung. \"Bug C behoben\" gesagt, ohne die Seite zu rendern. Der Freund bemerkte es in der ersten Minute."
+  - "Mehrmals \"ausgeliefert\" gesagt, wo das richtige Wort \"committet-aber-noch-nicht-veröffentlicht\" war. Dieser Unterschied zählt mehr, als es klingt."
+  - Der Stop-Hook des Agenten-Harness feuerte bei Lovable-Übergabe-Runden etwa zwölf Mal zu oft. Werkzeug-Reibung.
+lessons:
+  - Prüfen-ohne-Rendern ist die teuerste Fehlerklasse. Immer durchklicken.
+  - Ausgeliefert muss live in Produktion und verhaltensgeprüft heißen. Alles andere braucht ein anderes Wort.
+  - Ein echter Freund-Walkthrough fängt Dinge, die das Agenten-Harness nicht kann. Die ersten sechs Bugs waren alle in den ersten zehn Minuten sichtbar, in denen jemand das Produkt kalt benutzte.
+  - Auf der Matte aufzutauchen heißt, brasilianische Macher zu treffen, die Probleme von einer Seite denken, die ich nicht denke. Das ist der Ertrag zweiter Ordnung des Jiu Jitsu, den ich nicht kommen sah.
+---
+
+Launch-Vorbereitungstag für OneProposal. Bis Mitternacht hatte das Produkt eine echte Domain, echtes Stripe, echte erste Nutzer und sechs echte Bugs, die das Agenten-Harness nicht gesehen hatte.
+
+Der Walkthrough war der Tag. Jemandem in Echtzeit dabei zuzusehen, wie er das Produkt kalt benutzt, ist unübertroffen. Jede Annahme, die ich über den Flow gemacht hatte, kam in zehn Minuten ans Licht. Keine davon war technisch. Sie waren alle "Moment, was soll hier passieren?". Die Bugs, die ich in der Sitzung benannte, sind alles Dinge, die ich stolz ausgeliefert hätte, und alle hätten den ersten echten Nutzer abspringen lassen.
+
+Dann verschickte ich die Freunde-und-Familie-Nachricht, und echtes Feedback begann innerhalb der Stunde einzutreffen. Leute klicken in die Teile, die ich untergewichtet habe, überspringen die Teile, auf die ich zwei Lackschichten gelegt habe. Das Feedback war gut, womit ich "umsetzbar und leicht schmerzhaft" meine. Direkt zurück ans Bauen.
+
+Nebenstrang heute: ein Gespräch mit einem Freund, den ich beim Jiu Jitsu treffe, über eine andere App-Idee. Wir sind früh genug, dass ich noch nichts davon ins öffentliche Log stelle. Was erwähnenswert ist, ist, dass das Gespräch überhaupt stattfand. Auf der Matte aufzutauchen heißt auch, vor der breiteren brasilianischen Macher-Gemeinschaft aufzutauchen, und dieser Teil zahlt sich auf Weisen aus, die ich nicht geplant habe.
+
+Die Reibung, die es wert ist, benannt zu werden, ist die sprachliche. Ich nannte Dinge ständig "ausgeliefert", bevor sie live waren. Dieses Wort muss live und verifiziert heißen. Alles andere braucht ein anderes Wort.
+
+Morgen kommen die Tester an.

@@ -10,14 +10,18 @@ interface App {
 	minutes: number;
 }
 
+import { useJournal, type Locale } from '../i18n/ui';
+
 interface Props {
 	focusTime?: string;
 	topCategories?: Category[];
 	topApps?: App[];
 	rizePartial?: boolean;
+	lang?: Locale;
 }
 
-const { focusTime, topCategories = [], topApps = [], rizePartial = false } = Astro.props;
+const { focusTime, topCategories = [], topApps = [], rizePartial = false, lang = 'en' } = Astro.props;
+const rz = useJournal(lang).rize;
 
 const visibleCategories = topCategories.slice(0, 5);
 const visibleApps = topApps.slice(0, 6);
@@ -32,14 +36,14 @@ const formatMinutes = (mins: number): string => {
 
 <aside class="rize-recap" aria-label="Screen-time summary from Rize">
 	<header class="rize-head">
-		<span class="rize-label">On screen</span>
+		<span class="rize-label">{rz.onScreen}</span>
 		<span class="rize-time">{focusTime}</span>
-		{rizePartial && <span class="rize-partial" title="Rize tracking was off for part of this day">partial day</span>}
+		{rizePartial && <span class="rize-partial" title="Rize tracking was off for part of this day">{rz.partialDay}</span>}
 	</header>
 
 	{visibleCategories.length > 0 && (
 		<div class="rize-section">
-			<div class="rize-section-label">Top categories</div>
+			<div class="rize-section-label">{rz.topCategories}</div>
 			<ul class="rize-list">
 				{visibleCategories.map((c) => (
 					<li class="rize-row">
@@ -56,7 +60,7 @@ const formatMinutes = (mins: number): string => {
 
 	{visibleApps.length > 0 && (
 		<div class="rize-section">
-			<div class="rize-section-label">Top apps &amp; sites</div>
+			<div class="rize-section-label">{rz.topApps}</div>
 			<ul class="rize-app-list">
 				{visibleApps.map((a) => (
 					<li class="rize-app">
@@ -69,7 +73,7 @@ const formatMinutes = (mins: number): string => {
 	)}
 
 	<footer class="rize-foot">
-		<span>Tracked with <a href="https://rize.io" target="_blank" rel="noopener">Rize</a></span>
+		<span>{rz.trackedWith} <a href="https://rize.io" target="_blank" rel="noopener">Rize</a></span>
 	</footer>
 </aside>
 

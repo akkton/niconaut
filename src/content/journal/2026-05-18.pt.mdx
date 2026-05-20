@@ -1,0 +1,104 @@
+---
+date: 2026-05-18
+writtenAt: "01:15"
+title: "Dia 5: infraestrutura em cada camada"
+summary: "Segunda-feira no Brasil. Pesado de build. Separei o sistema de agentes no seu próprio espaço de trabalho compartimentado, levei o Handyman de um rascunho de briefing a um draft de scoping técnico travado, entreguei o Dia 2 do blog. Uma pausa para o Jiu Jitsu, segunda sessão, absolutamente incrível. Um pitch com um instalador local que moveu a agulha de formas que eu não previa."
+tags: [handyman, blog, system-infra, agents, jiu-jitsu]
+focusTime: "14h 4m"
+rizePartial: false
+lang: pt
+translationKey: "2026-05-18"
+topCategories:
+  - { name: "Code", percent: 44, minutes: 372 }
+  - { name: "Learning", percent: 12, minutes: 101 }
+  - { name: "Product", percent: 7, minutes: 58 }
+  - { name: "Meeting", percent: 6, minutes: 52 }
+  - { name: "Messaging", percent: 6, minutes: 52 }
+  - { name: "Sales", percent: 6, minutes: 50 }
+  - { name: "Productivity", percent: 4, minutes: 36 }
+  - { name: "Social Media", percent: 3, minutes: 28 }
+topApps:
+  - { name: "Visual Studio Code", minutes: 332 }
+  - { name: "youtube.com", minutes: 71 }
+  - { name: "lovable.dev", minutes: 58 }
+  - { name: "WhatsApp", minutes: 52 }
+  - { name: "oneproposal.app", minutes: 50 }
+  - { name: "nicolasneumann.blog", minutes: 29 }
+  - { name: "instagram.com", minutes: 28 }
+  - { name: "Rize", minutes: 26 }
+targets:
+  - Separar o workspace personal-apps de forma limpa do agentic-ops para que o trabalho de cliente e o de produto pessoal parem de se contaminar
+  - Levar o Handyman de rascunho de briefing a um documento de scoping técnico travado, pronto para discutir com meu conselheiro
+  - Entregar o Dia 2 do blog (integração do Rize, accountability, OG de verdade, eventos customizados)
+  - Aparecer no Jiu Jitsu
+wins:
+  - Trabalhei o dia inteiro. Uma pausa de verdade para o Jiu Jitsu. Duas pausas curtas para comer. O resto foi build de cabeça baixa.
+  - Sistema de agentes finalmente separado. Personal-apps e agentic-ops são agora duas instâncias separadas do VS Code com sua própria memória, seus próprios comandos, seus próprios servidores MCP. Sem mais sangramento cruzado.
+  - O scoping do Handyman aterrissou de ponta a ponta. Briefing renovado por um loop de clarificação de 5 rodadas, draft de scoping técnico escrito, mensagem para o conselheiro redigida limpa de lint. Pronto para a ligação.
+  - Dia 2 do blog entregue. Integração do Rize, esquema de accountability, imagem OG programática, dois eventos customizados do PostHog. O blog está real o suficiente para colocar nas minhas bios agora.
+  - Sessão 2 de Jiu Jitsu. Absolutamente incrível. A hora mais pura de diversão do dia.
+  - A conversa com um instalador local moveu a agulha. Fiz o pitch do Handyman, recebi a ideia de volta com novo enquadramento. Ele trouxe à tona contexto que eu nunca pensaria em pedir.
+losses:
+  - Ainda trabalhando à 1 da manhã. O bloco de reflexão abaixo vai soar meio formado porque estou cansado demais para pensar com clareza sobre o dia. Vou passar por isso com a cabeça limpa amanhã.
+  - Me distraí escrevendo o resumo da reunião no meio da tarde quando deveria estar de cabeça baixa no escopo do Handyman. Em retrospecto rendeu, mas na hora pareceu deriva.
+  - O YouTube tomou 71 minutos que eu não planejei. A maior parte foi barulho de fundo enquanto construía, mas parte foi atenção de verdade.
+  - Não fiz o backfill de 13 a 16 de maio na voz final. Estão com cara de placeholder. Amanhã.
+lessons:
+  - Separar o sistema de agentes em workspaces compartimentados deveria ter acontecido uma semana atrás. O custo da contaminação cruzada entre trabalho de cliente e trabalho pessoal era um imposto de foco que eu não conseguia ver enquanto pagava. Vejo agora.
+  - Ouvir antes de fazer o pitch. A ligação funcionou porque o formato pitch-depois-contra-pitch o fez trazer à tona um contexto de domínio que eu não saberia pedir. Enquadramento barato de conversa, alto rendimento de informação.
+  - Reflexão de madrugada compõe mal. A versão de 1 da manhã de "o que aprendi hoje" é genuinamente pior do que a versão de 9 da manhã de "o que aprendi ontem". O esquema precisa suportar um bloco de atualização na mesma entrada que eu possa preencher com a cabeça limpa.
+updates:
+  - at: "2026-05-19 cabeça limpa no dia seguinte"
+    note: |
+      Voltando a isto com a cabeça limpa na manhã seguinte. Três coisas que quero registrar e que não tive energia para escrever à 01:15.
+
+      A demonstração do Handyman está no ar e compartilhada com um pequeno grupo. Primeira vez que um terceiro pode clicar em algo do Handyman e funcionar. Grande mudança em como as conversas sobre o projeto podem ser agora.
+
+      Bom trabalho no blog depois que esta entrada foi escrita. Nove rodadas de entrega em duas sessões: reforma de UI, /privacy, linha com múltiplos compartilhamentos, stub de newsletter, página de stats /work, visão de longo prazo do tempo de foco desde fevereiro. O blog também pegou seu primeiro tráfego de verdade. 27 visitantes únicos na última semana, article_read_50 disparou 18 vezes de 5 pessoas diferentes. As pessoas estão lendo entradas até o fim, não desistindo na página inicial.
+
+      Bom trabalho de motor no OneProposal por cima de tudo isso. Horas dentro do núcleo, não em código de invólucro.
+
+      A textura que eu quero que este diário tenha é que o dia continua sendo a unidade, mas o dia cresce com o tempo. Um brain dump no fim do dia, depois uma passagem de cabeça limpa na manhã seguinte, talvez uma atualização à tarde se algo aterrissou. Cada uma com seu próprio timestamp, cada uma com sua própria mensagem. Não uma narrativa polida.
+---
+
+Cinco sessões de trabalho empilhadas uma atrás da outra. O que as une é que foram todas infraestrutura em camadas diferentes: o harness de agentes foi separado em workspaces distintos, o projeto Handyman foi escopado de um rascunho para algo que posso entregar ao meu conselheiro, o blog ganhou o polimento do Dia 2 que o torna real, e uma conversa rápida com um instalador local jogou a tese inteira do Handyman de volta para mim com novo enquadramento.
+
+## O sistema de agentes finalmente foi separado
+
+Nos últimos dois meses, tudo o que faço (trabalho de engajamento de cliente para dois clientes, meu próprio trabalho de produto no OneProposal, o novo blog pessoal) vivia em um único workspace do Claude Code. Um MEMORY.md indexava tudo. Um CLAUDE.md descrevia "o projeto", que eram na verdade cinco projetos. Cada sessão tinha que pagar um imposto de atenção para descobrir qual contexto se aplicava.
+
+Hoje clonei o workspace e o despi: trabalho de cliente fica em `agentic-ops-main`, produto pessoal e trabalho de app vivem em `personal-apps-main`. Mesmo harness, mesmas skills, mesmos hooks, mas duas memórias independentes. Dois registros de projeto independentes. Duas instâncias do VS Code independentes abertas em paralelo quando uma sessão precisa das duas.
+
+Esse é o tipo de mudança que eu deveria ter feito uma semana atrás. O custo da contaminação era invisível porque eu o pagava continuamente: uma sessão sobre meu blog trazia memórias sobre um incidente de cliente, uma sessão sobre preços do OneProposal puxava padrões de um orquestrador Make.com que construí para outra pessoa. Nenhum desses erros era grande, individualmente. Mas somavam um constante "esse contexto se aplica?" de baixo nível que eu rodava na cabeça por cima de cada resposta.
+
+A separação está limpa agora. A sessão de blog de onde escrevo esta entrada não carregou uma única memória de trabalho de cliente.
+
+## O Handyman foi de rascunho a documento de scoping em uma sessão
+
+Ontem eu tinha um briefing pré-renovação de 14 seções para o Handyman (uma plataforma de marketplace de serviços para casa no Brasil, Pix e parcelado como o diferencial central, Upwork cruzado com Uber como a estrela-guia do design). Hoje passei por cinco rodadas de clarificação, travei a renovação, escrevi um draft de scoping técnico (~1100 palavras: requisitos de arquitetura, quatro candidatos de stack com alvos de refutação, matriz de processadores de pagamento, cinco marcos sem prazos), redigi uma mensagem para o conselheiro e atualizei o registro do workspace.
+
+O draft de scoping técnico é explicitamente *alvo de iteração*, não *arquitetura travada*. A contribuição do meu conselheiro entra como notas inline amanhã na ligação; as decisões de arquitetura são travadas em uma sessão dedicada depois disso.
+
+## Dia 2 do blog entregue
+
+A versão estruturada: integração do Rize como recurso de primeira classe do diário (esquema, componente reutilizável `RizeRecap`, 17 de maio retroajustado). Imagem OG de verdade renderizada programaticamente via sharp + SVG. Dois eventos customizados do PostHog (`outbound_link_click`, `article_read_50`). Rodapé de accountability modelado no ritual de log da Maker School. Rodapé limpo, tagline travada depois de três rodadas de pushback, todo placeholder de template do Astro eliminado.
+
+A versão não estruturada: este blog está agora real o suficiente para eu estar disposto a colocá-lo na minha bio do Instagram e no meu perfil do LinkedIn. Esse era o objetivo de hoje, e eu o atingi.
+
+## Sessão 2 de Jiu Jitsu
+
+Absolutamente incrível. A hora mais pura de diversão do dia. Não há nada no loop de build que dê essa sensação, o que é um dado útil.
+
+## A conversa com o instalador
+
+Fui até a casa de um instalador local de painéis solares, com a intenção de fazer o pitch do Handyman. Em vez disso, a conversa virou um vai e vem. Fiz o pitch do Handyman, ele engajou a sério, e então fez o pitch de investimento em painéis solares de volta para mim como "a única coisa em que você deveria estar colocando dinheiro no Brasil agora". Esse contra-pitch não era o que eu fui buscar, mas trouxe à tona um domínio inteiro de contexto que eu não saberia pedir: como o negócio de instalação solar de fato funciona aqui, como são as margens, onde estão os ganchos regulatórios.
+
+A tese do Handyman também ficou mais afiada com o enquadramento dele. Ele tem a intuição local para quais problemas valem a pena resolver aqui, e a leitura dele sobre a dor do marketplace bateu com a minha.
+
+## O que segura o amanhã
+
+A ligação com o conselheiro está na agenda. Briefing renovado do Handyman, draft de scoping técnico e a mensagem para o conselheiro aterrissam todos na frente dele. A esperança é que ele faça pushback na arquitetura para que o doc de scoping fique mais afiado, não aprovado-como-está.
+
+Também: as entradas de backfill de 13 a 16 de maio ainda estão em voz de placeholder. Precisam de uma passagem amanhã de manhã quando eu tiver a cabeça limpa.
+
+A coisa é real. Amanhã eu continuo aparecendo.

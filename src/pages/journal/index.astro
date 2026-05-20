@@ -6,7 +6,7 @@ import Header from '../../components/Header.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import { SITE_TITLE } from '../../consts';
 
-const entries = (await getCollection('journal', ({ data }) => !data.draft)).sort(
+const entries = (await getCollection('journal', ({ data }) => !data.draft && data.lang === 'en')).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 

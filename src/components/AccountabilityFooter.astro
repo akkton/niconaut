@@ -1,12 +1,16 @@
 ---
+import { useJournal, type Locale } from '../i18n/ui';
+
 interface Props {
 	targets?: string[];
 	wins?: string[];
 	losses?: string[];
 	lessons?: string[];
+	lang?: Locale;
 }
 
-const { targets, wins, losses, lessons } = Astro.props;
+const { targets, wins, losses, lessons, lang = 'en' } = Astro.props;
+const acc = useJournal(lang).acc;
 const hasAny =
 	(targets && targets.length > 0) ||
 	(wins && wins.length > 0) ||
@@ -18,7 +22,7 @@ const hasAny =
 	<section class="accountability" aria-label="Day accountability">
 		{targets && targets.length > 0 && (
 			<div class="block">
-				<h3 class="block-label">Targets</h3>
+				<h3 class="block-label">{acc.targets}</h3>
 				<ul>
 					{targets.map((t) => <li>{t}</li>)}
 				</ul>
@@ -27,7 +31,7 @@ const hasAny =
 		<div class="grid">
 			{wins && wins.length > 0 && (
 				<div class="block wins">
-					<h3 class="block-label">Wins</h3>
+					<h3 class="block-label">{acc.wins}</h3>
 					<ul>
 						{wins.map((w) => <li>{w}</li>)}
 					</ul>
@@ -35,7 +39,7 @@ const hasAny =
 			)}
 			{losses && losses.length > 0 && (
 				<div class="block losses">
-					<h3 class="block-label">Losses</h3>
+					<h3 class="block-label">{acc.losses}</h3>
 					<ul>
 						{losses.map((l) => <li>{l}</li>)}
 					</ul>
@@ -43,7 +47,7 @@ const hasAny =
 			)}
 			{lessons && lessons.length > 0 && (
 				<div class="block lessons">
-					<h3 class="block-label">Lessons</h3>
+					<h3 class="block-label">{acc.lessons}</h3>
 					<ul>
 						{lessons.map((l) => <li>{l}</li>)}
 					</ul>

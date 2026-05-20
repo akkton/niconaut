@@ -1,0 +1,55 @@
+---
+date: 2026-05-16
+title: "Dia 3: preparação de lançamento, walkthrough, primeiro feedback"
+summary: "Sábado no Brasil. Dia de preparação para o lançamento do OneProposal. Troca de domínio para oneproposal.app, Stripe em modo ao vivo, PostHog sem cookies, correção do livro-razão de créditos. Um walkthrough com um amigo revelou seis bugs de UX antes invisíveis. Mensagem de compartilhamento para amigos e família enviada antes da meia-noite. Fio paralelo, uma conversa com um amigo brasileiro sobre outra ideia de app que estou mantendo vaga por enquanto."
+tags: [brazil, oneproposal, launch-prep, jiu-jitsu]
+focusTime: "9h 22m"
+screenshot: /journal-assets/rize-2026-05-16.png
+lang: pt
+translationKey: "2026-05-16"
+topCategories:
+  - { name: "Code", percent: 34, minutes: 191 }
+  - { name: "Meeting", percent: 17, minutes: 96 }
+  - { name: "Product", percent: 10, minutes: 55 }
+  - { name: "Social Media", percent: 9, minutes: 50 }
+  - { name: "Meetings", percent: 9, minutes: 50 }
+topApps:
+  - { name: "Visual Studio Code", minutes: 191 }
+  - { name: "lovable.dev", minutes: 51 }
+  - { name: "instagram.com", minutes: 50 }
+  - { name: "oneproposal.app", minutes: 21 }
+  - { name: "Microsoft Outlook", minutes: 18 }
+  - { name: "Microsoft Edge", minutes: 14 }
+  - { name: "WhatsApp", minutes: 14 }
+targets:
+  - Verificar e corrigir os quatro bugs que bloqueiam o lançamento
+  - Passar o OneProposal para o modo Stripe ao vivo e trocar o domínio para oneproposal.app
+  - Conduzir um amigo pelo produto a frio e enviar a mensagem de compartilhamento para amigos e família
+wins:
+  - oneproposal.app totalmente operacional. A troca de domínio tocou 19 arquivos e funcionou de ponta a ponta.
+  - Modo ao vivo do Stripe ativo. O produto pode de fato receber dinheiro agora.
+  - O walkthrough com um amigo revelou seis bugs de UX antes invisíveis. O melhor feedback possível pelo menor custo possível.
+  - Mensagem de compartilhamento para amigos e família enviada antes da meia-noite. Primeiro feedback de verdade dentro de uma hora.
+  - Uma conversa com um amigo brasileiro sobre outra ideia de app que estou mantendo vaga por enquanto. A conversa importa mais do que a ideia neste estágio.
+losses:
+  - "Teatro de verificação na auditoria de bugs. Disse \"Bug C corrigido\" sem renderizar a página. O amigo pegou no primeiro minuto."
+  - "Disse \"entregue\" várias vezes quando a palavra certa era \"commitado-mas-ainda-não-publicado\". Essa distinção importa mais do que parece."
+  - O Stop hook do harness de agentes disparou demais umas doze vezes em turnos de handoff do Lovable. Atrito de ferramenta.
+lessons:
+  - Auditar-sem-renderizar é a classe de erro mais cara. Sempre clique pra ver.
+  - Entregue tem que significar ao vivo em produção e com comportamento verificado. Qualquer outra coisa precisa de outra palavra.
+  - Um walkthrough de verdade com um amigo pega coisas que o harness de agentes não pega. Os primeiros seis bugs estavam todos visíveis nos primeiros dez minutos de outra pessoa usando o produto a frio.
+  - Aparecer no tatame significa que estou conhecendo construtores brasileiros que pensam os problemas por um lado que eu não penso. Esse é o rendimento de segunda ordem do jiu jitsu que eu não tinha previsto.
+---
+
+Dia de preparação de lançamento para o OneProposal. Até a meia-noite o produto tinha um domínio de verdade, Stripe de verdade, primeiros usuários de verdade, e seis bugs de verdade que o harness de agentes não tinha visto.
+
+O walkthrough foi o dia. Ver alguém usar o produto a frio, em tempo real, é incomparável. Toda suposição que eu vinha fazendo sobre o fluxo veio à tona em dez minutos. Nenhuma delas era técnica. Eram todas "espera, o que deveria acontecer aqui?". Os bugs que nomeei durante a sessão são todos coisas que eu teria entregado me sentindo orgulhoso, e todas elas teriam feito o primeiro usuário de verdade desistir.
+
+Depois enviei a mensagem de compartilhamento para amigos e família e o feedback de verdade começou a chegar dentro de uma hora. As pessoas clicam nas partes que eu subestimei, pulam as partes em que coloquei duas demãos de polimento. O feedback foi bom, com isso quero dizer "acionável e levemente doloroso". De volta direto para a construção.
+
+Fio paralelo hoje: uma conversa com um amigo que venho encontrando no Jiu Jitsu, sobre outra ideia de app. Estamos cedo o suficiente para eu não colocar nada disso no registro público ainda. O que vale notar é que a conversa aconteceu. Aparecer no tatame também é aparecer para a comunidade mais ampla de construtores brasileiros, e essa parte está rendendo de jeitos que eu não planejei.
+
+O atrito que vale nomear é o da linguagem. Eu ficava chamando coisas de "entregues" antes de estarem ao vivo. Essa palavra tem que significar ao vivo e verificado. Todo o resto precisa de outra palavra.
+
+Amanhã os testadores chegam.
