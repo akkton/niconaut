@@ -1,19 +1,23 @@
 ---
-// Newsletter signup stub. The form does not POST anywhere yet.
-// On submit, JS constructs a mailto: link to Nico with the email + preference
-// and opens it in the visitor's default mail client. Once a real provider is
-// wired (Buttondown / Resend), swap the submit handler.
+// Newsletter signup, wired to Buttondown.
+// On submit: fire the PostHog newsletter_signup_intent event (before anything else),
+// then POST the email + preference (as a Buttondown tag) to the embed-subscribe
+// endpoint via fetch (no-cors keeps the visitor on-site). Buttondown sends the
+// double-opt-in confirmation email. Username lives in consts.ts (BUTTONDOWN_USERNAME).
+import { BUTTONDOWN_USERNAME } from '../consts';
+
+const subscribeAction = `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`;
 ---
 
 <section class="newsletter" aria-label="Email subscribe">
 	<div class="head">
 		<h2 class="title">Get this in your inbox</h2>
 		<p class="sub">
-			One email when a new piece lands. No tracking pixels, no third-party tools.
-			Reply with "stop" any time to unsubscribe.
+			One email when a new piece lands. Sent through Buttondown, with a one-click
+			unsubscribe in every email. No tracking pixels.
 		</p>
 	</div>
-	<form id="newsletter-form" novalidate>
+	<form id="newsletter-form" data-action={subscribeAction} novalidate>
 		<label class="email-label" for="newsletter-email">Email</label>
 		<input
 			id="newsletter-email"
@@ -23,7 +27,7 @@
 			required
 		/>
 		<fieldset class="prefs">
-			<legend>I want notifications for…</legend>
+			<legend>I want…</legend>
 			<label>
 				<input type="radio" name="pref" value="both" checked />
 				<span>Both</span>
@@ -38,9 +42,7 @@
 			</label>
 		</fieldset>
 		<button type="submit">Subscribe</button>
-		<p class="confirm" hidden>
-			Opening your mail client. Once the email window appears, just hit send.
-		</p>
+		<p class="confirm" role="status" hidden></p>
 	</form>
 </section>
 
@@ -133,11 +135,18 @@
 		background: var(--bg);
 		color: var(--ink);
 	}
+	button[type="submit"]:disabled {
+		opacity: 0.6;
+		cursor: default;
+	}
 	.confirm {
 		margin: 0;
 		color: var(--ink-muted);
 		font-size: 13px;
 		line-height: 1.45;
+	}
+	.confirm.error {
+		color: #b00020;
 	}
 	.confirm[hidden] { display: none; }
 </style>
@@ -146,26 +155,53 @@
 	(function () {
 		var form = document.getElementById('newsletter-form');
 		if (!form) return;
+		var action = form.getAttribute('data-action');
+		var status = form.querySelector('.confirm');
+
+		function show(msg, isError) {
+			if (!status) return;
+			status.textContent = msg;
+			status.hidden = false;
+			if (isError) {
+				status.classList.add('error');
+			} else {
+				status.classList.remove('error');
+			}
+		}
+
 		form.addEventListener('submit', function (e) {
 			e.preventDefault();
 			var email = (form.querySelector('input[name="email"]') || {}).value || '';
 			var pref = (form.querySelector('input[name="pref"]:checked') || {}).value || 'both';
 			if (!email || email.indexOf('@') === -1) {
-				alert('Please enter a valid email.');
+				show('Please enter a valid email.', true);
 				return;
 			}
-			var subject = encodeURIComponent('Newsletter signup: ' + pref);
-			var body = encodeURIComponent(
-				'Email: ' + email + '\nPreference: ' + pref + '\n\n' +
-				'(Sent from nicolasneumann.blog newsletter signup form.)',
-			);
+
+			// Fire the intent event first, before any navigation or async work.
 			if (window.posthog && typeof window.posthog.capture === 'function') {
 				window.posthog.capture('newsletter_signup_intent', { preference: pref });
 			}
-			var confirm = form.querySelector('.confirm');
-			if (confirm) confirm.hidden = false;
-			var href = 'mailto:neumanic2@gmail.com?subject=' + subject + '&body=' + body;
-			window.location.href = href;
+
+			var btn = form.querySelector('button[type="submit"]');
+			if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
+
+			var body = new URLSearchParams();
+			body.append('email', email);
+			body.append('tag', pref);
+			body.append('embed', '1');
+
+			fetch(action, { method: 'POST', mode: 'no-cors', body: body })
+				.then(function () {
+					show('Check your inbox. Click the confirmation link and you are in.', false);
+					form.reset();
+				})
+				.catch(function () {
+					show('Something went wrong. Try again, or email me at neumanic2@gmail.com.', true);
+				})
+				.then(function () {
+					if (btn) { btn.disabled = false; btn.textContent = 'Subscribe'; }
+				});
 		});
 	})();
 </script>
