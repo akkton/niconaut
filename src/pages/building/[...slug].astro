@@ -1,0 +1,210 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects', ({ data }) => !data.draft);
+	return projects.map((project) => ({
+		params: { slug: project.id },
+		props: project,
+	}));
+}
+type Props = CollectionEntry<'projects'>;
+
+const project = Astro.props;
+const { name, status, summary, startedDate, links, changelog, tags } = project.data;
+const { Content } = await render(project);
+
+const changelogSorted = [...changelog].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+// Posts that follow this project: any post tagged with one of the project's tags.
+const related = (await getCollection('posts', ({ data }) => !data.draft))
+	.filter((post) => post.data.tags.some((t) => tags.includes(t)))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${name} · Building`} description={summary} />
+		<style>
+			a.back-link {
+				display: inline-block;
+				margin-bottom: 1.5em;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				text-decoration: none;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+			a.back-link:hover {
+				color: var(--ink);
+			}
+			.title {
+				margin: 0 0 1.5em 0;
+			}
+			.title-row {
+				display: flex;
+				align-items: baseline;
+				gap: 0.75em;
+				flex-wrap: wrap;
+			}
+			.title h1 {
+				margin: 0;
+				font-size: 1.9rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+			}
+			.status {
+				font-family: var(--font-stack-mono);
+				font-size: 10px;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--ink-faint);
+				border: 1px solid var(--rule);
+				border-radius: 999px;
+				padding: 0.15em 0.6em;
+			}
+			.title .desc {
+				margin: 0.6em 0 0.4em 0;
+				color: var(--ink-muted);
+				font-size: 1rem;
+				line-height: 1.5;
+			}
+			.meta {
+				font-family: var(--font-stack-mono);
+				font-size: 12px;
+				color: var(--ink-faint);
+			}
+			.links {
+				margin: 0.6em 0 0 0;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5em 1em;
+			}
+			.links a {
+				font-size: 13px;
+				color: var(--ink);
+			}
+			.prose {
+				color: var(--ink);
+				font-size: 15px;
+				line-height: 1.65;
+				margin: 0 0 2.5em 0;
+			}
+			.prose :global(p) {
+				margin: 0 0 1.1em 0;
+			}
+			.section-head {
+				margin: 2.5em 0 1em 0;
+				padding-bottom: 0.4em;
+				border-bottom: 1px solid var(--rule);
+				font-size: 0.78rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--ink-faint);
+			}
+			.changelog {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.changelog li {
+				display: grid;
+				grid-template-columns: 7em 1fr;
+				gap: 1em;
+				padding: 0.6em 0;
+				border-bottom: 1px solid var(--rule);
+			}
+			.changelog li:last-child {
+				border-bottom: none;
+			}
+			.cl-date {
+				font-family: var(--font-stack-mono);
+				font-size: 12px;
+				color: var(--ink-faint);
+				white-space: nowrap;
+			}
+			.cl-note {
+				font-size: 14px;
+				color: var(--ink);
+				line-height: 1.5;
+			}
+			.related {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.related li {
+				padding: 0.5em 0;
+			}
+			.related a {
+				color: var(--ink);
+				font-size: 14.5px;
+			}
+			@media (max-width: 540px) {
+				.changelog li {
+					grid-template-columns: 6em 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<a href="/building/" class="back-link">&larr; all projects</a>
+			<article>
+				<div class="title">
+					<div class="title-row">
+						<h1>{name}</h1>
+						<span class="status">{status}</span>
+					</div>
+					<p class="desc">{summary}</p>
+					<p class="meta">since <FormattedDate date={startedDate} /></p>
+					{links && links.length > 0 && (
+						<div class="links">
+							{links.map((link) => (
+								<a href={link.url}>{link.label} &rarr;</a>
+							))}
+						</div>
+					)}
+				</div>
+
+				<div class="prose">
+					<Content />
+				</div>
+
+				{changelogSorted.length > 0 && (
+					<>
+						<div class="section-head">Changelog</div>
+						<ul class="changelog">
+							{changelogSorted.map((entry) => (
+								<li>
+									<span class="cl-date"><FormattedDate date={entry.date} /></span>
+									<span class="cl-note">{entry.note}</span>
+								</li>
+							))}
+						</ul>
+					</>
+				)}
+
+				{related.length > 0 && (
+					<>
+						<div class="section-head">Posts following this</div>
+						<ul class="related">
+							{related.map((post) => (
+								<li><a href={`/posts/${post.id}/`}>{post.data.title}</a></li>
+							))}
+						</ul>
+					</>
+				)}
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
