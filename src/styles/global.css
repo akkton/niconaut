@@ -6,7 +6,14 @@
 @import "tailwindcss";
 
 :root {
-	/* New palette */
+	/* Typography stacks (theme-independent) */
+	--font-stack-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-stack-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+	--font-stack-display: var(--font-inter), system-ui, sans-serif;
+}
+
+:root,
+:root[data-theme="light"] {
 	--bg: #ffffff;
 	--ink: #0f0f0f;
 	--ink-muted: #555555;
@@ -15,6 +22,8 @@
 	--rule-strong: #d0d0d0;
 	--code-bg: #f5f5f5;
 	--link-hover: #2337ff;
+	--pre-bg: #0f0f0f;
+	--pre-fg: #f0f0f0;
 
 	/* Legacy aliases (RGB triplets so existing rgb(var(--xxx)) callsites still work) */
 	--accent: var(--ink);
@@ -23,11 +32,48 @@
 	--gray: 136, 136, 136;
 	--gray-light: 234, 234, 234;
 	--gray-dark: 85, 85, 85;
+}
 
-	/* Typography stacks */
-	--font-stack-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
-	--font-stack-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-	--font-stack-display: var(--font-inter), system-ui, sans-serif;
+:root[data-theme="dark"] {
+	--bg: #0f0f0f;
+	--ink: #f0f0f0;
+	--ink-muted: #a0a0a0;
+	--ink-faint: #707070;
+	--rule: #2a2a2a;
+	--rule-strong: #404040;
+	--code-bg: #1f1f1f;
+	--link-hover: #6b85ff;
+	--pre-bg: #1a1a1a;
+	--pre-fg: #f0f0f0;
+
+	--accent: var(--ink);
+	--accent-dark: var(--link-hover);
+	--black: 240, 240, 240;
+	--gray: 112, 112, 112;
+	--gray-light: 42, 42, 42;
+	--gray-dark: 160, 160, 160;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--bg: #0f0f0f;
+		--ink: #f0f0f0;
+		--ink-muted: #a0a0a0;
+		--ink-faint: #707070;
+		--rule: #2a2a2a;
+		--rule-strong: #404040;
+		--code-bg: #1f1f1f;
+		--link-hover: #6b85ff;
+		--pre-bg: #1a1a1a;
+		--pre-fg: #f0f0f0;
+
+		--accent: var(--ink);
+		--accent-dark: var(--link-hover);
+		--black: 240, 240, 240;
+		--gray: 112, 112, 112;
+		--gray-light: 42, 42, 42;
+		--gray-dark: 160, 160, 160;
+	}
 }
 
 html,
@@ -149,7 +195,7 @@ code {
 pre {
 	margin: 1em 0;
 	padding: 0.9em 1em;
-	background: #0f0f0f;
+	background: var(--pre-bg);
 	border-radius: 4px;
 	overflow-x: auto;
 	font-size: 0.85rem;
@@ -159,7 +205,7 @@ pre {
 pre > code {
 	background: transparent;
 	padding: 0;
-	color: #f0f0f0;
+	color: var(--pre-fg);
 	font-size: inherit;
 }
 

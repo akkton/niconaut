@@ -27,9 +27,24 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="color-scheme" content="light" />
-<meta name="theme-color" content="#ffffff" />
-<style is:inline>html,body{background:#ffffff;color:#0f0f0f}</style>
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
+<script is:inline>
+	(function () {
+		try {
+			var t = localStorage.getItem('theme');
+			if (t === 'light' || t === 'dark') {
+				document.documentElement.dataset.theme = t;
+			}
+		} catch (e) { /* ignore */ }
+	})();
+</script>
+<style is:inline>
+	html,body{background:#ffffff;color:#0f0f0f}
+	html[data-theme="dark"],html[data-theme="dark"] body{background:#0f0f0f;color:#f0f0f0}
+	@media (prefers-color-scheme: dark){html:not([data-theme]),html:not([data-theme]) body{background:#0f0f0f;color:#f0f0f0}}
+</style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />

@@ -11,9 +11,34 @@ import HeaderLink from './HeaderLink.astro';
 			<HeaderLink href="/work">Work</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
 			<HeaderLink href="/feedback">Feedback</HeaderLink>
+			<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◐</button>
 		</div>
 	</nav>
 </header>
+<script is:inline>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		function current() {
+			var t = document.documentElement.dataset.theme;
+			if (t === 'dark' || t === 'light') return t;
+			try {
+				return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			} catch (e) { return 'light'; }
+		}
+		function syncLabel() {
+			var c = current();
+			btn.setAttribute('aria-label', c === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+		}
+		btn.addEventListener('click', function () {
+			var next = current() === 'dark' ? 'light' : 'dark';
+			document.documentElement.dataset.theme = next;
+			try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+			syncLabel();
+		});
+		syncLabel();
+	})();
+</script>
 <style>
 	header {
 		margin: 0;
@@ -61,6 +86,26 @@ import HeaderLink from './HeaderLink.astro';
 		text-decoration-color: var(--ink);
 		text-underline-offset: 5px;
 		font-weight: 500;
+	}
+	.theme-toggle {
+		font-family: var(--font-stack-sans);
+		font-size: 15px;
+		line-height: 1;
+		color: var(--ink-faint);
+		background: transparent;
+		border: none;
+		padding: 0;
+		margin: 0;
+		cursor: pointer;
+		transition: color 0.12s ease;
+	}
+	.theme-toggle:hover {
+		color: var(--ink);
+	}
+	.theme-toggle:focus-visible {
+		outline: 1px solid var(--ink);
+		outline-offset: 3px;
+		border-radius: 2px;
 	}
 	@media (max-width: 540px) {
 		nav {
