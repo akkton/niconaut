@@ -111,12 +111,100 @@ import { SITE_TITLE } from '../consts';
 
 			<h2>Opt out</h2>
 			<p>
-				If you'd rather not be counted by PostHog at all, the simplest way is the
-				<a href="https://github.com/dnschneid/uBlock-Origin-list-uBOrAdblockTracker/blob/master/uBOrAdblockTracker.txt" target="_blank" rel="noopener">uBlock Origin</a>
+				One click below tells PostHog to stop capturing events from this browser. The flag is
+				stored in this browser's localStorage, so it persists across visits on this device.
+				Clear your site data and it resets to opted-in.
+			</p>
+			<div class="opt-out-box">
+				<button id="opt-out-btn" type="button">Opt out of analytics on this site</button>
+				<p id="opt-out-status" class="opt-out-status">Status: loading.</p>
+			</div>
+			<p>
+				If you'd rather block PostHog at the browser level across every site, the
+				<a href="https://github.com/dnschneid/uBlock-Origin-list-uBOrAdblockTracker/blob/master/uBOrAdblockTracker.txt" target="_blank" rel="noopener">uBlock Origin tracker list</a>
 				or
 				<a href="https://privacybadger.org/" target="_blank" rel="noopener">Privacy Badger</a>
-				route. I'll keep working even if you do.
+				do that. I'll keep working either way.
 			</p>
+
+			<script is:inline>
+				(function () {
+					var btn = document.getElementById('opt-out-btn');
+					var status = document.getElementById('opt-out-status');
+					if (!btn || !status) return;
+
+					function isOptedOut() {
+						try {
+							if (window.posthog && typeof window.posthog.has_opted_out_capturing === 'function') {
+								var r = window.posthog.has_opted_out_capturing();
+								if (typeof r === 'boolean') return r;
+							}
+						} catch (e) { /* ignore */ }
+						return false;
+					}
+
+					function render() {
+						var out = isOptedOut();
+						btn.textContent = out ? 'Re-enable analytics on this site' : 'Opt out of analytics on this site';
+						status.textContent = out
+							? 'Status: opted out. PostHog will not capture events from this browser.'
+							: 'Status: opted in. PostHog is collecting anonymous pageview and interaction events.';
+					}
+
+					btn.addEventListener('click', function () {
+						if (!window.posthog) return;
+						if (isOptedOut()) {
+							window.posthog.opt_in_capturing();
+						} else {
+							window.posthog.opt_out_capturing();
+						}
+						render();
+					});
+
+					var tries = 0;
+					var t = setInterval(function () {
+						if (window.posthog && typeof window.posthog.has_opted_out_capturing === 'function') {
+							render();
+							clearInterval(t);
+						} else if (++tries > 30) {
+							render();
+							clearInterval(t);
+						}
+					}, 100);
+				})();
+			</script>
+
+			<style>
+				.opt-out-box {
+					margin: 0.5em 0 1.5em 0;
+					padding: 1em 1.1em;
+					border: 1px solid var(--rule);
+					border-radius: 6px;
+					background: var(--bg);
+				}
+				#opt-out-btn {
+					font-family: var(--font-stack-sans);
+					font-size: 13.5px;
+					font-weight: 500;
+					color: var(--ink);
+					background: transparent;
+					border: 1px solid var(--ink);
+					padding: 0.55em 1em;
+					border-radius: 4px;
+					cursor: pointer;
+					transition: background 0.12s ease, color 0.12s ease;
+				}
+				#opt-out-btn:hover {
+					background: var(--ink);
+					color: var(--bg);
+				}
+				.opt-out-status {
+					margin: 0.85em 0 0 0;
+					font-family: var(--font-stack-mono);
+					font-size: 12px;
+					color: var(--ink-muted);
+				}
+			</style>
 
 			<h2>Contact</h2>
 			<p>

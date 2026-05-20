@@ -1,11 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import aboutImg from '../assets/blog-placeholder-about.jpg';
 
 const recentJournal = (await getCollection('journal', ({ data }) => !data.draft))
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -43,6 +45,46 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 				font-size: 0.95rem;
 				line-height: 1.6;
 				max-width: 55ch;
+			}
+
+			.about-stanza {
+				margin: 0 0 3.5em 0;
+			}
+			.about-figure {
+				margin: 0 0 1.5em 0;
+			}
+			.about-figure img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border-radius: 4px;
+				border: 1px solid var(--rule);
+			}
+			.about-figure figcaption {
+				margin: 0.55em 0 0 0;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+				letter-spacing: 0.02em;
+			}
+			.about-stanza p {
+				margin: 0 0 0.85em 0;
+				color: var(--ink);
+				font-size: 0.95rem;
+				line-height: 1.6;
+				max-width: 60ch;
+			}
+			.about-stanza p:last-child {
+				margin-bottom: 0;
+			}
+			.about-stanza a {
+				color: var(--ink);
+				text-decoration: underline;
+				text-decoration-thickness: 1px;
+				text-underline-offset: 3px;
+			}
+			.about-stanza a:hover {
+				color: var(--link-hover);
 			}
 
 			section {
@@ -205,6 +247,22 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft))
 				<p>
 					I'm building products with AI agents, journaling the work in public, and figuring out
 					what an entrepreneurial life looks like in 2026. This is the log.
+				</p>
+			</section>
+
+			<section class="about-stanza">
+				<figure class="about-figure">
+					<Image src={aboutImg} alt="A placeholder portrait. Real photo lands later." width={1020} height={680} />
+					<figcaption>The log starts here.</figcaption>
+				</figure>
+				<p>
+					Two streams. A near-daily journal tracks what I worked on, what shipped, what stalled,
+					and the focus time from Rize. Long-form posts when an idea earns more than 200 words.
+				</p>
+				<p>
+					Everything is plain text first. The repo is public. The analytics events are listed
+					on <a href="/privacy/">/privacy</a>. If anything you read lands or fails to land,
+					the <a href="/feedback/">/feedback</a> link comes straight to my inbox.
 				</p>
 			</section>
 
