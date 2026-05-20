@@ -104,6 +104,10 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog
 			var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
 			if (!link) return;
 			var href = link.getAttribute('href') || '';
+				var phEvent = link.getAttribute('data-ph-event');
+				if (phEvent && window.posthog && typeof window.posthog.capture === 'function') {
+					window.posthog.capture(phEvent, { href: href, source_path: window.location.pathname });
+				}
 			if (!/^https?:\/\//i.test(href)) return;
 			try {
 				var url = new URL(href, window.location.href);

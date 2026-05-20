@@ -1,0 +1,56 @@
+---
+title: "Set up your own agentic workspace"
+description: "A downloadable starter kit, one CLAUDE.md plus the structure that grows around it, and a ten-minute install guide so you can run the same setup I do."
+pubDate: 2026-05-20
+tags: [workflow, claude-code, vs-code, agents, starter-kit]
+draft: false
+---
+
+A while back I wrote about [how my agentic system actually works](/posts/how-the-agentic-system-works/). That post is the why. This one is the how, plus a file you can download and use today.
+
+The thing people get stuck on is not the idea. It is the blank page. You open the agent in an empty folder and you do not know what to put in front of it. So here is the smallest useful starting point, packaged up.
+
+## Download the kit
+
+<p>
+  <a href="/downloads/agentic-starter-kit.zip" download data-ph-event="agentic_kit_download"><strong>Download the starter kit (zip)</strong></a>
+</p>
+
+Inside the zip:
+
+- **`CLAUDE.md`** is the file you actually use. It is the wrapper: a two-page description of your project and how the agent should work in it. This is the part that matters.
+- **`README.md`** is the install guide and a page of hard-won notes.
+- **`.claude/`** shows the structure that grows around the wrapper: where slash commands live, an example command template, and a real safety hook that stops the agent from editing your secrets.
+- **`.mcp.json.example`** shows the shape of connecting an external tool, with no keys in it.
+
+The kit is deliberately generic. It is not my system. My system is six months of corrections layered on top of a file like this one. The point is to hand you the seed, not the tree.
+
+## Install it (about ten minutes)
+
+1. **Get an IDE with an agent.** I use VS Code with Claude Code. Install Claude Code, sign in. Any editor with an agent integration works the same way.
+2. **Open a folder.** A real project, or an empty one for something new.
+3. **Drop `CLAUDE.md` into the root.** Copy the `.claude/` folder too if you want the examples nearby.
+4. **Edit `CLAUDE.md`** so it describes your actual project: what it is, the stack, the layout, the rules you care about. Keep it to two pages.
+5. **Point the agent at it.** Open the folder in Claude Code and say: *"Read CLAUDE.md, then propose a scaffold. Ask me what you need before you build."*
+6. **Critique what it does** for the next half hour. Every correction becomes a new line in `CLAUDE.md`. That is the whole loop, and it is the only step that compounds.
+
+If you want the agent to reach outside the repo (a database, an automation tool, an analytics product), that is what MCP is for. Copy `.mcp.json.example` to `.mcp.json`, fill in the real values, never commit it, and fully restart the IDE so the connection loads. Then run one small test before you build anything real on it.
+
+## Why the blank version does not work
+
+You can open the agent in an empty folder and tell it to build. It will. The result looks reasonable and is subtly wrong, because the model has no idea what your work looks like. It is a contractor with no brief.
+
+The wrapper is the brief. When my agent is good at something, the model did not get smarter. The `CLAUDE.md` got shaped by twenty sessions of getting it wrong. That is the difference between a vanilla agent and a system: the vanilla one guesses every time, the system remembers what you already decided.
+
+## A few notes from doing this daily
+
+- **Frontload, do not dribble.** Give the agent the whole picture in one go. Output quality tracks input quality, and a long brief beats ten tiny prompts.
+- **Push it to do more itself.** Agents hand you work they could do. Ask "can you do that part yourself?" more than feels natural. The automation ceiling rises every time.
+- **You are the sanity checker.** You do not need to know how the model works inside. You need to read what it produced and judge it. If you cannot read what it wrote, you do not own what it built.
+- **Checkpoint before the context fills.** Letting it auto-compact silently drops detail. A short summary plus a friction log keeps the thread across sessions.
+- **Then fix the design, not just the bug.** Every few checkpoints, ask whether the same kind of error keeps coming back because the design is wrong. Fixing that is what ends the loop.
+- **Sync to git constantly.** The wrapper is the asset. Losing the folder is losing months.
+
+The honest version of "ship faster with AI" is this: you spend the time you save building the system that lets you trust the speed. Fair trade. Not a free one.
+
+The kit is the first hour of that trade, done for you. The rest is yours.

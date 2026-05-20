@@ -1,0 +1,12 @@
+{
+  "_comment": "Rename to .mcp.json and fill in real values. NEVER commit the real file. Add .mcp.json to your .gitignore. Restart the IDE fully after editing. This example shows the shape of one stdio MCP server; swap in whichever tool you are connecting (a database, an automation platform, an analytics product).",
+  "mcpServers": {
+    "example-tool": {
+      "command": "npx",
+      "args": ["-y", "@example/mcp-server"],
+      "env": {
+        "EXAMPLE_API_KEY": "put-your-key-here"
+      }
+    }
+  }
+}

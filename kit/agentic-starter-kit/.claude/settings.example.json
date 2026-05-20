@@ -1,0 +1,16 @@
+{
+  "_comment": "Rename to settings.json. This wires the pre-edit guard hook so it runs before every Edit/Write. See https://docs.claude.com/claude-code for the full hooks reference.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/pre-edit-guard.py"
+          }
+        ]
+      }
+    ]
+  }
+}
