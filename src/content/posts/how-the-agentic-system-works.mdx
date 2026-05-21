@@ -1,16 +1,17 @@
 ---
 title: "How my agentic system actually works"
-description: A live walkthrough I gave to a client today, written down. What sits where, why a blank workspace plus AI is not the system, and a seed prompt you can paste to start your own.
+description: A live walkthrough I gave to a client, written down. What sits where, why a blank workspace plus AI is not the system, the four layers that make it reliable, and a seed prompt you can paste to start your own.
 pubDate: 2026-05-19
+updatedDate: 2026-05-20
 tags: [workflow, agents, claude-code, vs-code, n8n]
 draft: false
 ---
 
-A client asked me today how my setup works.
+A client asked me how my setup works.
 
 She has a job to automate (bug intake from Sentry, triage with an LLM, ticket creation in Jira, notification in Slack) and she wanted to know how I would build it. We ended up spending an hour on the screen. I realized I was explaining the same thing I get asked about every week.
 
-Here is the written version.
+Here is the written version, longer than the one I gave on the call because the call kept getting interrupted by "wait, what is that."
 
 ## The three pieces
 
@@ -32,7 +33,49 @@ Half of what I do every day is improve the wrapper the agent sits inside. A desc
 
 When my agent is good at something, it is usually because that wrapper has been shaped by twenty sessions of getting it wrong. The model is the same model. The wrapper is what changed.
 
-If you skip the wrapper and run the agent on raw vibes, you get the result you would get from any contractor working with no context. They will produce something. It will look reasonable. It will be subtly wrong in ways you do not notice until later.
+## The four layers: rules, skills, commands, hooks
+
+When people see my setup they ask where the magic is, expecting one clever file. There is no clever file. There are four layers, and the trick is knowing which layer a given piece of behavior belongs in.
+
+**Rules** are the bottom layer. A rule is prose the agent reads: "before asking me a question, try the obvious thing first." Cheap to write, easy to change. The catch is that a rule is non-deterministic. The agent reads it, interprets it, and mostly follows it. Mostly. Some fraction of the time it reads right past it.
+
+**Skills** are what you get when several rules cluster around one job. Enough rules about how to write an email, and it stops being loose guidance and becomes a named skill the agent can load when that job comes up. Still read by the model, still interpretable, but bundled and reusable.
+
+**Commands** are predefined prompts that run a fixed sequence top to bottom. The difference between "run this command" and pasting the same words as a normal message is real. Asked as a loose prompt, the agent skims and improvises. Run as a command, it goes through the steps in order, stops to ask the clarifying questions you told it to ask, and does not quietly skip the step you cared about. When a workflow has an order that matters, it wants to be a command.
+
+**Hooks** are the top layer and the only deterministic one. A hook is a small piece of Python that fires on a trigger, every time, whether or not the model "felt like it." This is where you put the behavior that is not allowed to fail. Rules and skills are advice. A hook is a law.
+
+The layers are not a menu you pick from once. They are a pipeline. A behavior starts as a rule. If I lean on it often, or keep rewriting it, the rules cluster into a skill. If a skill gets used constantly, or keeps drifting from what I actually want, that is the signal to graduate it into a hook and make it deterministic. The system tells you when something needs to move up a layer: the more an error repeats, the higher the layer its fix belongs in.
+
+### What a hook actually does
+
+Three of mine, to make it concrete:
+
+- One watches for the moment the agent tries to hand a task back to me. The instant it starts to say "you should go do X," the hook interrupts and makes it check whether it actually has the access to do X itself. Most of the time it does. That one hook is most of the difference between a tool that gives me homework and a tool that does the work.
+- One forces a sync to git at the end of every session. That hook exists because a session once ran for hours, edited hundreds of files, and pushed none of them. I only noticed later. Now it is not allowed to happen, because it is not advice anymore, it is code.
+- One is a safety gate. If the agent is working inside a context flagged as live production, edits get blocked and the session gets stopped before anything ships. That one I now install for clients too. You do not want the difference between "draft" and "live" to depend on the model paying attention.
+
+The honest reason hooks exist is hallucination. The model is excellent and still, some percentage of the time, does the wrong confident thing. You cannot prompt that percentage to zero. You can route the things that matter through a layer where the percentage does not apply.
+
+The famous small example is the em-dash. Models love the long dash, and there is no key on the keyboard that makes one, so it is a fingerprint that text went through an AI. I can write a rule that says no em-dashes. The model will still produce them now and then. The version that actually holds is a hook that strips them on the way out.
+
+## Sessions, checkpoints, and not losing the thread
+
+A session is one continuous conversation with the agent inside a project. The longer it runs, the more context it carries, and at some point the context fills up. When that happens the default behavior is to compact: the agent summarizes the conversation so far and continues from the summary. That is fine for a chat. It is a quiet disaster when the detail it summarized away was the detail you needed, especially if your real communications and decisions live in the system and have to stay exact.
+
+So I do not let it compact silently. Before the context fills, I run a checkpoint command. It writes a checkpoint file: what we did, what is still open, what broke, what I decided. The next session starts by reading that file, so it begins with the real context instead of a lossy summary. The thread survives the handoff.
+
+This also keeps projects from bleeding into each other. Each project is its own scope. The blog work does not see the client work and cannot confuse the two, because the sessions are separated and each one loads only its own context.
+
+## The loop that improves the system itself
+
+The checkpoints feed the part I am most attached to.
+
+Every checkpoint logs the friction: the moments the agent did something I had to correct. Let enough of those pile up and I run a development pass over the whole system. It reads all the friction since the last pass and fixes the specific errors. Then it does the thing that actually matters: it steps back and asks whether the same kind of error keeps showing up because the design is wrong underneath. Patch the three bugs, then ask if the three bugs are really one bad assumption wearing three coats.
+
+That is the difference between a setup that slowly gets better and one that slowly gets more tangled. Fixing the bug clears today. Fixing the design is what stops you fixing the same bug for the twentieth time.
+
+A note on input, since it feeds all of this: I talk to the system far more than I type at it. Spoken input is faster and richer, and richer input gets better output. One of my hooks even notices whether a given instruction came in by voice or by keyboard, because the two read differently and deserve to be handled differently.
 
 ## How I actually start a new project
 
@@ -44,11 +87,15 @@ The agent reads the file, asks the questions it has, and starts building the str
 
 After six months of doing this, I have a wrapper that knows my voice, my projects, my tools, my failure modes. The work I do on it compounds. The work I would have done correcting the same mistakes for the twentieth time does not.
 
-## The trap
+## The trap, and what this actually costs
 
 The trap is running the agent on infrastructure you do not understand.
 
 It will produce things. Files appear. Workflows get configured. APIs get called. If you cannot read what it wrote, you do not own what it built. The first time something breaks, you will have nothing to debug from. The audit trail is the wrapper plus the code plus your understanding of both. Remove any of the three and you are renting a result.
+
+There is a second, quieter cost I should be honest about. A system this shaped is powerful and fragile at the same time. It is wired tightly to how I work, how I think, how I phrase things. I tried to hand a stripped-down version to someone who works closely with me and it mostly did not take, because the value was never only the files. The value was six months of my specific corrections living inside them. You cannot clone the result. You can only grow your own.
+
+Which points at what my job has actually become. I write almost no code now, and I read very little of it. What I do is hold the context, sanity-check what comes back, and point the thing in the right direction. The system is the worker. I am the one who knows whether the work is right and where it should go next. That is a strange role to grow into, and it is the real one.
 
 The honest version of "use AI to ship faster" is: you will spend the time you save on building the system that lets you trust the speed. That is a fair trade. It is not a free one.
 
@@ -86,7 +133,7 @@ External services: [e.g. Stripe, Supabase, Sentry, N8N]
 - If a pattern exists in the codebase, reuse it instead of inventing a new one.
 ```
 
-That file is the seed. It is intentionally short. You add to it every time the agent does something you did not want, and every time it does something you do want and you want to keep doing.
+That file is the seed. It is a rule file, the bottom layer. You add to it every time the agent does something you did not want, and every time it does something you do want and you want to keep doing. When a rule starts carrying too much weight, that is your cue to promote it into a skill, and eventually into a hook.
 
 The system is not the agent. It is what you write down about how you work, so the agent can stop guessing.
 

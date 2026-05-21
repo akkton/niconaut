@@ -1,18 +1,19 @@
 ---
 title: "Como meu sistema de agentes realmente funciona"
-description: "Um passo a passo ao vivo que dei a uma cliente hoje, posto no papel. O que fica onde, por que um espaço em branco mais IA não é o sistema, e um prompt inicial que você pode colar para começar o seu."
+description: "Um passo a passo ao vivo que dei a uma cliente, posto no papel. O que fica onde, por que um espaço em branco mais IA não é o sistema, as quatro camadas que o tornam confiável, e um prompt inicial que você pode colar para começar o seu."
 pubDate: 2026-05-19
+updatedDate: 2026-05-20
 tags: [workflow, agents, claude-code, vs-code, n8n]
 draft: false
 lang: pt
 translationKey: "how-the-agentic-system-works"
 ---
 
-Uma cliente me perguntou hoje como funciona o meu setup.
+Uma cliente me perguntou como funciona o meu setup.
 
 Ela tem uma tarefa para automatizar (entrada de bugs do Sentry, triagem com um LLM, criação de tickets no Jira, notificação no Slack) e queria saber como eu construiria isso. Acabamos passando uma hora na tela. Percebi que estava explicando a mesma coisa sobre a qual me perguntam toda semana.
 
-Aqui está a versão escrita.
+Aqui está a versão escrita, mais longa do que a que dei na ligação, porque a ligação vivia sendo interrompida por "espera, o que é isso".
 
 ## As três peças
 
@@ -34,7 +35,49 @@ Metade do que eu faço todo dia é melhorar o invólucro em que o agente fica. U
 
 Quando meu agente é bom em algo, normalmente é porque esse invólucro foi moldado por vinte sessões de erro. O modelo é o mesmo modelo. O que mudou foi o invólucro.
 
-Se você pula o invólucro e roda o agente no impulso puro, você tem o resultado que teria de qualquer prestador trabalhando sem contexto. Eles vão produzir algo. Vai parecer razoável. Vai estar sutilmente errado de jeitos que você só percebe mais tarde.
+## As quatro camadas: regras, habilidades, comandos, hooks
+
+Quando as pessoas veem o meu setup, perguntam onde está a mágica, esperando um arquivo genial. Não existe arquivo genial. Existem quatro camadas, e o truque é saber a qual camada um determinado comportamento pertence.
+
+**Regras** são a camada de baixo. Uma regra é texto que o agente lê: "antes de me perguntar algo, tente primeiro o óbvio". Barata de escrever, fácil de mudar. O problema é que uma regra não é determinística. O agente lê, interpreta e segue na maior parte das vezes. Na maior parte. Em alguma fração das vezes, ele passa direto por cima.
+
+**Habilidades** são o que você obtém quando várias regras se juntam em torno de uma tarefa. Regras suficientes sobre como escrever um e-mail, e deixa de ser orientação solta e vira uma habilidade nomeada que o agente pode carregar quando essa tarefa aparece. Ainda lida pelo modelo, ainda interpretável, mas agrupada e reutilizável.
+
+**Comandos** são prompts predefinidos que rodam uma sequência fixa de cima para baixo. A diferença entre "rode este comando" e as mesmas palavras como uma mensagem normal é real. Como prompt solto, o agente passa os olhos e improvisa. Rodado como comando, ele percorre os passos na ordem, para para fazer as perguntas de esclarecimento que você mandou ele fazer, e não pula em silêncio o passo que importava para você. Quando um fluxo tem uma ordem que importa, ele quer ser um comando.
+
+**Hooks** são a camada de cima e a única determinística. Um hook é um pequeno trecho de Python que dispara num gatilho, toda vez, com o modelo "a fim" ou não. É aqui que você coloca o comportamento que não pode falhar. Regras e habilidades são conselhos. Um hook é uma lei.
+
+As camadas não são um cardápio do qual você escolhe uma vez. São uma pipeline. Um comportamento começa como regra. Se eu me apoio nele com frequência, ou fico reescrevendo, as regras se juntam numa habilidade. Se uma habilidade passa a ser usada o tempo todo, ou fica desviando do que eu de fato quero, esse é o sinal de promovê-la a hook e torná-la determinística. O sistema te diz quando algo precisa subir uma camada: quanto mais um erro se repete, mais alta a camada onde o conserto dele pertence.
+
+### O que um hook de fato faz
+
+Três dos meus, para deixar concreto:
+
+- Um vigia o momento em que o agente tenta me devolver uma tarefa. No instante em que ele começa a dizer "você deveria ir fazer X", o hook interrompe e o faz checar se ele de fato tem o acesso para fazer X sozinho. Na maioria das vezes, tem. Esse único hook é a maior parte da diferença entre uma ferramenta que me dá lição de casa e uma ferramenta que faz o trabalho.
+- Um força uma sincronização com o git ao fim de cada sessão. Esse hook existe porque uma sessão uma vez rodou por horas, editou centenas de arquivos e não subiu nenhum deles. Só percebi mais tarde. Agora não pode mais acontecer, porque deixou de ser conselho e virou código.
+- Um é um portão de segurança. Se o agente está trabalhando num contexto marcado como produção ao vivo, as edições são bloqueadas e a sessão é parada antes que qualquer coisa vá ao ar. Esse eu agora instalo para os clientes também. Você não quer que a diferença entre "rascunho" e "ao vivo" dependa de o modelo estar prestando atenção.
+
+A razão honesta de existirem hooks é a alucinação. O modelo é excelente e, ainda assim, em alguma porcentagem das vezes, faz a coisa errada com confiança. Você não consegue promptar essa porcentagem até zero. Você consegue rotear as coisas que importam por uma camada onde a porcentagem não se aplica.
+
+O famoso exemplo pequeno é o travessão. Os modelos adoram o traço longo, e não há tecla no teclado que o produza, então ele é uma impressão digital de que um texto passou por uma IA. Eu posso escrever uma regra que o proíbe. O modelo ainda vai produzi-lo de vez em quando. O que de fato segura é um hook que o remove na saída.
+
+## Sessões, checkpoints, e não perder o fio
+
+Uma sessão é uma conversa contínua com o agente dentro de um projeto. Quanto mais ela roda, mais contexto carrega, e em algum momento o contexto enche. Quando isso acontece, o comportamento padrão é comprimir: o agente resume a conversa até ali e continua a partir do resumo. Para um chat, tudo bem. É um desastre silencioso quando o detalhe que ele resumiu de fora era o detalhe de que você precisava, ainda mais quando a sua comunicação real e as suas decisões vivem no sistema e têm que ficar exatas.
+
+Então eu não deixo comprimir em silêncio. Antes de o contexto encher, rodo um comando de checkpoint. Ele escreve um arquivo de checkpoint: o que fizemos, o que ainda está aberto, o que quebrou, o que decidi. A próxima sessão começa lendo esse arquivo, então parte do contexto real em vez de um resumo com perdas. O fio sobrevive à passagem de bastão.
+
+Isso também impede que os projetos se misturem. Cada projeto tem o seu próprio escopo. O trabalho do blog não vê o trabalho do cliente e não consegue confundir os dois, porque as sessões são separadas e cada uma carrega só o seu próprio contexto.
+
+## O ciclo que melhora o próprio sistema
+
+Os checkpoints alimentam a parte à qual sou mais apegado.
+
+Cada checkpoint registra o atrito: os momentos em que o agente fez algo que eu tive que corrigir. Deixe acumular o suficiente e eu rodo uma passagem de desenvolvimento sobre o sistema inteiro. Ela lê todo o atrito desde a última passagem e conserta os erros específicos. Depois faz o que de fato importa: dá um passo atrás e pergunta se o mesmo tipo de erro fica aparecendo porque o design está errado por baixo. Conserte os três bugs, depois pergunte se os três bugs são, na verdade, uma suposição ruim vestida com três casacos.
+
+Essa é a diferença entre um setup que melhora aos poucos e um que aos poucos fica mais emaranhado. Consertar o bug resolve o hoje. Consertar o design é o que te impede de consertar o mesmo bug pela vigésima vez.
+
+Uma nota sobre a entrada, já que ela alimenta tudo isso: eu falo com o sistema muito mais do que digito. A entrada por voz é mais rápida e mais rica, e entrada mais rica gera saída melhor. Um dos meus hooks até nota se uma instrução chegou por voz ou por teclado, porque as duas se leem de jeitos diferentes e merecem ser tratadas de jeitos diferentes.
 
 ## Como eu de fato começo um projeto novo
 
@@ -46,11 +89,15 @@ O agente lê o arquivo, faz as perguntas que tem, e começa a montar a estrutura
 
 Depois de seis meses fazendo isso, tenho um invólucro que conhece a minha voz, meus projetos, minhas ferramentas, meus modos de falha. O trabalho que faço sobre ele acumula. O trabalho que eu teria feito corrigindo o mesmo erro pela vigésima vez, não.
 
-## A armadilha
+## A armadilha, e o que isto de fato custa
 
 A armadilha é rodar o agente numa infraestrutura que você não entende.
 
 Ele vai produzir coisas. Arquivos aparecem. Workflows são configurados. APIs são chamadas. Se você não consegue ler o que ele escreveu, você não é dono do que ele construiu. Na primeira vez que algo quebrar, você não terá nada para depurar. A trilha de auditoria é o invólucro mais o código mais o seu entendimento dos dois. Tire qualquer um dos três e você está alugando um resultado.
+
+Há um segundo custo, mais silencioso, sobre o qual eu deveria ser honesto. Um sistema com esse formato é poderoso e frágil ao mesmo tempo. Ele está amarrado de perto a como eu trabalho, como eu penso, como eu formulo as coisas. Tentei passar uma versão enxuta a alguém que trabalha de perto comigo e ela em grande parte não pegou, porque o valor nunca foram só os arquivos. O valor eram seis meses das minhas correções específicas vivendo dentro deles. Você não consegue clonar o resultado. Você só consegue cultivar o seu.
+
+O que aponta para o que o meu trabalho de fato virou. Hoje eu quase não escrevo código, e leio muito pouco dele. O que eu faço é segurar o contexto, checar se o que volta está certo, e apontar a coisa na direção certa. O sistema é o trabalhador. Eu sou o que sabe se o trabalho está certo e para onde ele deve ir em seguida. É um papel estranho de se crescer para dentro, e é o verdadeiro.
 
 A versão honesta de "use IA para entregar mais rápido" é: você vai gastar o tempo que economizou construindo o sistema que te permite confiar na velocidade. É uma troca justa. Não é uma troca de graça.
 
@@ -88,7 +135,7 @@ External services: [e.g. Stripe, Supabase, Sentry, N8N]
 - If a pattern exists in the codebase, reuse it instead of inventing a new one.
 ```
 
-Esse arquivo é a semente. Ele é curto de propósito. Você acrescenta a ele toda vez que o agente faz algo que você não queria, e toda vez que ele faz algo que você quer e quer continuar fazendo.
+Esse arquivo é a semente. É um arquivo de regras, a camada de baixo. Você acrescenta a ele toda vez que o agente faz algo que você não queria, e toda vez que ele faz algo que você quer e quer continuar fazendo. Quando uma regra começa a carregar peso demais, esse é o seu sinal para promovê-la a habilidade, e por fim a um hook.
 
 O sistema não é o agente. É o que você anota sobre como trabalha, para que o agente pare de adivinhar.
 

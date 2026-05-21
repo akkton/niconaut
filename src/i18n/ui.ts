@@ -25,6 +25,7 @@ type Dict = {
 		backEntries: string;
 		since: string;
 		updated: string;
+		minRead: string;
 		noEntries: string;
 		noPosts: string;
 	};
@@ -43,6 +44,7 @@ export const ui: Record<Locale, Dict> = {
 			backEntries: 'all entries',
 			since: 'since',
 			updated: 'updated',
+			minRead: 'min read',
 			noEntries: 'No entries yet.',
 			noPosts: 'No long-form posts yet.',
 		},
@@ -72,6 +74,7 @@ export const ui: Record<Locale, Dict> = {
 			backEntries: 'todas as entradas',
 			since: 'desde',
 			updated: 'atualizado',
+			minRead: 'min de leitura',
 			noEntries: 'Ainda não há entradas.',
 			noPosts: 'Ainda não há artigos longos.',
 		},
@@ -101,6 +104,7 @@ export const ui: Record<Locale, Dict> = {
 			backEntries: 'alle Einträge',
 			since: 'seit',
 			updated: 'aktualisiert',
+			minRead: 'Min. Lesezeit',
 			noEntries: 'Noch keine Einträge.',
 			noPosts: 'Noch keine langen Beiträge.',
 		},

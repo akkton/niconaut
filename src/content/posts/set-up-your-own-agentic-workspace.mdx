@@ -1,7 +1,8 @@
 ---
 title: "Set up your own agentic workspace"
-description: "A downloadable starter kit, one CLAUDE.md plus the structure that grows around it, and a ten-minute install guide so you can run the same setup I do."
+description: "A downloadable starter kit, one CLAUDE.md plus the structure that grows around it, a ten-minute install, and an honest list of what will break on day one so you know it is normal."
 pubDate: 2026-05-20
+updatedDate: 2026-05-20
 tags: [workflow, claude-code, vs-code, agents, starter-kit]
 draft: false
 ---
@@ -36,6 +37,25 @@ The kit is deliberately generic. It is not my system. My system is six months of
 
 If you want the agent to reach outside the repo (a database, an automation tool, an analytics product), that is what MCP is for. Copy `.mcp.json.example` to `.mcp.json`, fill in the real values, never commit it, and fully restart the IDE so the connection loads. Then run one small test before you build anything real on it.
 
+## What will break on day one (this is normal)
+
+I have now watched someone set this up from zero, and the same small things tripped her up that trip everyone up. None of them mean you did it wrong. Knowing they are coming is half the battle.
+
+- **The connection is not live until you wire it.** The agent cannot reach your external tool just because you mentioned it. You have to create the API key on that service, paste it into `.mcp.json`, and only then can the agent talk to it. Until you do, every attempt fails, and that failure is expected, not a bug.
+- **You have to fully restart the IDE.** Not just the agent panel, the whole window. Commands and new connections load on startup. Half the "it is not working" moments are fixed by closing everything and opening it again.
+- **You will hit permission prompts.** The agent asks before it edits files or runs commands, which is correct. Once you trust a project, there is a setting to loosen that so you are not clicking "yes" all day. Find it early; it changes how the work feels.
+- **It hands you homework it could do itself.** The agent will tell you to go do a step it has the access to do on its own. The single most useful habit is to push back: "can you do that part yourself?" The honest answer is usually yes. The automation ceiling rises every time you ask.
+
+The mindset that makes all of this bearable: it is a marathon, not a sprint. You are slow at the start because every tiny thing breaks and you have to learn what each break means. Then you are fast, because you have seen the breaks before and you know exactly where to look. The friction at the beginning is not the obstacle. It is the curriculum.
+
+## You do not need to read the code
+
+The fear that stops most people is that they are not technical enough. Set it down.
+
+You do not need to understand how the model works inside. You need to read what it produced and judge whether it is right, ask the next question, and point it in a direction. You are the fact-checker, the sanity-checker, the one who holds the context. That is a real job and it is not a coding job.
+
+It is not a black box. It just needs a flashlight, and someone to show you where the switch is. After a week you will be surprised how much of the dark was just unlit.
+
 ## Why the blank version does not work
 
 You can open the agent in an empty folder and tell it to build. It will. The result looks reasonable and is subtly wrong, because the model has no idea what your work looks like. It is a contractor with no brief.
@@ -45,6 +65,8 @@ The wrapper is the brief. When my agent is good at something, the model did not 
 ## A few notes from doing this daily
 
 - **Frontload, do not dribble.** Give the agent the whole picture in one go. Output quality tracks input quality, and a long brief beats ten tiny prompts.
+- **Talk to it, do not just type.** Spoken input is faster and carries more, and richer input produces better output. A dictation tool plus the agent is a real upgrade over typing.
+- **Give it positive feedback.** When it nails something, say so. It sounds odd, but the same way you would steer a person, telling the agent "that was right, keep doing that" makes the next pass better.
 - **Push it to do more itself.** Agents hand you work they could do. Ask "can you do that part yourself?" more than feels natural. The automation ceiling rises every time.
 - **You are the sanity checker.** You do not need to know how the model works inside. You need to read what it produced and judge it. If you cannot read what it wrote, you do not own what it built.
 - **Checkpoint before the context fills.** Letting it auto-compact silently drops detail. A short summary plus a friction log keeps the thread across sessions.

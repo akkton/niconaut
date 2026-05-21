@@ -1,7 +1,8 @@
 ---
 title: "Richte deinen eigenen Agenten-Arbeitsbereich ein"
-description: "Ein Starter-Kit zum Herunterladen, eine CLAUDE.md plus die Struktur, die darum herum wächst, und eine Zehn-Minuten-Anleitung, damit du dasselbe Setup fahren kannst wie ich."
+description: "Ein Starter-Kit zum Herunterladen, eine CLAUDE.md plus die Struktur, die darum herum wächst, eine Zehn-Minuten-Installation und eine ehrliche Liste, was am ersten Tag schiefgeht, damit du weißt, dass es normal ist."
 pubDate: 2026-05-20
+updatedDate: 2026-05-20
 tags: [workflow, claude-code, vs-code, agents, starter-kit]
 draft: false
 lang: de
@@ -38,6 +39,25 @@ Das Kit ist absichtlich generisch. Es ist nicht mein System. Mein System sind se
 
 Wenn der Agent über das Repository hinausgreifen soll (eine Datenbank, ein Automationswerkzeug, ein Analyse-Produkt), dafür ist MCP da. Kopiere `.mcp.json.example` zu `.mcp.json`, trag die echten Werte ein, mach niemals einen Commit davon, und starte das IDE komplett neu, damit die Verbindung lädt. Dann führe einen kleinen Test aus, bevor du etwas Echtes darauf baust.
 
+## Was am ersten Tag schiefgeht (das ist normal)
+
+Ich habe jetzt jemandem zugesehen, der das von null aufgesetzt hat, und dieselben Kleinigkeiten haben sie stolpern lassen, die jeden stolpern lassen. Keine davon bedeutet, dass du etwas falsch gemacht hast. Zu wissen, dass sie kommen, ist die halbe Miete.
+
+- **Die Verbindung ist nicht aktiv, bevor du sie verdrahtest.** Der Agent erreicht dein externes Werkzeug nicht, nur weil du es erwähnt hast. Du musst den API-Schlüssel auf dem Dienst erstellen, ihn in `.mcp.json` einfügen, und erst dann kann der Agent damit reden. Bis dahin scheitert jeder Versuch, und dieses Scheitern ist erwartet, kein Fehler.
+- **Du musst das IDE komplett neu starten.** Nicht nur das Agenten-Fenster, das ganze Fenster. Befehle und neue Verbindungen laden beim Start. Die Hälfte der "es geht nicht"-Momente löst sich, indem du alles schließt und wieder öffnest.
+- **Du wirst auf Berechtigungsabfragen stoßen.** Der Agent fragt, bevor er Dateien bearbeitet oder Befehle ausführt, was richtig ist. Sobald du einem Projekt vertraust, gibt es eine Einstellung, die das lockert, damit du nicht den ganzen Tag "Ja" klickst. Finde sie früh, sie verändert, wie sich die Arbeit anfühlt.
+- **Er gibt dir Hausaufgaben, die er selbst erledigen könnte.** Der Agent sagt dir, du sollst einen Schritt tun, für den er selbst den Zugriff hat. Die nützlichste Angewohnheit ist, dagegenzuhalten: "Kannst du den Teil selbst machen?" Die ehrliche Antwort ist meistens ja. Die Automationsgrenze steigt jedes Mal, wenn du fragst.
+
+Die Haltung, die das alles erträglich macht: Es ist ein Marathon, kein Sprint. Du bist am Anfang langsam, weil jede Kleinigkeit bricht und du lernen musst, was jeder Bruch bedeutet. Dann bist du schnell, weil du die Brüche schon gesehen hast und genau weißt, wo du nachschauen musst. Die Reibung am Anfang ist nicht das Hindernis. Sie ist der Lehrplan.
+
+## Du musst den Code nicht lesen
+
+Die Angst, die die meisten aufhält, ist, dass sie nicht technisch genug seien. Leg sie ab.
+
+Du musst nicht verstehen, wie das Modell innen funktioniert. Du musst lesen, was es produziert hat, und beurteilen, ob es richtig ist, die nächste Frage stellen und es in eine Richtung weisen. Du bist der Fakten-Checker, der Sanity-Checker, der den Kontext hält. Das ist ein echter Job, und es ist kein Programmier-Job.
+
+Es ist keine Blackbox. Sie braucht nur eine Taschenlampe und jemanden, der dir zeigt, wo der Schalter ist. Nach einer Woche wirst du überrascht sein, wie viel von dem Dunkel einfach nur unbeleuchtet war.
+
 ## Warum die leere Version nicht funktioniert
 
 Du kannst den Agenten in einem leeren Ordner öffnen und ihn bauen lassen. Er tut es. Das Ergebnis sieht vernünftig aus und ist auf subtile Weise falsch, weil das Modell keine Ahnung hat, wie deine Arbeit aussieht. Es ist ein Auftragnehmer ohne Briefing.
@@ -47,6 +67,8 @@ Die Hülle ist das Briefing. Wenn mein Agent in etwas gut ist, ist das Modell ni
 ## Ein paar Notizen aus dem täglichen Tun
 
 - **Lade den Kontext auf einmal, nicht tröpfchenweise.** Gib dem Agenten das ganze Bild auf einmal. Die Qualität der Ausgabe folgt der Qualität der Eingabe, und ein langes Briefing schlägt zehn winzige Prompts.
+- **Sprich mit ihm, tipp nicht nur.** Spracheingabe ist schneller und trägt mehr, und reichere Eingabe ergibt bessere Ausgabe. Ein Diktierwerkzeug plus der Agent ist ein echter Sprung gegenüber dem Tippen.
+- **Gib ihm positives Feedback.** Wenn er etwas trifft, sag es. Es klingt seltsam, aber genauso, wie du einen Menschen lenken würdest, macht es den nächsten Durchlauf besser, dem Agenten zu sagen "das war richtig, mach weiter so".
 - **Dräng ihn, mehr selbst zu tun.** Agenten reichen dir Arbeit, die sie selbst erledigen könnten. Frag öfter "Kannst du den Teil selbst machen?", als es sich natürlich anfühlt. Die Automationsgrenze steigt jedes Mal.
 - **Du bist der Sanity-Checker.** Du musst nicht wissen, wie das Modell innen funktioniert. Du musst lesen, was es produziert hat, und es beurteilen. Wenn du nicht lesen kannst, was es geschrieben hat, besitzt du nicht, was es gebaut hat.
 - **Mach einen Checkpoint, bevor der Kontext voll ist.** Das Fenster sich selbst komprimieren zu lassen, verwirft still und leise Detail. Eine kurze Zusammenfassung plus ein Reibungs-Protokoll hält den Faden.

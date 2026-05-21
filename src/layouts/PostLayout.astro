@@ -9,9 +9,9 @@ import Header from '../components/Header.astro';
 import { blogPostingSchema } from '../lib/jsonld';
 import { useTranslations, type Locale } from '../i18n/ui';
 
-type Props = CollectionEntry<'posts'>['data'] & { slug: string; lang?: Locale };
+type Props = CollectionEntry<'posts'>['data'] & { slug: string; lang?: Locale; minutesRead?: number };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, slug, lang = 'en' } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, slug, lang = 'en', minutesRead } = Astro.props;
 const t = useTranslations(lang);
 const base = lang === 'en' ? '' : `/${lang}`;
 const postsIndexPath = `${base}/posts/`;
@@ -147,6 +147,8 @@ const postJsonLd = blogPostingSchema({
 					<p class="desc">{description}</p>
 					<div class="meta">
 						<span><FormattedDate date={pubDate} /></span>
+						{minutesRead && <span class="sep">·</span>}
+						{minutesRead && <span>{minutesRead} {t.labels.minRead}</span>}
 						{updatedDate && <span class="sep">·</span>}
 						{updatedDate && (
 							<span class="updated">updated <FormattedDate date={updatedDate} /></span>

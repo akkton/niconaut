@@ -1,18 +1,19 @@
 ---
 title: "Wie mein Agenten-System wirklich funktioniert"
-description: "Ein Live-Durchlauf, den ich heute einer Kundin gegeben habe, aufgeschrieben. Was wo sitzt, warum ein leerer Arbeitsbereich plus KI nicht das System ist, und ein Start-Prompt zum Einfügen für deinen eigenen Anfang."
+description: "Ein Live-Durchlauf, den ich einer Kundin gegeben habe, aufgeschrieben. Was wo sitzt, warum ein leerer Arbeitsbereich plus KI nicht das System ist, die vier Ebenen, die es verlässlich machen, und ein Start-Prompt zum Einfügen für deinen eigenen Anfang."
 pubDate: 2026-05-19
+updatedDate: 2026-05-20
 tags: [workflow, agents, claude-code, vs-code, n8n]
 draft: false
 lang: de
 translationKey: "how-the-agentic-system-works"
 ---
 
-Eine Kundin hat mich heute gefragt, wie mein Setup funktioniert.
+Eine Kundin hat mich gefragt, wie mein Setup funktioniert.
 
 Sie hat eine Aufgabe zu automatisieren (Bug-Eingang aus Sentry, Triage mit einem LLM, Ticket-Erstellung in Jira, Benachrichtigung in Slack) und wollte wissen, wie ich das bauen würde. Wir haben am Ende eine Stunde am Bildschirm verbracht. Mir wurde klar, dass ich dasselbe erklärte, wonach ich jede Woche gefragt werde.
 
-Hier ist die schriftliche Version.
+Hier ist die schriftliche Version, länger als die am Telefon, weil das Telefonat ständig von "warte, was ist das" unterbrochen wurde.
 
 ## Die drei Teile
 
@@ -34,7 +35,49 @@ Die Hälfte dessen, was ich jeden Tag mache, ist, die Hülle zu verbessern, in d
 
 Wenn mein Agent in etwas gut ist, liegt es meist daran, dass diese Hülle von zwanzig Sitzungen voller Fehler geformt wurde. Das Modell ist dasselbe Modell. Was sich geändert hat, ist die Hülle.
 
-Wenn du die Hülle überspringst und den Agenten auf reines Bauchgefühl laufen lässt, bekommst du das Ergebnis, das du von jedem Auftragnehmer ohne Kontext bekämst. Sie produzieren etwas. Es sieht vernünftig aus. Es ist auf subtile Weise falsch, auf eine Art, die du erst später bemerkst.
+## Die vier Ebenen: Regeln, Fähigkeiten, Befehle, Hooks
+
+Wenn Leute mein Setup sehen, fragen sie, wo die Magie steckt, und erwarten eine clevere Datei. Es gibt keine clevere Datei. Es gibt vier Ebenen, und der Trick besteht darin, zu wissen, auf welche Ebene ein bestimmtes Verhalten gehört.
+
+**Regeln** sind die unterste Ebene. Eine Regel ist Text, den der Agent liest: "Bevor du mir eine Frage stellst, probier zuerst das Naheliegende." Billig zu schreiben, leicht zu ändern. Der Haken ist, dass eine Regel nicht deterministisch ist. Der Agent liest sie, deutet sie und befolgt sie meistens. Meistens. In einem gewissen Anteil der Fälle liest er einfach darüber hinweg.
+
+**Fähigkeiten** sind das, was du bekommst, wenn sich mehrere Regeln um eine Aufgabe sammeln. Genug Regeln darüber, wie man eine E-Mail schreibt, und es ist nicht mehr lose Anleitung, sondern eine benannte Fähigkeit, die der Agent laden kann, wenn diese Aufgabe auftaucht. Immer noch vom Modell gelesen, immer noch deutbar, aber gebündelt und wiederverwendbar.
+
+**Befehle** sind vordefinierte Prompts, die eine feste Abfolge von oben nach unten durchlaufen. Der Unterschied zwischen "führe diesen Befehl aus" und denselben Worten als normale Nachricht ist echt. Als loser Prompt überfliegt der Agent und improvisiert. Als Befehl ausgeführt, geht er die Schritte der Reihe nach durch, hält an, um die klärenden Fragen zu stellen, die du ihm aufgetragen hast, und überspringt nicht still den Schritt, der dir wichtig war. Wenn ein Ablauf eine Reihenfolge hat, auf die es ankommt, will er ein Befehl sein.
+
+**Hooks** sind die oberste Ebene und die einzige deterministische. Ein Hook ist ein kleines Stück Python, das bei einem Auslöser feuert, jedes Mal, ob das Modell "Lust hatte" oder nicht. Hier legst du das Verhalten ab, das nicht scheitern darf. Regeln und Fähigkeiten sind Ratschläge. Ein Hook ist ein Gesetz.
+
+Die Ebenen sind kein Menü, aus dem du einmal wählst. Sie sind eine Pipeline. Ein Verhalten beginnt als Regel. Wenn ich mich oft darauf stütze oder es ständig umschreibe, sammeln sich die Regeln zu einer Fähigkeit. Wenn eine Fähigkeit ständig genutzt wird oder immer wieder von dem abweicht, was ich eigentlich will, ist das das Signal, sie auf einen Hook anzuheben und deterministisch zu machen. Das System sagt dir, wann etwas eine Ebene höher muss: je öfter ein Fehler wiederkehrt, desto höher die Ebene, auf die seine Behebung gehört.
+
+### Was ein Hook tatsächlich tut
+
+Drei von meinen, zur Veranschaulichung:
+
+- Einer wacht über den Moment, in dem der Agent versucht, mir eine Aufgabe zurückzugeben. In der Sekunde, in der er anfängt zu sagen "du solltest X erledigen", greift der Hook ein und lässt ihn prüfen, ob er tatsächlich selbst den Zugriff hat, X zu tun. Meistens hat er ihn. Dieser eine Hook ist der größte Teil des Unterschieds zwischen einem Werkzeug, das mir Hausaufgaben gibt, und einem Werkzeug, das die Arbeit erledigt.
+- Einer erzwingt am Ende jeder Sitzung eine Synchronisierung mit Git. Diesen Hook gibt es, weil eine Sitzung einmal stundenlang lief, hunderte Dateien bearbeitete und keine davon hochlud. Ich habe es erst später bemerkt. Jetzt darf das nicht mehr passieren, weil es kein Ratschlag mehr ist, sondern Code.
+- Einer ist ein Sicherheitstor. Wenn der Agent in einem Kontext arbeitet, der als Live-Produktion markiert ist, werden Änderungen blockiert und die Sitzung wird gestoppt, bevor irgendetwas live geht. Diesen installiere ich inzwischen auch für Kunden. Du willst nicht, dass der Unterschied zwischen "Entwurf" und "live" davon abhängt, ob das Modell aufpasst.
+
+Der ehrliche Grund, warum es Hooks gibt, ist Halluzination. Das Modell ist hervorragend und tut trotzdem in einem gewissen Prozentsatz der Fälle selbstbewusst das Falsche. Du kannst diesen Prozentsatz nicht auf null prompten. Du kannst die Dinge, auf die es ankommt, über eine Ebene leiten, auf der der Prozentsatz nicht gilt.
+
+Das berühmte kleine Beispiel ist der lange Gedankenstrich. Modelle lieben ihn, und es gibt keine Taste auf der Tastatur, die ihn erzeugt, also ist er ein Fingerabdruck dafür, dass ein Text durch eine KI gelaufen ist. Ich kann eine Regel schreiben, die ihn verbietet. Das Modell wird ihn trotzdem ab und zu produzieren. Was wirklich hält, ist ein Hook, der ihn beim Hinausgehen entfernt.
+
+## Sitzungen, Checkpoints und den Faden nicht verlieren
+
+Eine Sitzung ist ein durchgehendes Gespräch mit dem Agenten innerhalb eines Projekts. Je länger sie läuft, desto mehr Kontext trägt sie, und irgendwann ist der Kontext voll. Dann ist das Standardverhalten, zu komprimieren: Der Agent fasst das bisherige Gespräch zusammen und macht aus der Zusammenfassung weiter. Für einen Chat ist das in Ordnung. Es ist ein stilles Desaster, wenn das Detail, das er wegfasste, genau das war, das du brauchtest, vor allem, wenn deine echte Kommunikation und deine Entscheidungen im System leben und exakt bleiben müssen.
+
+Also lasse ich es nicht still komprimieren. Bevor der Kontext voll ist, führe ich einen Checkpoint-Befehl aus. Er schreibt eine Checkpoint-Datei: was wir getan haben, was noch offen ist, was kaputtging, was ich entschieden habe. Die nächste Sitzung beginnt damit, diese Datei zu lesen, und startet so mit dem echten Kontext statt mit einer verlustbehafteten Zusammenfassung. Der Faden überlebt die Übergabe.
+
+Das hält auch Projekte davon ab, ineinander zu bluten. Jedes Projekt hat seinen eigenen Geltungsbereich. Die Blog-Arbeit sieht die Kundenarbeit nicht und kann die beiden nicht verwechseln, weil die Sitzungen getrennt sind und jede nur ihren eigenen Kontext lädt.
+
+## Der Kreislauf, der das System selbst verbessert
+
+Die Checkpoints speisen den Teil, an dem ich am meisten hänge.
+
+Jeder Checkpoint protokolliert die Reibung: die Momente, in denen der Agent etwas tat, das ich korrigieren musste. Wenn sich genug davon angesammelt hat, lasse ich einen Entwicklungsdurchlauf über das ganze System laufen. Er liest die gesamte Reibung seit dem letzten Durchlauf und behebt die konkreten Fehler. Dann tut er das, worauf es eigentlich ankommt: Er tritt einen Schritt zurück und fragt, ob dieselbe Art von Fehler immer wieder auftaucht, weil das Design darunter falsch ist. Behebe die drei Bugs, dann frage, ob die drei Bugs in Wirklichkeit eine schlechte Annahme in drei Mänteln sind.
+
+Das ist der Unterschied zwischen einem Setup, das langsam besser wird, und einem, das langsam verworrener wird. Den Bug zu beheben räumt heute auf. Das Design zu beheben ist das, was dich davon abhält, denselben Bug zum zwanzigsten Mal zu beheben.
+
+Eine Anmerkung zur Eingabe, weil sie all das speist: Ich spreche weit mehr mit dem System, als ich tippe. Spracheingabe ist schneller und reicher, und reichere Eingabe ergibt bessere Ausgabe. Einer meiner Hooks bemerkt sogar, ob eine Anweisung per Stimme oder per Tastatur kam, weil sich die beiden unterschiedlich lesen und es verdienen, unterschiedlich behandelt zu werden.
 
 ## Wie ich ein neues Projekt tatsächlich beginne
 
@@ -46,11 +89,15 @@ Der Agent liest die Datei, stellt seine Fragen und beginnt, die Struktur zu baue
 
 Nach sechs Monaten habe ich eine Hülle, die meine Stimme kennt, meine Projekte, meine Werkzeuge, meine Fehlerquellen. Die Arbeit daran summiert sich. Die Arbeit, die ich beim zwanzigsten Mal mit demselben Fehler gehabt hätte, nicht.
 
-## Die Falle
+## Die Falle, und was das wirklich kostet
 
 Die Falle ist, den Agenten auf einer Infrastruktur laufen zu lassen, die du nicht verstehst.
 
 Er wird Dinge produzieren. Dateien tauchen auf. Workflows werden konfiguriert. APIs werden aufgerufen. Wenn du nicht lesen kannst, was er geschrieben hat, besitzt du nicht, was er gebaut hat. Beim ersten Mal, wenn etwas bricht, hast du nichts, woraus du debuggen kannst. Die Spur ist die Hülle plus der Code plus dein Verständnis von beidem. Nimm eines der drei weg, und du mietest nur ein Ergebnis.
+
+Es gibt einen zweiten, leiseren Preis, bei dem ich ehrlich sein sollte. Ein so geformtes System ist mächtig und fragil zugleich. Es ist eng damit verdrahtet, wie ich arbeite, wie ich denke, wie ich Dinge formuliere. Ich habe versucht, eine abgespeckte Version an jemanden zu übergeben, der eng mit mir arbeitet, und sie hat größtenteils nicht gegriffen, weil der Wert nie nur die Dateien waren. Der Wert waren sechs Monate meiner spezifischen Korrekturen, die in ihnen leben. Du kannst das Ergebnis nicht klonen. Du kannst nur dein eigenes wachsen lassen.
+
+Das deutet darauf, was meine Arbeit tatsächlich geworden ist. Ich schreibe inzwischen fast keinen Code mehr und lese sehr wenig davon. Was ich tue, ist den Kontext halten, prüfen, ob das Zurückkommende stimmt, und das Ding in die richtige Richtung weisen. Das System ist der Arbeiter. Ich bin der, der weiß, ob die Arbeit richtig ist und wohin sie als Nächstes soll. Das ist eine seltsame Rolle, in die man hineinwächst, und es ist die echte.
 
 Die ehrliche Version von "mit KI schneller liefern" lautet: Du gibst die Zeit, die du sparst, dafür aus, das System zu bauen, das dir erlaubt, der Geschwindigkeit zu vertrauen. Das ist ein fairer Tausch. Kein kostenloser.
 
@@ -88,7 +135,7 @@ External services: [e.g. Stripe, Supabase, Sentry, N8N]
 - If a pattern exists in the codebase, reuse it instead of inventing a new one.
 ```
 
-Diese Datei ist der Samen. Sie ist absichtlich kurz. Du ergänzt sie jedes Mal, wenn der Agent etwas tut, das du nicht wolltest, und jedes Mal, wenn er etwas tut, das du behalten willst.
+Diese Datei ist der Samen. Sie ist eine Regeldatei, die unterste Ebene. Du ergänzt sie jedes Mal, wenn der Agent etwas tut, das du nicht wolltest, und jedes Mal, wenn er etwas tut, das du behalten willst. Wenn eine Regel zu viel Gewicht trägt, ist das dein Stichwort, sie zu einer Fähigkeit zu befördern und irgendwann zu einem Hook.
 
 Das System ist nicht der Agent. Es ist das, was du darüber aufschreibst, wie du arbeitest, damit der Agent aufhört zu raten.
 

@@ -12,10 +12,10 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'posts'>;
 
 const post = Astro.props;
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
 const slug = post.data.translationKey ?? post.id;
 ---
 
-<PostLayout {...post.data} slug={slug} lang={post.data.lang}>
+<PostLayout {...post.data} slug={slug} lang={post.data.lang} minutesRead={remarkPluginFrontmatter.minutesRead}>
 	<Content />
 </PostLayout>

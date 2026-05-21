@@ -1,7 +1,8 @@
 ---
 title: "Monte seu próprio espaço de trabalho com agentes"
-description: "Um kit inicial para baixar, um CLAUDE.md mais a estrutura que cresce em volta dele, e um guia de instalação de dez minutos para você rodar o mesmo setup que eu uso."
+description: "Um kit inicial para baixar, um CLAUDE.md mais a estrutura que cresce em volta dele, uma instalação de dez minutos, e uma lista honesta do que vai quebrar no primeiro dia para você saber que é normal."
 pubDate: 2026-05-20
+updatedDate: 2026-05-20
 tags: [workflow, claude-code, vs-code, agents, starter-kit]
 draft: false
 lang: pt
@@ -38,6 +39,25 @@ O kit é genérico de propósito. Não é o meu sistema. O meu sistema são seis
 
 Se você quer que o agente alcance fora do repositório (um banco de dados, uma ferramenta de automação, um produto de análise), é para isso que serve o MCP. Copie o `.mcp.json.example` para `.mcp.json`, preencha os valores reais, nunca faça commit dele, e reinicie o IDE por completo para a conexão carregar. Depois rode um pequeno teste antes de construir qualquer coisa real em cima.
 
+## O que vai quebrar no primeiro dia (isto é normal)
+
+Agora já vi alguém montar isto do zero, e as mesmas coisinhas que tropeçam todo mundo a fizeram tropeçar. Nenhuma delas significa que você fez errado. Saber que elas vêm é metade da batalha.
+
+- **A conexão não fica viva até você ligá-la.** O agente não alcança a sua ferramenta externa só porque você a mencionou. Você tem que criar a chave de API naquele serviço, colá-la no `.mcp.json`, e só então o agente consegue falar com ela. Até lá, toda tentativa falha, e essa falha é esperada, não um bug.
+- **Você tem que reiniciar o IDE por completo.** Não só o painel do agente, a janela inteira. Comandos e conexões novas carregam na inicialização. Metade dos momentos de "não está funcionando" se resolve fechando tudo e abrindo de novo.
+- **Você vai bater em pedidos de permissão.** O agente pergunta antes de editar arquivos ou rodar comandos, o que está certo. Quando você confia num projeto, há uma configuração para afrouxar isso para você não clicar "sim" o dia todo. Ache-a cedo; ela muda como o trabalho parece.
+- **Ele te entrega lição de casa que ele mesmo poderia fazer.** O agente vai te dizer para ir fazer um passo para o qual ele tem o acesso de fazer sozinho. O hábito mais útil é rebater: "você consegue fazer essa parte sozinho?" A resposta honesta costuma ser sim. O teto da automação sobe toda vez que você pergunta.
+
+A mentalidade que torna tudo isso suportável: é uma maratona, não uma corrida curta. Você é lento no começo porque cada coisinha quebra e você tem que aprender o que cada quebra significa. Depois você fica rápido, porque já viu as quebras antes e sabe exatamente onde olhar. O atrito do começo não é o obstáculo. É o currículo.
+
+## Você não precisa ler o código
+
+O medo que para a maioria das pessoas é achar que não são técnicas o bastante. Pode largar esse medo.
+
+Você não precisa entender como o modelo funciona por dentro. Você precisa ler o que ele produziu e julgar se está certo, fazer a próxima pergunta, e apontá-lo numa direção. Você é o verificador de fatos, o verificador de sanidade, o que segura o contexto. Isso é um trabalho de verdade, e não é um trabalho de programação.
+
+Não é uma caixa-preta. Ela só precisa de uma lanterna, e de alguém que te mostre onde fica o interruptor. Depois de uma semana você vai se surpreender com quanto do escuro era só falta de luz.
+
 ## Por que a versão em branco não funciona
 
 Você pode abrir o agente numa pasta vazia e mandar ele construir. Ele vai. O resultado parece razoável e está sutilmente errado, porque o modelo não faz ideia de como o seu trabalho é. É um prestador sem briefing.
@@ -47,6 +67,8 @@ O invólucro é o briefing. Quando meu agente é bom em algo, o modelo não fico
 ## Algumas notas de quem faz isto todo dia
 
 - **Carregue o contexto de uma vez, não em conta-gotas.** Dê ao agente o quadro inteiro de uma só vez. A qualidade da saída acompanha a qualidade da entrada, e um briefing longo vence dez prompts pequenos.
+- **Fale com ele, não só digite.** A entrada por voz é mais rápida e carrega mais, e entrada mais rica produz saída melhor. Uma ferramenta de ditado mais o agente é um salto real em relação a digitar.
+- **Dê feedback positivo a ele.** Quando ele acerta algo, diga. Soa estranho, mas do mesmo jeito que você guiaria uma pessoa, dizer ao agente "isso estava certo, continue assim" deixa a passagem seguinte melhor.
 - **Empurre-o a fazer mais sozinho.** Agentes te entregam trabalho que poderiam fazer. Pergunte "você consegue fazer essa parte sozinho?" mais do que parece natural. O teto da automação sobe toda vez.
 - **Você é o verificador de sanidade.** Você não precisa saber como o modelo funciona por dentro. Você precisa ler o que ele produziu e julgar. Se você não consegue ler o que ele escreveu, você não é dono do que ele construiu.
 - **Faça checkpoint antes de o contexto encher.** Deixar a janela se comprimir sozinha descarta detalhe em silêncio. Um resumo curto mais um registro de atritos mantém o fio.
