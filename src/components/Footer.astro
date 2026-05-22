@@ -1,8 +1,10 @@
 ---
 import PrivacyBanner from './PrivacyBanner.astro';
+import FeedbackBlock from './FeedbackBlock.astro';
 const today = new Date();
 ---
 
+<div class="global-feedback"><FeedbackBlock /></div>
 <PrivacyBanner />
 <footer>
 	<div class="inner">
@@ -32,6 +34,11 @@ const today = new Date();
 	</div>
 </footer>
 <style>
+	.global-feedback {
+		max-width: 680px;
+		margin: 0 auto;
+		padding: 0 1em;
+	}
 	footer {
 		margin-top: 4em;
 		padding: 1.5em 1em;

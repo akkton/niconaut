@@ -29,7 +29,7 @@ const related = (await getCollection('posts', ({ data }) => !data.draft))
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={`${name} · Building`} description={summary} />
+		<BaseHead title={`${name} · Projects`} description={summary} />
 		<style>
 			a.back-link {
 				display: inline-block;
@@ -157,7 +157,7 @@ const related = (await getCollection('posts', ({ data }) => !data.draft))
 	<body>
 		<Header />
 		<main>
-			<a href="/building/" class="back-link">&larr; all projects</a>
+			<a href="/projects/" class="back-link">&larr; all projects</a>
 			<article>
 				<div class="title">
 					<div class="title-row">

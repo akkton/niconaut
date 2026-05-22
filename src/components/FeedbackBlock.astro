@@ -1,31 +1,58 @@
 ---
 type Props = {
-	headline: string;
-	articleType: 'journal' | 'post';
-	path: string;
+	articleType?: 'journal' | 'post' | 'page';
+	path?: string;
 };
 
-const { headline, articleType, path } = Astro.props as Props;
+const props = Astro.props as Props;
+const pathname = props.path ?? Astro.url.pathname;
 
-const mailSubject = `Re: ${headline}`;
-const mailBody = `\n\n----\nIn response to: https://nicolasneumann.blog${path}`;
+function deriveType(p: string): 'journal' | 'post' | 'page' {
+	const parts = p.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+	if (parts.length && (parts[0] === 'pt' || parts[0] === 'de')) parts.shift();
+	if (parts[0] === 'posts' && parts.length > 1) return 'post';
+	if (parts[0] === 'journal' && parts.length > 1) return 'journal';
+	return 'page';
+}
+
+// Layout mounts pass articleType explicitly (contextual, right after the prose).
+// The Footer mounts this globally with no props: it derives the type from the path
+// and renders only on generic pages, so article pages are not double-served and the
+// dedicated /feedback page keeps its own form.
+const explicit = props.articleType !== undefined;
+const derived = deriveType(pathname);
+const articleType = props.articleType ?? derived;
+const firstSeg = pathname.replace(/^\/+/, '').split('/').filter(Boolean)[0];
+const isFeedbackPage = firstSeg === 'feedback';
+const shouldRender = explicit ? true : derived === 'page' && !isFeedbackPage;
+
+const prompt = articleType === 'page' ? "How's the site landing?" : 'How did this land?';
 ---
 
-<section class="feedback" aria-label="Feedback on this entry" data-path={path} data-article-type={articleType}>
-	<div class="feedback-prompt">How did this land?</div>
-	<div class="feedback-buttons">
-		<button class="fb fb-resonates" type="button" data-reaction="resonates">resonates</button>
-		<button class="fb fb-didnt" type="button" data-reaction="didnt_land">didn't land</button>
-		<button class="fb fb-more" type="button" data-subject={mailSubject} data-body={mailBody}>want to say more</button>
-	</div>
-	<div class="feedback-thanks" hidden>noted, thanks for the read.</div>
-</section>
+{shouldRender && (
+	<section class="feedback" aria-label="Feedback" data-path={pathname} data-article-type={articleType}>
+		<div class="feedback-prompt">{prompt}</div>
+		<div class="feedback-buttons">
+			<button class="fb fb-resonates" type="button" data-reaction="resonates">resonates</button>
+			<button class="fb fb-didnt" type="button" data-reaction="didnt_land">didn't land</button>
+			<button class="fb fb-more" type="button">say more</button>
+		</div>
+		<div class="feedback-more" hidden>
+			<textarea class="fb-text" rows="4" placeholder="Type away. Plain text is fine. Goes straight to me, no email app."></textarea>
+			<input class="fb-email" type="email" autocomplete="email" placeholder="email (optional, only if you want a reply)" />
+			<div class="feedback-actions">
+				<button class="fb fb-send" type="button">send</button>
+			</div>
+		</div>
+		<div class="feedback-thanks" hidden>noted, thanks for the read.</div>
+	</section>
+)}
 
 <style>
 	.feedback {
 		margin: 3em 0 0 0;
 		padding: 1.5em 1.5em 1.4em 1.5em;
-		background: #fafafa;
+		background: var(--code-bg);
 		border: 1px solid var(--rule);
 		border-radius: 4px;
 	}
@@ -72,12 +99,59 @@ const mailBody = `\n\n----\nIn response to: https://nicolasneumann.blog${path}`;
 		opacity: 0.25;
 		pointer-events: none;
 	}
+	.feedback-more {
+		margin-top: 1em;
+		display: flex;
+		flex-direction: column;
+		gap: 0.7em;
+	}
+	.feedback-more[hidden] {
+		display: none;
+	}
+	.fb-text,
+	.fb-email {
+		width: 100%;
+		box-sizing: border-box;
+		border: 1px solid var(--rule-strong);
+		background: var(--bg);
+		color: var(--ink);
+		font: inherit;
+	}
+	.fb-text {
+		padding: 0.7em 0.9em;
+		font-size: 14px;
+		line-height: 1.5;
+		resize: vertical;
+		min-height: 90px;
+	}
+	.fb-email {
+		padding: 0.55em 0.9em;
+		font-size: 13.5px;
+	}
+	.fb-text:focus,
+	.fb-email:focus {
+		outline: none;
+		border-color: var(--ink);
+	}
+	.feedback-actions {
+		display: flex;
+	}
+	button.fb-send {
+		background: var(--ink);
+		color: var(--bg);
+	}
+	button.fb-send:hover {
+		opacity: 0.85;
+	}
 	.feedback-thanks {
 		margin-top: 1em;
 		font-family: var(--font-stack-mono);
 		font-size: 12px;
 		color: var(--ink-muted);
 		letter-spacing: 0.02em;
+	}
+	.feedback-thanks[hidden] {
+		display: none;
 	}
 	@media (max-width: 540px) {
 		.feedback {
@@ -96,48 +170,80 @@ const mailBody = `\n\n----\nIn response to: https://nicolasneumann.blog${path}`;
 <script is:inline>
 	(function () {
 		document.querySelectorAll('section.feedback').forEach(function (section) {
+			// Guard against double-binding: the component's inline script is emitted by
+			// every instance on the page (layout + footer), but binds each section once.
+			if (section.getAttribute('data-fb-bound')) return;
+			section.setAttribute('data-fb-bound', '1');
+
 			var path = section.getAttribute('data-path') || window.location.pathname;
-			var articleType = section.getAttribute('data-article-type') || 'unknown';
-			var buttons = section.querySelectorAll('button.fb');
+			var articleType = section.getAttribute('data-article-type') || 'page';
+			var reactionButtons = section.querySelectorAll('button.fb[data-reaction]');
+			var moreBtn = section.querySelector('.fb-more');
+			var moreBox = section.querySelector('.feedback-more');
+			var textEl = section.querySelector('.fb-text');
+			var emailEl = section.querySelector('.fb-email');
+			var sendBtn = section.querySelector('.fb-send');
 			var thanks = section.querySelector('.feedback-thanks');
-			var reacted = false;
+			var selectedReaction = null;
 
-			buttons.forEach(function (btn) {
-				btn.addEventListener('click', function () {
-					var reaction = btn.getAttribute('data-reaction');
-
-					if (reaction === 'resonates' || reaction === 'didnt_land') {
-						if (reacted) return;
-						reacted = true;
-						btn.classList.add('reacted');
-						buttons.forEach(function (other) {
-							if (other !== btn && other.getAttribute('data-reaction') !== null) {
-								other.classList.add('faded');
-							}
-						});
-						if (thanks) thanks.hidden = false;
-						if (window.posthog && typeof window.posthog.capture === 'function') {
-							window.posthog.capture('feedback_reaction', {
-								path: path,
-								article_type: articleType,
-								reaction: reaction,
-							});
-						}
-					} else {
-						// "want to say more": open mailto, fire intent event
-						var subj = btn.getAttribute('data-subject') || '';
-						var body = btn.getAttribute('data-body') || '';
-						if (window.posthog && typeof window.posthog.capture === 'function') {
-							window.posthog.capture('feedback_open', {
-								path: path,
-								article_type: articleType,
-							});
-						}
-						var href = 'mailto:neumanic2@gmail.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-						window.location.href = href;
+			function capture(event, props) {
+				try {
+					if (window.posthog && typeof window.posthog.capture === 'function') {
+						window.posthog.capture(event, props);
 					}
+				} catch (e) {
+					/* analytics blocked: degrade silently */
+				}
+			}
+
+			reactionButtons.forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					if (selectedReaction) return;
+					selectedReaction = btn.getAttribute('data-reaction');
+					btn.classList.add('reacted');
+					reactionButtons.forEach(function (other) {
+						if (other !== btn) other.classList.add('faded');
+					});
+					capture('feedback_reaction', { path: path, article_type: articleType, reaction: selectedReaction });
+					if (thanks && (!moreBox || moreBox.hidden)) thanks.hidden = false;
 				});
 			});
+
+			if (moreBtn && moreBox) {
+				moreBtn.addEventListener('click', function () {
+					moreBox.hidden = false;
+					moreBtn.classList.add('faded');
+					if (thanks) thanks.hidden = true;
+					if (textEl) textEl.focus();
+					capture('feedback_open', { path: path, article_type: articleType });
+				});
+			}
+
+			if (sendBtn) {
+				sendBtn.addEventListener('click', function () {
+					var text = textEl && textEl.value ? textEl.value.trim() : '';
+					var email = emailEl && emailEl.value ? emailEl.value.trim() : '';
+					if (!text) {
+						if (textEl) textEl.focus();
+						return;
+					}
+					var props = {
+						path: path,
+						article_type: articleType,
+						reaction: selectedReaction,
+						message: text.slice(0, 5000),
+						message_length: text.length,
+						has_email: !!email,
+					};
+					if (email) props.email = email;
+					capture('feedback_text', props);
+					if (moreBox) moreBox.hidden = true;
+					if (thanks) {
+						thanks.textContent = 'got it. thank you, I read every one.';
+						thanks.hidden = false;
+					}
+				});
+			}
 		});
 	})();
 </script>

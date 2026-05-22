@@ -6,18 +6,34 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_TITLE } from '../../consts';
 
-const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => {
+const CATEGORY_ORDER: { key: string; label: string }[] = [
+	{ key: 'product', label: 'Products' },
+	{ key: 'practice', label: 'Practice' },
+	{ key: 'learning', label: 'Learning' },
+	{ key: 'work', label: 'Work' },
+];
+
+const all = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => {
 	const ao = a.data.order ?? 999;
 	const bo = b.data.order ?? 999;
 	if (ao !== bo) return ao - bo;
 	return b.data.startedDate.valueOf() - a.data.startedDate.valueOf();
 });
+
+const groups = CATEGORY_ORDER.map((c) => ({
+	...c,
+	items: all.filter((p) => (p.data.category ?? 'product') === c.key),
+})).filter((g) => g.items.length > 0);
+
+// Only show category headings once there is more than one populated category,
+// so a single-group page does not get a redundant label.
+const showHeadings = groups.length > 1;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={`Building · ${SITE_TITLE}`} description="The projects I'm working on, with a running changelog for each." />
+		<BaseHead title={`Projects · ${SITE_TITLE}`} description="The things I'm building and practicing, in the open, with a running changelog for each." />
 		<style>
 			.page-head {
 				margin: 0 0 2.5em 0;
@@ -34,6 +50,17 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 				font-size: 0.95rem;
 				line-height: 1.6;
 				max-width: 60ch;
+			}
+			.cat-head {
+				margin: 2.25em 0 0.25em 0;
+				font-size: 0.78rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--ink-faint);
+			}
+			.cat-head:first-of-type {
+				margin-top: 0;
 			}
 			.project-list {
 				list-style: none;
@@ -100,30 +127,36 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 		<Header />
 		<main>
 			<section class="page-head">
-				<h1>Building</h1>
+				<h1>Projects</h1>
 				<p>
-					The things I'm working on, in the open. Each project has a running changelog and,
-					over time, posts that follow it. Status is honest, not aspirational.
+					The things I'm working on, in the open. Products I'm building, plus the practice
+					and learning around them. Each has a running changelog and, over time, posts that
+					follow it. Status is honest, not aspirational.
 				</p>
 			</section>
 
-			{projects.length === 0 ? (
+			{groups.length === 0 ? (
 				<p class="empty">Nothing public yet.</p>
 			) : (
-				<ul class="project-list">
-					{projects.map((project) => (
-						<li>
-							<a href={`/building/${project.id}/`}>
-								<div class="p-head">
-									<h2 class="p-name">{project.data.name}</h2>
-									<span class="status">{project.data.status}</span>
-								</div>
-								<p class="p-summary">{project.data.summary}</p>
-								<span class="p-since">since <FormattedDate date={project.data.startedDate} /></span>
-							</a>
-						</li>
-					))}
-				</ul>
+				groups.map((group) => (
+					<section>
+						{showHeadings && <h2 class="cat-head">{group.label}</h2>}
+						<ul class="project-list">
+							{group.items.map((project) => (
+								<li>
+									<a href={`/projects/${project.id}/`}>
+										<div class="p-head">
+											<h3 class="p-name">{project.data.name}</h3>
+											<span class="status">{project.data.status}</span>
+										</div>
+										<p class="p-summary">{project.data.summary}</p>
+										<span class="p-since">since <FormattedDate date={project.data.startedDate} /></span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
 			)}
 		</main>
 		<Footer />

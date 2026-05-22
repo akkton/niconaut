@@ -495,7 +495,32 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 				line-height: 1.5;
 			}
 
-			@media (max-width: 720px) {
+			/* Light motion + interactivity polish (2026-05-22). Monochrome by design. */
+				.bar-fill {
+					transition: background 0.15s ease;
+				}
+				ul.bars li:hover .bar-fill {
+					background: var(--link-hover);
+				}
+				@media (prefers-reduced-motion: no-preference) {
+					.bar-fill {
+						transform-origin: left center;
+						animation: bar-grow-x 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+					}
+					.week-bar-fill,
+					.month-bar-fill {
+						transform-origin: center bottom;
+						animation: bar-grow-y 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+					}
+				}
+				@keyframes bar-grow-x {
+					from { transform: scaleX(0); }
+				}
+				@keyframes bar-grow-y {
+					from { transform: scaleY(0); }
+				}
+
+				@media (max-width: 720px) {
 				.summary-grid { grid-template-columns: 1fr 1fr; }
 				.apps-grid { grid-template-columns: 1fr; }
 				.week-bar { height: 60px; }
@@ -582,7 +607,7 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 				) : (
 					<ul class="bars">
 						{topCategoriesAll.map(([name, minutes]) => (
-							<li>
+							<li title={`${name}: ${formatMinutes(minutes)}`}>
 								<span class="bar-name">{name}</span>
 								<span class="bar-track">
 									<span class="bar-fill" style={`width: ${(minutes / topCategoriesMax) * 100}%`}></span>
@@ -604,7 +629,7 @@ const avgFocusLabel = formatMinutes(Math.round(avgFocusPerDay));
 				) : (
 					<div class="apps-grid">
 						{topAppsAll.map(([name, minutes]) => (
-							<div class="app">
+							<div class="app" title={`${name}: ${formatMinutes(minutes)}`}>
 								<span class="app-name">{name}</span>
 								<span class="app-time">{formatMinutes(minutes)}</span>
 							</div>

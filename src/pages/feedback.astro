@@ -125,7 +125,7 @@ import { SITE_TITLE } from '../consts';
 				margin-top: 2em;
 				padding: 1.25em;
 				border: 1px solid var(--rule-strong);
-				background: #f5f5f5;
+				background: var(--code-bg);
 				font-size: 14px;
 				line-height: 1.6;
 				color: var(--ink);
@@ -148,9 +148,9 @@ import { SITE_TITLE } from '../consts';
 			<section class="page-head">
 				<h1>Feedback</h1>
 				<p>
-					Send a thought, ask a question, push back. Anything you have got. The form opens
-					your email client so you can hit send from your own address. No accounts,
-					no third-party form provider.
+					Send a thought, ask a question, push back. Anything you have got. It posts
+					straight to me, right here. No email app, no accounts, no third-party form
+					provider.
 				</p>
 			</section>
 
@@ -180,16 +180,16 @@ import { SITE_TITLE } from '../consts';
 				<div class="actions">
 					<button class="fb-submit" type="submit" id="fb-submit-btn">Send</button>
 					<span class="fallback">
-						If your email client does not open, copy the message and write directly to
+						Prefer email? You can also write directly to
 						<a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
 					</span>
 				</div>
 			</form>
 
 			<div class="confirm" id="fb-confirm" hidden>
-				<strong>Your email client should have opened.</strong>
-				If nothing happened, paste your message and write directly to
-				<a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
+				<strong>Got it. Thank you, I read every one.</strong>
+				If you left an email and asked for a reply, I will get back to you. You can also
+				write directly to <a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
 			</div>
 		</main>
 		<Footer />
@@ -210,22 +210,26 @@ import { SITE_TITLE } from '../consts';
 						if (msg) msg.focus();
 						return;
 					}
-					var body = text;
-					if (email) {
-						body += '\n\n----\nReply to: ' + email;
+					// Capture in-place. No mailto, no navigation, so the event always lands
+					// (this is the fix for the old capture-after-navigation bug).
+					var props = {
+						path: window.location.pathname,
+						article_type: 'feedback_page',
+						message: text.slice(0, 5000),
+						message_length: text.length,
+						has_email: !!email,
+					};
+					if (email) props.email = email;
+					try {
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('feedback_text', props);
+						}
+					} catch (err) {
+						/* analytics blocked: degrade silently, still confirm to the reader */
 					}
-					var subject = '[Blog feedback]';
-					var href = 'mailto:neumanic2@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-					window.location.href = href;
+					if (form) form.style.display = 'none';
 					if (confirmBox) confirmBox.hidden = false;
 					if (submitBtn) submitBtn.disabled = true;
-					if (window.posthog && typeof window.posthog.capture === 'function') {
-						window.posthog.capture('feedback_page_submit_intent', {
-							path: window.location.pathname,
-							has_email: !!email,
-							message_length: text.length,
-						});
-					}
 				});
 			})();
 		</script>

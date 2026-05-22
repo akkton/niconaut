@@ -160,11 +160,7 @@ const postJsonLd = blogPostingSchema({
 				<div class="prose">
 					<slot />
 				</div>
-				<FeedbackBlock
-					headline={title}
-					articleType="post"
-					path={postPath}
-				/>
+				<FeedbackBlock articleType="post" path={postPath} />
 			</article>
 		</main>
 		<Footer />

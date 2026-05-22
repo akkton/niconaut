@@ -339,11 +339,7 @@ const copyUrl = shareUrl('copylink');
 					</button>
 				</div>
 			</section>
-			<FeedbackBlock
-				headline={headline}
-				articleType="journal"
-				path={`${base}/journal/${isoDate}/`}
-			/>
+			<FeedbackBlock articleType="journal" path={`${base}/journal/${isoDate}/`} />
 			<nav class="prevnext" aria-label="Journal navigation">
 				<div>
 					{prev ? (

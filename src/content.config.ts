@@ -73,6 +73,7 @@ const projects = defineCollection({
 			status: z.string(),
 			summary: z.string(),
 			startedDate: z.coerce.date(),
+			category: z.enum(['product', 'practice', 'learning', 'work']).default('product'),
 			order: z.number().optional(),
 			tags: z.array(z.string()).default([]),
 			links: z

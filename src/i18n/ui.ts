@@ -36,7 +36,7 @@ type Dict = {
 
 export const ui: Record<Locale, Dict> = {
 	en: {
-		nav: { journal: 'Journal', posts: 'Posts', building: 'Building', work: 'Work', about: 'About', feedback: 'Feedback' },
+		nav: { journal: 'Journal', posts: 'Posts', building: 'Projects', work: 'Work', about: 'About', feedback: 'Feedback' },
 		labels: {
 			allPosts: 'all posts',
 			allEntries: 'all entries',
@@ -66,7 +66,7 @@ export const ui: Record<Locale, Dict> = {
 		footer: { rights: 'Building, learning, journaling in public.' },
 	},
 	pt: {
-		nav: { journal: 'Diário', posts: 'Artigos', building: 'Construindo', work: 'Trabalho', about: 'Sobre', feedback: 'Feedback' },
+		nav: { journal: 'Diário', posts: 'Artigos', building: 'Projetos', work: 'Trabalho', about: 'Sobre', feedback: 'Feedback' },
 		labels: {
 			allPosts: 'todos os artigos',
 			allEntries: 'todas as entradas',
