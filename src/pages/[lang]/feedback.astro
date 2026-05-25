@@ -1,0 +1,161 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+import { LOCALES, useTranslations, type Locale } from '../../i18n/ui';
+
+export function getStaticPaths() {
+	return LOCALES.filter((l) => l !== 'en').map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+
+type Fb = {
+	intro: string;
+	msgLabel: string;
+	msgPlaceholder: string;
+	emailLabel: string;
+	optional: string;
+	emailPlaceholder: string;
+	emailHint: string;
+	send: string;
+	fallbackPre: string;
+	confirmStrong: string;
+	confirmRest: string;
+};
+
+const copy: Record<string, Fb> = {
+	pt: {
+		intro: 'Mande um pensamento, faça uma pergunta, discorde. O que você tiver. Vai direto para mim, aqui mesmo. Sem app de e-mail, sem contas, sem formulário de terceiros.',
+		msgLabel: 'Seu pensamento',
+		msgPlaceholder: 'Pode escrever. Texto simples já basta.',
+		emailLabel: 'Seu e-mail',
+		optional: '(opcional)',
+		emailPlaceholder: 'voce@exemplo.com',
+		emailHint: 'Só se quiser uma resposta. Caso contrário, deixe em branco.',
+		send: 'Enviar',
+		fallbackPre: 'Prefere e-mail? Você também pode escrever direto para',
+		confirmStrong: 'Recebido. Obrigado, eu leio cada um.',
+		confirmRest: 'Se você deixou um e-mail e pediu resposta, eu retorno. Você também pode escrever direto para',
+	},
+	de: {
+		intro: 'Schick einen Gedanken, stell eine Frage, widersprich. Was immer du hast. Es geht direkt an mich, hier. Keine E-Mail-App, keine Konten, kein Formular von Dritten.',
+		msgLabel: 'Dein Gedanke',
+		msgPlaceholder: 'Schreib einfach los. Reiner Text reicht.',
+		emailLabel: 'Deine E-Mail',
+		optional: '(optional)',
+		emailPlaceholder: 'du@beispiel.com',
+		emailHint: 'Nur wenn du eine Antwort möchtest. Sonst lass es leer.',
+		send: 'Senden',
+		fallbackPre: 'Lieber per E-Mail? Du kannst auch direkt schreiben an',
+		confirmStrong: 'Angekommen. Danke, ich lese jedes einzelne.',
+		confirmRest: 'Wenn du eine E-Mail hinterlassen und um Antwort gebeten hast, melde ich mich. Du kannst auch direkt schreiben an',
+	},
+};
+const c = copy[lang];
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t.nav.feedback} · ${SITE_TITLE}`} description={c.intro} />
+		<style>
+			.page-head { margin: 0 0 2em 0; }
+			.page-head h1 { margin: 0 0 0.4em 0; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+			.page-head p { margin: 0; color: var(--ink-muted); font-size: 0.95rem; line-height: 1.55; max-width: 58ch; }
+			form.feedback-form { margin: 0; display: flex; flex-direction: column; gap: 1.25em; }
+			label.field-label { display: block; font-family: var(--font-stack-mono); font-size: 11px; font-weight: 600; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5em 0; }
+			textarea.fb-message { display: block; width: 100%; min-height: 180px; padding: 0.85em 1em; border: 1px solid var(--rule-strong); background: var(--bg); color: var(--ink); font: inherit; font-size: 15px; line-height: 1.55; resize: vertical; box-sizing: border-box; }
+			textarea.fb-message:focus { outline: none; border-color: var(--ink); }
+			input.fb-email { display: block; width: 100%; padding: 0.65em 1em; border: 1px solid var(--rule-strong); background: var(--bg); color: var(--ink); font: inherit; font-size: 14px; box-sizing: border-box; }
+			input.fb-email:focus { outline: none; border-color: var(--ink); }
+			.field-hint { margin: 0.4em 0 0 0; font-size: 11.5px; color: var(--ink-faint); line-height: 1.45; }
+			.actions { display: flex; gap: 0.75em; align-items: center; flex-wrap: wrap; }
+			button.fb-submit { display: inline-flex; align-items: center; padding: 0.65em 1.4em; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); font: inherit; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.12s ease; }
+			button.fb-submit:hover { opacity: 0.85; }
+			button.fb-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+			.fallback { font-size: 12px; color: var(--ink-faint); line-height: 1.5; }
+			.fallback a { color: var(--ink-muted); }
+			.fallback a:hover { color: var(--ink); }
+			.confirm { margin-top: 2em; padding: 1.25em; border: 1px solid var(--rule-strong); background: var(--code-bg); font-size: 14px; line-height: 1.6; color: var(--ink); }
+			.confirm strong { font-weight: 600; }
+			.confirm a { color: var(--ink); text-decoration: underline; }
+			.confirm[hidden] { display: none; }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>{t.nav.feedback}</h1>
+				<p>{c.intro}</p>
+			</section>
+
+			<form class="feedback-form" id="feedback-form" novalidate>
+				<div>
+					<label class="field-label" for="fb-message">{c.msgLabel}</label>
+					<textarea id="fb-message" class="fb-message" placeholder={c.msgPlaceholder} required></textarea>
+				</div>
+
+				<div>
+					<label class="field-label" for="fb-email">{c.emailLabel} <span style="text-transform: none; letter-spacing: 0; font-weight: 400;">{c.optional}</span></label>
+					<input id="fb-email" class="fb-email" type="email" placeholder={c.emailPlaceholder} autocomplete="email" />
+					<p class="field-hint">{c.emailHint}</p>
+				</div>
+
+				<div class="actions">
+					<button class="fb-submit" type="submit" id="fb-submit-btn">{c.send}</button>
+					<span class="fallback">
+						{c.fallbackPre} <a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
+					</span>
+				</div>
+			</form>
+
+			<div class="confirm" id="fb-confirm" hidden>
+				<strong>{c.confirmStrong}</strong>
+				{c.confirmRest} <a href="mailto:neumanic2@gmail.com">neumanic2@gmail.com</a>.
+			</div>
+		</main>
+		<Footer />
+
+		<script is:inline>
+			(function () {
+				var form = document.getElementById('feedback-form');
+				if (!form) return;
+				var submitBtn = document.getElementById('fb-submit-btn');
+				var confirmBox = document.getElementById('fb-confirm');
+				form.addEventListener('submit', function (e) {
+					e.preventDefault();
+					var msg = document.getElementById('fb-message');
+					var emailEl = document.getElementById('fb-email');
+					var text = msg && msg.value ? msg.value.trim() : '';
+					var email = emailEl && emailEl.value ? emailEl.value.trim() : '';
+					if (!text) {
+						if (msg) msg.focus();
+						return;
+					}
+					var props = {
+						path: window.location.pathname,
+						article_type: 'feedback_page',
+						message: text.slice(0, 5000),
+						message_length: text.length,
+						has_email: !!email,
+					};
+					if (email) props.email = email;
+					try {
+						if (window.posthog && typeof window.posthog.capture === 'function') {
+							window.posthog.capture('feedback_text', props);
+						}
+					} catch (err) {
+						/* analytics blocked: degrade silently, still confirm to the reader */
+					}
+					if (form) form.style.display = 'none';
+					if (confirmBox) confirmBox.hidden = false;
+					if (submitBtn) submitBtn.disabled = true;
+				});
+			})();
+		</script>
+	</body>
+</html>

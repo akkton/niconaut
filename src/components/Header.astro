@@ -5,8 +5,8 @@ import { getLangFromUrl, useTranslations } from '../i18n/ui';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-// Translated sections get a locale prefix; en stays at the root (no trailing slash,
-// so HeaderLink active-state matching keeps working). Utility pages stay English.
+// Localized sections get a locale prefix; en stays at the root (no trailing slash,
+// so HeaderLink active-state matching keeps working). Work stays English for now.
 const sec = (seg: string) => (lang === 'en' ? `/${seg}` : `/${lang}/${seg}`);
 const home = lang === 'en' ? '/' : `/${lang}/`;
 ---
@@ -17,10 +17,10 @@ const home = lang === 'en' ? '/' : `/${lang}/`;
 		<div class="internal-links">
 			<HeaderLink href={sec('journal')}>{t.nav.journal}</HeaderLink>
 			<HeaderLink href={sec('posts')}>{t.nav.posts}</HeaderLink>
-			<HeaderLink href="/projects">{t.nav.building}</HeaderLink>
+			<HeaderLink href={sec('projects')}>{t.nav.building}</HeaderLink>
 			<HeaderLink href="/work">{t.nav.work}</HeaderLink>
 			<HeaderLink href={sec('about')}>{t.nav.about}</HeaderLink>
-			<HeaderLink href="/feedback">{t.nav.feedback}</HeaderLink>
+			<HeaderLink href={sec('feedback')}>{t.nav.feedback}</HeaderLink>
 			<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◐</button>
 			<LanguageSwitcher />
 		</div>
@@ -79,13 +79,15 @@ const home = lang === 'en' ? '/' : `/${lang}/`;
 	}
 	.internal-links {
 		display: flex;
-		gap: 1.25em;
+		flex-wrap: wrap;
+			align-items: center;
+			gap: 0.5em 1.1em;
 	}
 	.internal-links a {
 		font-size: 14px;
 		color: var(--ink-muted);
 		text-decoration: none;
-		padding: 0.25em 0;
+		padding: 0.25em 0; white-space: nowrap;
 		transition: color 0.12s ease;
 	}
 	.internal-links a:hover {

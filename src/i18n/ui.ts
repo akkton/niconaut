@@ -13,8 +13,8 @@ export const LOCALE_LABELS: Record<Locale, string> = {
 };
 
 // Paths (after stripping any locale prefix) that have localized versions.
-// The language switcher maps these; anything else falls back to the locale home.
-export const TRANSLATABLE_PREFIXES = ['', 'about', 'posts', 'journal'];
+// The language switcher maps these; on any other page it stays put (never bounces home).
+export const TRANSLATABLE_PREFIXES = ['', 'about', 'posts', 'journal', 'projects', 'feedback'];
 
 type Dict = {
 	nav: { journal: string; posts: string; building: string; work: string; about: string; feedback: string };
@@ -144,16 +144,15 @@ export function stripLocale(pathname: string): string {
 	return '/' + parts.join('/');
 }
 
-// Build the URL for `pathname` in `lang`. Falls back to the locale home if the page
-// is not part of the translated surfaces, so the switcher never points at a 404.
+// Build the URL for `pathname` in `lang`. If the page has no localized variant, stay on
+// the current page instead of bouncing home, so the switcher never throws the reader off
+// the page they are on (and never points at a 404).
 export function localizedPath(pathname: string, lang: Locale): string {
 	const canonical = stripLocale(pathname);
 	const firstSeg = canonical.split('/').filter(Boolean)[0] ?? '';
 	const translatable = TRANSLATABLE_PREFIXES.includes(firstSeg);
-	if (lang === DEFAULT_LOCALE) {
-		return translatable ? ensureTrailingSlash(canonical) : '/';
-	}
-	if (!translatable) return `/${lang}/`;
+	if (!translatable) return pathname;
+	if (lang === DEFAULT_LOCALE) return ensureTrailingSlash(canonical);
 	const joined = canonical === '/' ? `/${lang}/` : `/${lang}${canonical}`;
 	return ensureTrailingSlash(joined);
 }

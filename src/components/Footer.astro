@@ -1,14 +1,17 @@
 ---
 import PrivacyBanner from './PrivacyBanner.astro';
 import FeedbackBlock from './FeedbackBlock.astro';
+import { getLangFromUrl } from '../i18n/ui';
 const today = new Date();
+const lang = getLangFromUrl(Astro.url);
+const feedbackHref = lang === 'en' ? '/feedback/' : `/${lang}/feedback/`;
 ---
 
 <div class="global-feedback"><FeedbackBlock /></div>
 <PrivacyBanner />
 <footer>
 	<div class="inner">
-		<div class="copy">&copy; {today.getFullYear()} Nicolas Neumann · <a class="rss" href="/rss.xml">RSS</a> · <a class="rss" href="/privacy/">Privacy</a> · <a class="rss" href="/feedback/">Feedback</a></div>
+		<div class="copy">&copy; {today.getFullYear()} Nicolas Neumann · <a class="rss" href="/rss.xml">RSS</a> · <a class="rss" href="/privacy/">Privacy</a> · <a class="rss" href={feedbackHref}>Feedback</a></div>
 		<div class="social-links">
 			<a href="https://www.linkedin.com/in/nicolas-neumann-520736286/" target="_blank" rel="noopener" aria-label="Nico on LinkedIn">
 				<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">

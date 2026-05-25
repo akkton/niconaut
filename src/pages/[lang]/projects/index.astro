@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Header from '../../../components/Header.astro';
+import { SITE_TITLE } from '../../../consts';
+import { LOCALES, useTranslations, type Locale } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+	return LOCALES.filter((l) => l !== 'en').map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+
+const copy: Record<string, { intro: string; empty: string; cats: Record<string, string> }> = {
+	pt: {
+		intro: 'As coisas em que estou trabalhando, em público. Produtos que estou construindo, além da prática e do aprendizado em volta. Cada um tem um changelog e, com o tempo, textos que o acompanham. O status é honesto, não aspiracional.',
+		empty: 'Nada público ainda.',
+		cats: { product: 'Produtos', practice: 'Prática', learning: 'Aprendizado', work: 'Trabalho' },
+	},
+	de: {
+		intro: 'Die Dinge, an denen ich arbeite, öffentlich. Produkte, die ich baue, plus die Praxis und das Lernen drumherum. Jedes hat einen Changelog und mit der Zeit Beiträge, die es begleiten. Der Status ist ehrlich, nicht beschönigt.',
+		empty: 'Noch nichts öffentlich.',
+		cats: { product: 'Produkte', practice: 'Praxis', learning: 'Lernen', work: 'Arbeit' },
+	},
+};
+const c = copy[lang];
+
+const CATEGORY_KEYS = ['product', 'practice', 'learning', 'work'];
+
+const all = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => {
+	const ao = a.data.order ?? 999;
+	const bo = b.data.order ?? 999;
+	if (ao !== bo) return ao - bo;
+	return b.data.startedDate.valueOf() - a.data.startedDate.valueOf();
+});
+
+const groups = CATEGORY_KEYS.map((key) => ({
+	key,
+	label: c.cats[key],
+	items: all.filter((p) => (p.data.category ?? 'product') === key),
+})).filter((g) => g.items.length > 0);
+
+const showHeadings = groups.length > 1;
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t.nav.building} · ${SITE_TITLE}`} description={c.intro} />
+		<style>
+			.page-head { margin: 0 0 2.5em 0; }
+			.page-head h1 { margin: 0 0 0.35em 0; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+			.page-head p { margin: 0; color: var(--ink-muted); font-size: 0.95rem; line-height: 1.6; max-width: 60ch; }
+			.cat-head { margin: 2.25em 0 0.25em 0; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
+			.cat-head:first-of-type { margin-top: 0; }
+			.project-list { list-style: none; margin: 0; padding: 0; }
+			.project-list li { padding: 1.25em 0; border-bottom: 1px solid var(--rule); }
+			.project-list li:last-child { border-bottom: none; }
+			.project-list a { display: block; color: var(--ink); text-decoration: none; }
+			.p-head { display: flex; align-items: baseline; gap: 0.75em; margin: 0 0 0.3em 0; }
+			.p-name { margin: 0; font-size: 1.1rem; font-weight: 600; }
+			.project-list a:hover .p-name { color: var(--link-hover); }
+			.status { font-family: var(--font-stack-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); border: 1px solid var(--rule); border-radius: 999px; padding: 0.15em 0.6em; white-space: nowrap; }
+			.p-summary { margin: 0 0 0.4em 0; color: var(--ink-muted); font-size: 14px; line-height: 1.55; }
+			.p-since { font-family: var(--font-stack-mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.02em; }
+			.empty { color: var(--ink-faint); font-style: italic; font-size: 14px; }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>{t.nav.building}</h1>
+				<p>{c.intro}</p>
+			</section>
+
+			{groups.length === 0 ? (
+				<p class="empty">{c.empty}</p>
+			) : (
+				groups.map((group) => (
+					<section>
+						{showHeadings && <h2 class="cat-head">{group.label}</h2>}
+						<ul class="project-list">
+							{group.items.map((project) => (
+								<li>
+									<a href={`/${lang}/projects/${project.id}/`}>
+										<div class="p-head">
+											<h3 class="p-name">{project.data.name}</h3>
+											<span class="status">{project.data.status}</span>
+										</div>
+										<p class="p-summary">{project.data.summary}</p>
+										<span class="p-since">{t.labels.since} <FormattedDate date={project.data.startedDate} /></span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>
