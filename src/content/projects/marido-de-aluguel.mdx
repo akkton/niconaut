@@ -1,6 +1,6 @@
 ---
 name: "Marido de Aluguel"
-status: "Scoping"
+status: "Building"
 summary: "A Brazilian marketplace for home services. Husband for Hire, as an app."
 startedDate: 2026-05-18
 order: 2
@@ -13,6 +13,12 @@ changelog:
     note: "Sketched a first architecture and built a click-through demo."
   - date: 2026-05-20
     note: "Working session with a local partner. Narrowed the first slice to a small, shippable start."
+  - date: 2026-05-21
+    note: "The waitlist went live, and the first real signups came in. Beyond my own testers, seven people found it and put their name down on their own. The clearest signal yet that the thing is wanted."
+  - date: 2026-05-22
+    note: "Built the foundation. A location model, a typed data layer that keeps precise addresses locked down, and the app moved onto its design system. Code-verified end to end."
+  - date: 2026-05-24
+    note: "Shipped and verified the first auth slice on a real backend: sign-in, an account that bootstraps on first login, and routes that stay closed until you are in."
 draft: false
 ---
 
@@ -20,4 +26,16 @@ This is a marketplace for home services, the trades you call when something in t
 
 It is built for the Brazilian market first, local before national, the kind of thing where word of mouth and a physical presence do the early work.
 
-The honest status is still scoping. The brief is locked and the first slice is deliberately small, so real people can react before the heavy machinery gets built. The changelog above is the running record.
+## Why this is harder than it looks
+
+The interesting part is not the marketplace, it is how the money moves. In Brazil that means Pix, the instant-payment rail, and paying in installments, which people expect even for a service. The shortcut would have been to reach for the same payment processor everyone uses in the US. It cannot do marketplace payouts or installments here, so the whole money path runs through a Brazilian processor instead, with the platform taking its cut on the split. That one constraint shaped more of the architecture than any feature did.
+
+## Built to go two ways
+
+It runs in one town first, but the architecture does not assume it stops there. Two languages and proper currency handling are in from the first commit, and the payment side sits behind an interface rather than wired straight to one provider. So it can stay a Brazilian product, the way some of the best ones have, or become a Brazil-first product that travels later, without a rewrite to find out which.
+
+## Keeping addresses private
+
+A marketplace for home services knows where people live, which is exactly the data you do not want leaking. So the model splits it: a public, city-level location anyone can see, and the precise address gated per user behind row-level rules in the database from day one. Privacy is not a setting bolted on later, it is the shape of the data.
+
+The honest status: the brief is locked, the foundation and sign-in are live, and a small waitlist is already real. Next is the part people will actually touch, profiles and the first job flow. The changelog above is the running record.

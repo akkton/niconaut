@@ -8,14 +8,28 @@ tags: ["blog"]
 links:
   - label: "About"
     url: "/about/"
+  - label: "How the agentic system works"
+    url: "/posts/how-the-agentic-system-works/"
 changelog:
   - date: 2026-05-17
     note: "Launched."
   - date: 2026-05-20
     note: "Added discoverability, a downloadable starter kit, this Building section, a newsletter, reading-time on posts, and Portuguese and German versions."
+  - date: 2026-05-22
+    note: "Journal entries went trilingual as the standard, each one in English, Portuguese, and German, linked as translations of the same day."
+  - date: 2026-05-24
+    note: "Locked the deploy pipeline. A push to the main branch builds the site and ships it worldwide in about thirty seconds, with no dashboard step in between."
 draft: false
 ---
 
 The blog is a project too. It is where the building gets written down: long-form posts when something is worth explaining, a daily journal with the hours and the honest wins and losses, and this running record of what I am working on.
 
-It runs as a static site and ships itself on every push, in English, Portuguese, and German. How it is put together is scattered across the posts rather than spelled out in one place, on purpose.
+It runs as a static site and ships itself on every push, in English, Portuguese, and German.
+
+## How it is built
+
+A static site generator with content written in MDX, so every post and journal entry is a file with a typed header the build refuses to accept if a field is wrong. Three collections sit underneath: the long-form posts, the daily journal with its time-tracking fields, and this projects list with its changelogs. Styling is utility-first, wired straight into the build with no separate config step. The three languages run on the framework's own routing, with a key that links the versions of one piece together.
+
+## The part that is actually different
+
+The thing worth explaining is not the stack, it is the authoring. There is no admin panel and no markdown editor. I talk, an agent writes the MDX with the right header, I read it back and edit, and a push deploys it. The blog is the most visible output of the agentic system the posts keep describing, and keeping that workflow intact is the point, not a convenience. The deploy is deliberately plain to match: the code is the source of truth, the hosting dashboard stays read-only, and every change goes through a commit. The About page is who I am. This page is how the thing is wired.
