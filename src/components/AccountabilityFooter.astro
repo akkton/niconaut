@@ -21,7 +21,7 @@ const hasAny =
 {hasAny && (
 	<section class="accountability" aria-label="Day accountability">
 		{targets && targets.length > 0 && (
-			<div class="block">
+			<div class="block targets">
 				<h3 class="block-label">{acc.targets}</h3>
 				<ul>
 					{targets.map((t) => <li>{t}</li>)}
@@ -60,40 +60,51 @@ const hasAny =
 <style>
 	.accountability {
 		margin: 2.5em 0 1em 0;
-		padding-top: 1.5em;
+		padding-top: 1.75em;
+		border-top: 1px solid var(--rule);
 	}
 	.block {
-		margin-bottom: 1.5em;
+		margin: 0 0 1em 0;
+		padding: 0.9em 1.1em 1em 1.15em;
+		border: 1px solid var(--rule);
+		border-left: 3px solid var(--rule-strong);
+		border-radius: 5px;
 	}
 	.block-label {
 		margin: 0 0 0.65em 0;
 		font-family: var(--font-stack-sans);
-		font-size: 0.72rem;
-		font-weight: 600;
+		font-size: 0.7rem;
+		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		color: var(--ink-faint);
 	}
 	.block ul {
 		margin: 0;
-		padding-left: 1.1em;
-		list-style-type: none;
+		padding: 0;
+		list-style: none;
 	}
 	.block li {
 		position: relative;
-		margin-bottom: 0.4em;
-		padding-left: 0.5em;
-		line-height: 1.5;
+		margin-bottom: 0.5em;
+		padding-left: 1.1em;
+		line-height: 1.55;
 		color: var(--ink);
 		font-size: 13.5px;
 	}
+	.block li:last-child {
+		margin-bottom: 0;
+	}
 	.block li::before {
-		content: "·";
+		content: "";
 		position: absolute;
-		left: -1.1em;
-		color: var(--ink-faint);
-		font-family: var(--font-stack-mono);
-		font-size: 0.85em;
+		left: 0;
+		top: 0.6em;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		background: var(--ink-faint);
+		opacity: 0.7;
 	}
 	.grid {
 		display: grid;
@@ -102,24 +113,39 @@ const hasAny =
 	}
 	.grid .block {
 		margin: 0;
-		padding: 0.9em 1.1em 1em 1.1em;
-		border: 1px solid var(--rule);
-		border-left: 3px solid var(--rule-strong);
-		border-radius: 4px;
 	}
-	.grid .block ul {
-		padding-left: 1.1em;
+	.targets {
+		border-left-color: var(--ink-faint);
 	}
-	.wins { border-left-color: #2a7548; }
-	.losses { border-left-color: #9c3636; }
-	.lessons { border-left-color: var(--ink-faint); }
-	.wins .block-label { color: #2a7548; }
-	.losses .block-label { color: #9c3636; }
-	.lessons .block-label { color: var(--ink-muted); }
+	.wins {
+		border-left-color: #2a7548;
+	}
+	.losses {
+		border-left-color: #9c3636;
+	}
+	.lessons {
+		border-left-color: var(--rule-strong);
+	}
+	.wins .block-label {
+		color: #2a7548;
+	}
+	.losses .block-label {
+		color: #9c3636;
+	}
+	.lessons .block-label {
+		color: var(--ink-muted);
+	}
+	.wins li::before {
+		background: #2a7548;
+		opacity: 0.8;
+	}
+	.losses li::before {
+		background: #9c3636;
+		opacity: 0.8;
+	}
 	@media (min-width: 721px) {
 		.grid {
 			grid-template-columns: 1fr 1fr;
-			gap: 1em;
 		}
 		.lessons {
 			grid-column: 1 / -1;
