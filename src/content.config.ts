@@ -2,6 +2,13 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
+// A wins/losses/lessons item: either a plain string (legacy entries) or a
+// { point, detail } pair that renders as a collapsible catchphrase + explanation.
+const accItem = z.union([
+	z.string(),
+	z.object({ point: z.string(), detail: z.string().optional() }),
+]);
+
 const posts = defineCollection({
 	loader: glob({ base: './src/content/posts', pattern: '**/[^_]*.{md,mdx}' }),
 	schema: ({ image }) =>
@@ -10,6 +17,14 @@ const posts = defineCollection({
 			description: z.string(),
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
+			edits: z
+				.array(
+					z.object({
+						date: z.coerce.date(),
+						note: z.string(),
+					}),
+				)
+				.default([]),
 			heroImage: z.optional(image()),
 			tags: z.array(z.string()).default([]),
 			draft: z.boolean().default(false),
@@ -51,9 +66,9 @@ const journal = defineCollection({
 			lang: z.enum(['en', 'pt', 'de']).default('en'),
 			translationKey: z.string().optional(),
 			targets: z.array(z.string()).optional(),
-			wins: z.array(z.string()).optional(),
-			losses: z.array(z.string()).optional(),
-			lessons: z.array(z.string()).optional(),
+			wins: z.array(accItem).optional(),
+			losses: z.array(accItem).optional(),
+			lessons: z.array(accItem).optional(),
 			updates: z
 				.array(
 					z.object({
@@ -75,6 +90,14 @@ const projects = defineCollection({
 			startedDate: z.coerce.date(),
 			category: z.enum(['product', 'practice', 'learning', 'work']).default('product'),
 			order: z.number().optional(),
+			milestones: z
+				.array(
+					z.object({
+						day: z.number(),
+						label: z.string(),
+					}),
+				)
+				.optional(),
 			tags: z.array(z.string()).default([]),
 			links: z
 				.array(

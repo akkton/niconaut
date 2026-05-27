@@ -15,10 +15,13 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'projects'>;
 
 const project = Astro.props;
-const { name, status, summary, startedDate, links, changelog, tags } = project.data;
+const { name, status, summary, startedDate, links, changelog, tags, milestones } = project.data;
 const { Content } = await render(project);
 
 const changelogSorted = [...changelog].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+const daysSince = Math.floor((Date.now() - startedDate.valueOf()) / 86400000);
+const milestonesView = (milestones ?? []).map((m) => ({ ...m, reached: daysSince >= m.day }));
 
 // Posts that follow this project: any post tagged with one of the project's tags.
 const related = (await getCollection('posts', ({ data }) => !data.draft))
@@ -147,6 +150,51 @@ const related = (await getCollection('posts', ({ data }) => !data.draft))
 				color: var(--ink);
 				font-size: 14.5px;
 			}
+			.milestones {
+				margin: 0 0 2em 0;
+				padding: 1em 1.1em;
+				border: 1px solid var(--rule);
+				border-left: 3px solid var(--rule-strong);
+				border-radius: 5px;
+			}
+			.ms-current {
+				font-family: var(--font-stack-mono);
+				font-size: 1.05rem;
+				color: var(--ink);
+				margin-bottom: 0.85em;
+			}
+			.ms-track {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.7em 1.6em;
+			}
+			.ms {
+				display: flex;
+				flex-direction: column;
+				gap: 0.15em;
+				font-family: var(--font-stack-mono);
+				opacity: 0.55;
+			}
+			.ms.reached {
+				opacity: 1;
+			}
+			.ms-day {
+				font-size: 13px;
+				color: var(--ink);
+			}
+			.ms-label {
+				font-size: 10px;
+				color: var(--ink-faint);
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+			.ms.reached .ms-label::after {
+				content: " ✓";
+				color: #2a7548;
+			}
 			@media (max-width: 540px) {
 				.changelog li {
 					grid-template-columns: 6em 1fr;
@@ -174,6 +222,20 @@ const related = (await getCollection('posts', ({ data }) => !data.draft))
 						</div>
 					)}
 				</div>
+
+				{milestonesView.length > 0 && (
+					<div class="milestones">
+						<div class="ms-current">Day {daysSince}</div>
+						<ul class="ms-track">
+							{milestonesView.map((m) => (
+								<li class={m.reached ? 'ms reached' : 'ms'}>
+									<span class="ms-day">{m.day}d</span>
+									<span class="ms-label">{m.label}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
 
 				<div class="prose">
 					<Content />

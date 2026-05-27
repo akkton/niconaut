@@ -1,11 +1,13 @@
 ---
 import { useJournal, type Locale } from '../i18n/ui';
 
+type AccItem = string | { point: string; detail?: string };
+
 interface Props {
 	targets?: string[];
-	wins?: string[];
-	losses?: string[];
-	lessons?: string[];
+	wins?: AccItem[];
+	losses?: AccItem[];
+	lessons?: AccItem[];
 	lang?: Locale;
 }
 
@@ -33,7 +35,18 @@ const hasAny =
 				<div class="block wins">
 					<h3 class="block-label">{acc.wins}</h3>
 					<ul>
-						{wins.map((w) => <li>{w}</li>)}
+						{wins.map((item) =>
+							typeof item === 'string' ? (
+								<li>{item}</li>
+							) : (
+								<li class="has-detail">
+									<details>
+										<summary>{item.point}</summary>
+										{item.detail && <div class="acc-detail">{item.detail}</div>}
+									</details>
+								</li>
+							),
+						)}
 					</ul>
 				</div>
 			)}
@@ -41,7 +54,18 @@ const hasAny =
 				<div class="block losses">
 					<h3 class="block-label">{acc.losses}</h3>
 					<ul>
-						{losses.map((l) => <li>{l}</li>)}
+						{losses.map((item) =>
+							typeof item === 'string' ? (
+								<li>{item}</li>
+							) : (
+								<li class="has-detail">
+									<details>
+										<summary>{item.point}</summary>
+										{item.detail && <div class="acc-detail">{item.detail}</div>}
+									</details>
+								</li>
+							),
+						)}
 					</ul>
 				</div>
 			)}
@@ -49,7 +73,18 @@ const hasAny =
 				<div class="block lessons">
 					<h3 class="block-label">{acc.lessons}</h3>
 					<ul>
-						{lessons.map((l) => <li>{l}</li>)}
+						{lessons.map((item) =>
+							typeof item === 'string' ? (
+								<li>{item}</li>
+							) : (
+								<li class="has-detail">
+									<details>
+										<summary>{item.point}</summary>
+										{item.detail && <div class="acc-detail">{item.detail}</div>}
+									</details>
+								</li>
+							),
+						)}
 					</ul>
 				</div>
 			)}
@@ -142,6 +177,30 @@ const hasAny =
 	.losses li::before {
 		background: #9c3636;
 		opacity: 0.8;
+	}
+	.block li.has-detail {
+		padding-left: 0;
+	}
+	.block li.has-detail::before {
+		display: none;
+	}
+	.has-detail summary {
+		cursor: pointer;
+		font-weight: 500;
+		color: var(--ink);
+		line-height: 1.55;
+	}
+	.has-detail summary::-webkit-details-marker {
+		color: var(--ink-faint);
+	}
+	.has-detail summary:hover {
+		color: var(--ink-muted);
+	}
+	.acc-detail {
+		margin-top: 0.5em;
+		color: var(--ink-muted);
+		font-size: 13px;
+		line-height: 1.65;
 	}
 	@media (min-width: 721px) {
 		.grid {

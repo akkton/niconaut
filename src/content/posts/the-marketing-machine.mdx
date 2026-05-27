@@ -2,6 +2,10 @@
 title: "Four roles, one funnel"
 description: "How I stopped treating marketing as the chore at the bottom of the list and started running it as a small org of agents, with a strategy seat, a tactical hub, a lead engine, and the product, all wired through one person. The system I am pointing at my first ten paying customers this week."
 pubDate: 2026-05-26
+updatedDate: 2026-05-27
+edits:
+  - date: 2026-05-27
+    note: "Reframed the human-in-the-loop section: not just the bus, the bus driver who checks every passenger, and why a general agent cannot yet do this orchestration. Broke up the denser sections for readability."
 tags: [systems, marketing, agents]
 draft: false
 ---
@@ -18,7 +22,11 @@ The honest part is that I did not draw this up and then build it. It accreted. E
 
 <MarketingSystemDiagram />
 
-It started scattered: three product builds and no coordination, marketing being whatever happened in the chat that day. The first real structure was a single marketing home with a freshness checker, built when my own docs kept drifting away from the live product. Then came the first campaign, where I learned to separate what marketing wants from what the build actually ships, and put myself in the middle as the relay. Only at the end, when a five-day sprint made the coordination load real, did it harden into the operating model the rest of this post describes: a strategy seat, a tactical hub, a lead engine, the product, and me as the only wire between them.
+It started scattered: three product builds and no coordination, marketing being whatever happened in the chat that day.
+
+The first real structure was a single marketing home with a freshness checker, built when my own docs kept drifting away from the live product. Then came the first campaign, where I learned to separate what marketing wants from what the build actually ships, and put myself in the middle as the relay.
+
+Only at the end, when a five-day sprint made the coordination load real, did it harden into the operating model the rest of this post describes: a strategy seat, a tactical hub, a lead engine, the product, and me as the only wire between them.
 
 That is the same way the rest of my system grew, the one I wrote about in [how my agentic system actually works](/posts/how-the-agentic-system-works/). A behavior starts loose, and structure gets added only when the looseness starts to cost something. Nothing here was clever up front. It was shaped by the stretch of it not quite working.
 
@@ -34,11 +42,17 @@ The split is what makes it work. Each piece does one job and is judged on one th
 
 **The product builder** ships the fixes. OneProposal is a Lovable app, so the product changes that support the campaign get made there, as prompts the build session relays. An activation fix or a tracking fix that the hub asks for lands here and goes live.
 
-## The human is the bus
+Four seats, four jobs. What keeps them from colliding is a single rule about who is allowed to talk to whom.
+
+## The human is the bus driver
 
 Here is the rule that keeps the whole thing from turning into chaos: the spokes never talk to each other. The strategy seat and the lead engine do not coordinate directly. Everything routes through me.
 
+And I am not just the bus that carries a message from one seat to the next. I am the driver, and I check everyone who gets on. Every handoff between agents passes through a person who reads it, weighs it against what is actually true, and decides whether it goes forward. That validation step is the control mechanism. It is the thing that stops a confident wrong assumption from boarding and riding the whole route unquestioned.
+
 It sounds like a bottleneck, and it is the opposite. The failure mode of a multi-agent setup is not that an agent is too weak. It is that three of them start negotiating with each other, drift out of sync, and quietly compound a wrong assumption across the whole system while you are not looking. One hub, one tracker, and a single human wire means there is exactly one place where the context lives and one place where a bad call gets caught. I am not trying to remove myself from the loop. I am trying to be the only loop, so nothing happens that I did not see.
+
+I want to be honest about why the human is still in the middle. At the current state of my infrastructure, I cannot drop a general agent into that seat and have it orchestrate and check the work the way I do. The judgment that catches a bad handoff is not something I can hand off yet. So the human wire is not nostalgia or control for its own sake. It is load-bearing, and it stays until the system is good enough to earn it away.
 
 The other half of the rule is cadence. The hub does not report a firehose of every micro-decision. It reports at defined beats: after a timed test, at a midweek go or no-go, at the end of the sprint. Checkpoints, not a stream.
 
@@ -46,7 +60,9 @@ The other half of the rule is cadence. The hub does not report a firehose of eve
 
 All of that exists to push one funnel: source a lead, reach them, let them taste the product for free, convert them to paid. Simple to draw, and the honest version is humbling.
 
-When I actually read the funnel instead of admiring it, most of the traffic I had been counting turned out to be editor and preview noise, not people. The real reach is small. The truly honest baseline is zero paying customers. Naming that out loud is what let me build a plan around the real bottleneck, which is reach, not supply. I do not have a shortage of leads or a shortage of product. I have a shortage of people who have actually heard of it. That is a distribution problem, and distribution is exactly what a funnel is for.
+When I actually read the funnel instead of admiring it, most of the traffic I had been counting turned out to be editor and preview noise, not people. The real reach is small. The truly honest baseline is zero paying customers.
+
+Naming that out loud is what let me build a plan around the real bottleneck, which is reach, not supply. I do not have a shortage of leads or a shortage of product. I have a shortage of people who have actually heard of it. That is a distribution problem, and distribution is exactly what a funnel is for.
 
 So the number for this week is plain: the first ten paying customers by Sunday. Not a thousand signups, not a vanity chart. Ten people who paid and did not ask for the money back. Small enough to be real, hard enough to force the machine to work.
 

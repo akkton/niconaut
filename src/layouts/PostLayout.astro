@@ -11,11 +11,12 @@ import { useTranslations, type Locale } from '../i18n/ui';
 
 type Props = CollectionEntry<'posts'>['data'] & { slug: string; lang?: Locale; minutesRead?: number };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, slug, lang = 'en', minutesRead } = Astro.props;
+const { title, description, pubDate, updatedDate, edits, heroImage, tags, slug, lang = 'en', minutesRead } = Astro.props;
 const t = useTranslations(lang);
 const base = lang === 'en' ? '' : `/${lang}`;
 const postsIndexPath = `${base}/posts/`;
 const postPath = `${base}/posts/${slug}/`;
+const editsSorted = (edits ?? []).slice().sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
 const postUrl = new URL(postPath, Astro.site).href;
 const ogImage = heroImage
@@ -129,6 +130,47 @@ const postJsonLd = blogPostingSchema({
 				letter-spacing: 0.04em;
 				text-transform: uppercase;
 			}
+			.edit-history {
+				margin: 2.5em 0 0 0;
+				padding-top: 1.25em;
+				border-top: 1px solid var(--rule);
+			}
+			.edit-history summary {
+				cursor: pointer;
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--ink-faint);
+			}
+			.edit-history summary:hover {
+				color: var(--ink);
+			}
+			.edit-history ul {
+				margin: 1em 0 0 0;
+				padding: 0;
+				list-style: none;
+			}
+			.edit-history li {
+				display: grid;
+				grid-template-columns: 7em 1fr;
+				gap: 0.75em;
+				margin-bottom: 0.6em;
+				align-items: baseline;
+			}
+			.edit-history li:last-child {
+				margin-bottom: 0;
+			}
+			.eh-date {
+				font-family: var(--font-stack-mono);
+				font-size: 11px;
+				color: var(--ink-faint);
+			}
+			.eh-note {
+				color: var(--ink-muted);
+				font-size: 13px;
+				line-height: 1.5;
+			}
 		</style>
 	</head>
 
@@ -160,7 +202,20 @@ const postJsonLd = blogPostingSchema({
 				<div class="prose">
 					<slot />
 				</div>
-				<FeedbackBlock articleType="post" path={postPath} />
+				{editsSorted.length > 0 && (
+						<details class="edit-history">
+							<summary>Edit history</summary>
+							<ul>
+								{editsSorted.map((e) => (
+									<li>
+										<span class="eh-date"><FormattedDate date={e.date} /></span>
+										<span class="eh-note">{e.note}</span>
+									</li>
+								))}
+							</ul>
+						</details>
+					)}
+					<FeedbackBlock articleType="post" path={postPath} />
 			</article>
 		</main>
 		<Footer />
