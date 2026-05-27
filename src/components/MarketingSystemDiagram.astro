@@ -1,0 +1,167 @@
+---
+// A theme-aware diagram of the marketing operating model: a strategy seat and a
+// tactical hub, a lead engine and the product builder, feeding one funnel, with
+// the human as the only wire between them. Colors come from the global theme
+// tokens via CSS custom properties, so it follows the light/dark toggle.
+---
+
+<figure class="ms-figure">
+	<svg
+		class="ms-diagram"
+		viewBox="0 0 520 650"
+		role="img"
+		aria-labelledby="ms-title ms-desc"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<title id="ms-title">The marketing operating model</title>
+		<desc id="ms-desc">
+			A strategy seat sets direction and hands off through one person to a tactical hub. The hub
+			runs the sprint and manages a lead engine and the product builder. Together they drive one
+			funnel: source, reach, free taste, paid, ending in ten paying customers by Sunday.
+		</desc>
+
+		<defs>
+			<marker id="ms-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+				<path class="ms-arrow-head" d="M0,0 L10,5 L0,10 z"></path>
+			</marker>
+		</defs>
+
+		<!-- Strategy seat -->
+		<rect class="ms-box" x="140" y="16" width="240" height="58" rx="6"></rect>
+		<text class="ms-title-t" x="260" y="40" text-anchor="middle">Strategy seat</text>
+		<text class="ms-sub" x="260" y="60" text-anchor="middle">direction · voice · the spec</text>
+
+		<!-- spine: strategy to hub -->
+		<line class="ms-line" x1="260" y1="74" x2="260" y2="103" marker-end="url(#ms-arrow)"></line>
+		<text class="ms-tag" x="270" y="92" text-anchor="start">me, the bus</text>
+
+		<!-- Tactical hub -->
+		<rect class="ms-box ms-box-strong" x="110" y="106" width="300" height="64" rx="6"></rect>
+		<text class="ms-title-t" x="260" y="134" text-anchor="middle">Tactical hub</text>
+		<text class="ms-sub" x="260" y="154" text-anchor="middle">runs the sprint · owns the funnel</text>
+
+		<!-- split to the two workers -->
+		<line class="ms-line" x1="255" y1="170" x2="135" y2="231" marker-end="url(#ms-arrow)"></line>
+		<line class="ms-line" x1="265" y1="170" x2="385" y2="231" marker-end="url(#ms-arrow)"></line>
+
+		<!-- Lead engine -->
+		<rect class="ms-box" x="22" y="234" width="216" height="58" rx="6"></rect>
+		<text class="ms-title-t" x="130" y="258" text-anchor="middle">Lead engine</text>
+		<text class="ms-sub" x="130" y="278" text-anchor="middle">leads · messages · status</text>
+
+		<!-- Product builder -->
+		<rect class="ms-box" x="282" y="234" width="216" height="58" rx="6"></rect>
+		<text class="ms-title-t" x="390" y="258" text-anchor="middle">Product builder</text>
+		<text class="ms-sub" x="390" y="278" text-anchor="middle">ships fixes · Lovable</text>
+
+		<!-- converge into the funnel -->
+		<line class="ms-line" x1="130" y1="292" x2="255" y2="345" marker-end="url(#ms-arrow)"></line>
+		<line class="ms-line" x1="390" y1="292" x2="265" y2="345" marker-end="url(#ms-arrow)"></line>
+		<line class="ms-line" x1="260" y1="347" x2="260" y2="365" marker-end="url(#ms-arrow)"></line>
+
+		<!-- the funnel -->
+		<rect class="ms-funnel" x="60" y="372" width="400" height="38" rx="4"></rect>
+		<text class="ms-funnel-t" x="260" y="396" text-anchor="middle">Source</text>
+
+		<rect class="ms-funnel" x="100" y="418" width="320" height="38" rx="4"></rect>
+		<text class="ms-funnel-t" x="260" y="442" text-anchor="middle">Reach</text>
+
+		<rect class="ms-funnel" x="140" y="464" width="240" height="38" rx="4"></rect>
+		<text class="ms-funnel-t" x="260" y="488" text-anchor="middle">Free taste</text>
+
+		<rect class="ms-funnel" x="180" y="510" width="160" height="38" rx="4"></rect>
+		<text class="ms-funnel-t" x="260" y="534" text-anchor="middle">Paid</text>
+
+		<line class="ms-line" x1="260" y1="548" x2="260" y2="561" marker-end="url(#ms-arrow)"></line>
+
+		<!-- the goal -->
+		<rect class="ms-goal" x="150" y="563" width="220" height="48" rx="24"></rect>
+		<text class="ms-goal-t" x="260" y="585" text-anchor="middle">10 paying customers</text>
+		<text class="ms-goal-sub" x="260" y="602" text-anchor="middle">by Sunday</text>
+
+		<text class="ms-caption" x="260" y="636" text-anchor="middle">The spokes never talk to each other. It all routes through one person.</text>
+	</svg>
+	<figcaption>The marketing machine: four roles, one funnel, one human bus.</figcaption>
+</figure>
+
+<style>
+	.ms-figure {
+		margin: 2em 0;
+	}
+	.ms-diagram {
+		display: block;
+		width: 100%;
+		max-width: 460px;
+		height: auto;
+		margin: 0 auto;
+		font-family: var(--font-stack-sans);
+	}
+	.ms-box {
+		fill: var(--bg);
+		stroke: var(--rule-strong);
+		stroke-width: 1;
+	}
+	.ms-box-strong {
+		stroke: var(--ink);
+		stroke-width: 2;
+	}
+	.ms-title-t {
+		fill: var(--ink);
+		font-size: 16px;
+		font-weight: 600;
+	}
+	.ms-sub {
+		fill: var(--ink-muted);
+		font-size: 11.5px;
+	}
+	.ms-tag {
+		fill: var(--ink-faint);
+		font-size: 11px;
+		font-style: italic;
+	}
+	.ms-line {
+		stroke: var(--ink-muted);
+		stroke-width: 1.5;
+		fill: none;
+	}
+	.ms-arrow-head {
+		fill: var(--ink-muted);
+	}
+	.ms-funnel {
+		fill: var(--bg);
+		stroke: var(--rule-strong);
+		stroke-width: 1;
+	}
+	.ms-funnel-t {
+		fill: var(--ink);
+		font-size: 14px;
+		font-weight: 500;
+	}
+	.ms-goal {
+		fill: var(--link-hover);
+		stroke: none;
+	}
+	.ms-goal-t {
+		fill: #ffffff;
+		font-size: 15px;
+		font-weight: 600;
+	}
+	.ms-goal-sub {
+		fill: #ffffff;
+		font-size: 12px;
+		opacity: 0.92;
+	}
+	.ms-caption {
+		fill: var(--ink-faint);
+		font-size: 11px;
+	}
+	.ms-figure figcaption {
+		margin-top: 0.5em;
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-faint);
+		text-align: center;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+</style>
