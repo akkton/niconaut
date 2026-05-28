@@ -1,0 +1,77 @@
+---
+title: "Quatro papéis, um funil"
+description: "Como parei de tratar o marketing como a tarefa no fim da lista e comecei a rodá-lo como uma pequena organização de agentes, com um assento de estratégia, um hub tático, um motor de leads, e o produto, todos conectados por uma pessoa. O sistema que estou apontando para os meus primeiros dez clientes pagantes esta semana."
+pubDate: 2026-05-26
+updatedDate: 2026-05-27
+edits:
+  - date: 2026-05-27
+    note: "Reformulei a seção do humano-no-loop: não só o ônibus, o motorista do ônibus que confere cada passageiro, e por que um agente geral ainda não consegue fazer essa orquestração. Quebrei as seções mais densas para a leitura."
+tags: [systems, marketing, agents]
+draft: false
+lang: pt
+translationKey: "the-marketing-machine"
+---
+
+import MarketingSystemDiagram from '../../components/MarketingSystemDiagram.astro';
+
+Por semanas o marketing foi a coisa que ficou no fim de cada lista. Eu construía o produto, resolvia o jurídico, limpava o administrativo, e então era tarde e o marketing escorregava para amanhã. É o trabalho de maior alavancagem que tenho e continuava perdendo para tudo, porque como uma tarefa solta competindo com outras dez, ele sempre perdia.
+
+Então na última semana fiz a coisa que eu deveria ter feito um mês atrás. Parei de tratar o marketing como tarefa e comecei a rodá-lo como uma pequena organização. Não mais gente. A mesma única pessoa, eu, mas com o trabalho dividido em papéis claros, cada um um assento em que um agente ou uma ferramenta de fato se senta, e uma regra única sobre quem pode falar com quem. Digo "na última semana" de propósito, porque eu não desenhei isso em uma tarde. Foi crescendo.
+
+## Como cresceu
+
+A parte honesta é que eu não desenhei e depois construí. Foi se acumulando. Cada peça entrou na semana em que um problema fez a forma anterior parar de funcionar, e dá para ver isso acontecer ao longo de uns sete dias.
+
+<MarketingSystemDiagram />
+
+Começou disperso: três construções de produto e nenhuma coordenação, marketing sendo o que quer que acontecesse no chat naquele dia.
+
+A primeira estrutura real foi um único lar de marketing com um verificador de frescor, construído quando os meus próprios documentos viviam se desencontrando do produto ao vivo. Depois veio a primeira campanha, em que aprendi a separar o que o marketing quer do que a construção de fato entrega, e me coloquei no meio como o relé.
+
+Só no fim, quando um sprint de cinco dias fez a carga de coordenação ficar real, é que se endureceu no modelo operacional que o resto deste post descreve: um assento de estratégia, um hub tático, um motor de leads, o produto, e eu como o único fio entre eles.
+
+É o mesmo jeito que o resto do meu sistema cresceu, aquele sobre o qual escrevi em [como o meu sistema de agentes funciona de verdade](/posts/how-the-agentic-system-works/). Um comportamento começa solto, e a estrutura é adicionada só quando a frouxidão começa a custar algo. Nada aqui foi esperto desde o início. Foi moldado pela esticada do quase-não-funcionar.
+
+## Quatro papéis
+
+A divisão é o que faz funcionar. Cada peça faz um trabalho e é julgada por uma coisa.
+
+**O assento de estratégia** define a direção. Possui o posicionamento, a voz da marca, os templates canônicos, e a minha própria presença de fundador entre os produtos. Lê os resultados e decide para onde mirar. Não roda o dia a dia, de propósito, porque a coisa que define a estratégia não deveria também estar no mato executando. É assim que estratégia silenciosamente vira tarefa burra.
+
+**O hub tático** roda o sprint. É o cérebro da operação. Possui o funil ao vivo, coordena o que sai e quando, e transforma a estratégia em envios reais. Quando algo no produto precisa mudar para mover os números, é o hub que chama.
+
+**O motor de leads** carrega as pessoas. Leads, a mensagem rascunhada para cada um, e o status de cada conversa. É o sistema de registro de quem foi contatado, quem respondeu, e quem disse sim. Não improvisa estratégia. Mantém a lista limpa e atual.
+
+**O construtor do produto** entrega os ajustes. O OneProposal é um app no Lovable, então as mudanças de produto que sustentam a campanha são feitas lá, como prompts que a sessão de build retransmite. Um ajuste de ativação ou de rastreamento que o hub pedir aterrissa aqui e vai ao ar.
+
+Quatro assentos, quatro trabalhos. O que os impede de colidir é uma regra única sobre quem pode falar com quem.
+
+## O humano é o motorista do ônibus
+
+Aqui está a regra que mantém a coisa toda fora do caos: os braços nunca falam entre si. O assento de estratégia e o motor de leads não se coordenam direto. Tudo passa por mim.
+
+E eu não sou só o ônibus que leva uma mensagem de um assento ao outro. Sou o motorista, e confiro cada um que sobe. Cada handoff entre agentes passa por uma pessoa que lê, pesa contra o que de fato é verdade, e decide se vai em frente. Esse passo de validação é o mecanismo de controle. É o que impede uma suposição confiantemente errada de embarcar e fazer o trajeto inteiro sem ser questionada.
+
+Soa como gargalo, e é o oposto. O modo de falha de um setup de múltiplos agentes não é que um agente seja fraco demais. É que três deles começam a negociar entre si, saem de sincronia, e compõem silenciosamente uma suposição errada pelo sistema inteiro enquanto você não está olhando. Um hub, um rastreador, e um único fio humano significa que existe exatamente um lugar onde o contexto vive e um lugar onde uma decisão ruim é pega. Não estou tentando me remover do loop. Estou tentando ser o único loop, para que nada aconteça sem eu ver.
+
+Quero ser honesto sobre por que o humano ainda está no meio. No estado atual da minha infraestrutura, não consigo colocar um agente geral nesse assento e fazer com que ele orquestre e cheque o trabalho do jeito que eu cheque. O julgamento que pega um handoff ruim não é algo que eu consiga entregar ainda. Então o fio humano não é nostalgia nem controle por controle. Ele carrega carga, e fica até o sistema estar bom o bastante para conquistar a saída.
+
+A outra metade da regra é cadência. O hub não reporta uma mangueira de cada micro-decisão. Ele reporta em batidas definidas: depois de um teste cronometrado, num "vai ou não vai" no meio da semana, no fim do sprint. Pontos de controle, não um fluxo contínuo.
+
+## O funil que ele empurra
+
+Tudo isso existe para empurrar um funil: encontrar um lead, alcançá-lo, deixá-lo provar o produto de graça, convertê-lo para pago. Simples de desenhar, e a versão honesta é humilhante.
+
+Quando de fato li o funil em vez de admirá-lo, a maior parte do tráfego que eu vinha contando era ruído de editor e de preview, não gente. O alcance real é pequeno. A linha de base honestamente honesta é zero clientes pagantes.
+
+Nomear isso em voz alta é o que me deixou construir um plano em torno do gargalo real, que é o alcance, não o suprimento. Não tenho falta de leads nem falta de produto. Tenho falta de gente que de fato ouviu falar dele. Isso é um problema de distribuição, e distribuição é exatamente para o que um funil serve.
+
+Então o número desta semana é claro: os primeiros dez clientes pagantes até domingo. Não mil cadastros, não um gráfico bonito. Dez pessoas que pagaram e não pediram o dinheiro de volta. Pequeno o bastante para ser real, difícil o bastante para forçar a máquina a funcionar.
+
+## Por que uma pequena organização ganha de uma lista de tarefas
+
+Eu escrevi há um tempo que [você cai ao nível dos seus sistemas](/posts/fall-to-the-level-of-your-systems/), e essa é aquela ideia aplicada à única área em que eu vinha falhando. Uma lista de tarefas de marketing perde para tudo porque não tem estrutura que a defenda. Uma pequena organização com assentos claros e uma regra sobre quem fala com quem não precisa de força de vontade para continuar rodando. A estrutura carrega.
+
+Se você quiser a versão geral de como tudo isso é conectado, a IDE e o agente e as camadas por baixo, escrevi isso à parte em [como o meu sistema de agentes funciona de verdade](/posts/how-the-agentic-system-works/). Esta peça é a versão estreita e apontada: a mesma maquinaria, mirada na única coisa que vinha me derrotando, e finalmente apontada em uma direção em que dá para observar se ela aterrissa.
+
+Até domingo saberei se a máquina vende ou só fica bonita desenhada em caixinhas. Vou anotar isso também.
