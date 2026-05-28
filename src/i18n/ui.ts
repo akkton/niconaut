@@ -32,6 +32,28 @@ type Dict = {
 	headings: { posts: string; journal: string; recentJournal: string; recentPosts: string };
 	newsletter: { title: string; sub: string; emailLabel: string; want: string; both: string; journalOnly: string; postsOnly: string; subscribe: string; subscribing: string; success: string; invalid: string; error: string };
 	footer: { rights: string };
+	comments: {
+		title: string;
+		empty: string;
+		loading: string;
+		loadError: string;
+		formTitle: string;
+		namePlaceholder: string;
+		emailPlaceholder: string;
+		bodyPlaceholder: string;
+		note: string;
+		submit: string;
+		submitting: string;
+		successPosted: string;
+		errorMissing: string;
+		errorRate: string;
+		errorGeneric: string;
+		justNow: string;
+		reply: string;
+		cancel: string;
+		inReplyTo: string;
+		replyPlaceholder: string;
+	};
 };
 
 export const ui: Record<Locale, Dict> = {
@@ -64,6 +86,28 @@ export const ui: Record<Locale, Dict> = {
 			error: 'Something went wrong. Try again, or email me at neumanic2@gmail.com.',
 		},
 		footer: { rights: 'Building, learning, journaling in public.' },
+		comments: {
+			title: 'Comments',
+			empty: 'No comments yet. Be the first.',
+			loading: 'Loading comments…',
+			loadError: 'Could not load comments. Refresh to try again.',
+			formTitle: 'Leave a comment',
+			namePlaceholder: 'Name',
+			emailPlaceholder: 'Email (optional, only if you want a reply)',
+			bodyPlaceholder: "What's on your mind? Plain text, no HTML.",
+			note: 'Plain text only. URLs are linkified automatically. Posted immediately, lightly moderated after the fact.',
+			submit: 'Post comment',
+			submitting: 'Posting…',
+			successPosted: 'Posted. Thanks for chiming in.',
+			errorMissing: 'Name and comment are required.',
+			errorRate: "You've sent a few in a row. Take a breath and try in an hour.",
+			errorGeneric: 'Something went wrong. Try again.',
+			justNow: 'just now',
+			reply: 'Reply',
+			cancel: 'Cancel',
+			inReplyTo: 'in reply to',
+			replyPlaceholder: 'Reply',
+		},
 	},
 	pt: {
 		nav: { journal: 'Diário', posts: 'Artigos', building: 'Projetos', work: 'Trabalho', about: 'Sobre', feedback: 'Feedback' },
@@ -94,6 +138,28 @@ export const ui: Record<Locale, Dict> = {
 			error: 'Algo deu errado. Tente de novo, ou escreva para neumanic2@gmail.com.',
 		},
 		footer: { rights: 'Construindo, aprendendo e escrevendo em público.' },
+		comments: {
+			title: 'Comentários',
+			empty: 'Ainda não há comentários. Seja o primeiro.',
+			loading: 'Carregando comentários…',
+			loadError: 'Não foi possível carregar os comentários. Atualize para tentar de novo.',
+			formTitle: 'Deixe um comentário',
+			namePlaceholder: 'Nome',
+			emailPlaceholder: 'E-mail (opcional, só se quiser uma resposta)',
+			bodyPlaceholder: 'O que está pensando? Texto simples, sem HTML.',
+			note: 'Só texto simples. URLs viram links automaticamente. Publicado na hora, com moderação leve depois.',
+			submit: 'Publicar comentário',
+			submitting: 'Publicando…',
+			successPosted: 'Publicado. Obrigado por participar.',
+			errorMissing: 'Nome e comentário são obrigatórios.',
+			errorRate: 'Você enviou alguns seguidos. Respire e tente em uma hora.',
+			errorGeneric: 'Algo deu errado. Tente de novo.',
+			justNow: 'agora mesmo',
+			reply: 'Responder',
+			cancel: 'Cancelar',
+			inReplyTo: 'em resposta a',
+			replyPlaceholder: 'Resposta',
+		},
 	},
 	de: {
 		nav: { journal: 'Tagebuch', posts: 'Beiträge', building: 'Projekte', work: 'Arbeit', about: 'Über mich', feedback: 'Feedback' },
@@ -124,6 +190,28 @@ export const ui: Record<Locale, Dict> = {
 			error: 'Etwas ist schiefgelaufen. Versuch es erneut, oder schreib an neumanic2@gmail.com.',
 		},
 		footer: { rights: 'Bauen, lernen und öffentlich dokumentieren.' },
+		comments: {
+			title: 'Kommentare',
+			empty: 'Noch keine Kommentare. Sei der Erste.',
+			loading: 'Kommentare werden geladen…',
+			loadError: 'Kommentare konnten nicht geladen werden. Lade neu, um es erneut zu versuchen.',
+			formTitle: 'Hinterlasse einen Kommentar',
+			namePlaceholder: 'Name',
+			emailPlaceholder: 'E-Mail (optional, nur wenn du eine Antwort möchtest)',
+			bodyPlaceholder: 'Was beschäftigt dich? Klartext, kein HTML.',
+			note: 'Nur Klartext. URLs werden automatisch verlinkt. Sofort sichtbar, danach leicht moderiert.',
+			submit: 'Kommentar absenden',
+			submitting: 'Wird gesendet…',
+			successPosted: 'Veröffentlicht. Danke fürs Mitreden.',
+			errorMissing: 'Name und Kommentar sind erforderlich.',
+			errorRate: 'Du hast einige in Folge gesendet. Atme durch und versuch es in einer Stunde.',
+			errorGeneric: 'Etwas ist schiefgelaufen. Versuch es erneut.',
+			justNow: 'gerade eben',
+			reply: 'Antworten',
+			cancel: 'Abbrechen',
+			inReplyTo: 'Antwort an',
+			replyPlaceholder: 'Antwort',
+		},
 	},
 };
 

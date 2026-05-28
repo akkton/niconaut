@@ -1,0 +1,19 @@
+name = "nicolasneumann-blog"
+pages_build_output_dir = "./dist"
+compatibility_date = "2025-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 binding for the public comment thread.
+# database_id is filled by `wrangler d1 create niconaut-comments` once; the
+# `wrangler d1 migrations apply niconaut-comments --remote` step in CI then
+# applies migrations/0001_comments.sql onward against the live DB.
+[[d1_databases]]
+binding = "COMMENTS_DB"
+database_name = "niconaut-comments"
+database_id = "9e2282dc-722a-44ce-b25b-2888c080abf1"
+migrations_dir = "migrations"
+
+# Secrets used by functions/api/comments*.ts. Set via:
+#   wrangler pages secret put ADMIN_TOKEN --project-name=nicolasneumann-blog
+#   wrangler pages secret put HASH_SALT --project-name=nicolasneumann-blog
+# (Plus locally in a .dev.vars file for `wrangler pages dev`.)

@@ -1,0 +1,756 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+
+type Props = { lang?: Locale; path?: string };
+
+const { lang = 'en', path } = Astro.props as Props;
+const t = useTranslations(lang).comments;
+const pathname = path ?? Astro.url.pathname;
+
+// Serialized payload for the inline script. JSON.stringify never emits raw `</`,
+// but as a belt-and-suspenders escape for any future content, replace just in case.
+const cfg = JSON.stringify({ path: pathname, lang, strings: t }).replace(/<\/(?=script)/gi, '<\\/');
+---
+
+<section class="comments" aria-label={t.title} data-path={pathname} data-lang={lang}>
+	<h2 class="comments-title">{t.title}</h2>
+
+	<div class="comments-list" data-state="loading">
+		<p class="comments-status">{t.loading}</p>
+	</div>
+
+	<form class="comments-form" novalidate>
+		<h3 class="comments-form-title">{t.formTitle}</h3>
+		<input
+			type="text"
+			name="website"
+			class="cm-honeypot"
+			tabindex="-1"
+			autocomplete="off"
+			aria-hidden="true"
+		/>
+		<input type="text" class="cm-name" placeholder={t.namePlaceholder} maxlength="60" required />
+		<input
+			type="email"
+			class="cm-email"
+			placeholder={t.emailPlaceholder}
+			maxlength="254"
+			autocomplete="email"
+		/>
+		<textarea
+			class="cm-body"
+			placeholder={t.bodyPlaceholder}
+			maxlength="4000"
+			rows="4"
+			required></textarea>
+		<div class="comments-form-foot">
+			<span class="cm-note">{t.note}</span>
+			<button type="submit" class="cm-submit">{t.submit}</button>
+		</div>
+		<div class="cm-status" role="status" aria-live="polite"></div>
+	</form>
+</section>
+
+<script is:inline type="application/json" class="cm-cfg" set:html={cfg}></script>
+
+<style>
+	.comments {
+		margin: 3em 0 0 0;
+		padding: 1.75em 1.5em 1.5em 1.5em;
+		background: var(--bg);
+		border: 1px solid var(--rule);
+		border-radius: 4px;
+	}
+	.comments-title {
+		margin: 0 0 1em 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+		letter-spacing: -0.005em;
+		color: var(--ink);
+	}
+	.comments-list {
+		margin: 0 0 1.5em 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1em;
+	}
+	.comments-status {
+		margin: 0;
+		font-family: var(--font-stack-mono);
+		font-size: 12px;
+		color: var(--ink-faint);
+		letter-spacing: 0.02em;
+	}
+	.comment {
+		padding: 0.9em 1em;
+		background: var(--code-bg);
+		border: 1px solid var(--rule);
+		border-radius: 4px;
+	}
+	.comment-head {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em 0.7em;
+		align-items: baseline;
+		margin: 0 0 0.5em 0;
+	}
+	.comment-author {
+		font-weight: 600;
+		font-size: 13.5px;
+		color: var(--ink);
+		letter-spacing: -0.005em;
+	}
+	.comment-time {
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-faint);
+		letter-spacing: 0.04em;
+	}
+	.comment-body {
+		margin: 0;
+		color: var(--ink);
+		font-size: 14px;
+		line-height: 1.55;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+	}
+	.comment-body a {
+		color: var(--ink);
+		text-decoration: underline;
+	}
+	.comments-form {
+		display: flex;
+		flex-direction: column;
+		gap: 0.7em;
+		padding-top: 1.25em;
+		border-top: 1px solid var(--rule);
+	}
+	.comments-form-title {
+		margin: 0 0 0.3em 0;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--ink);
+	}
+	.cm-honeypot {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+	.cm-name,
+	.cm-email,
+	.cm-body {
+		width: 100%;
+		box-sizing: border-box;
+		border: 1px solid var(--rule-strong);
+		background: var(--bg);
+		color: var(--ink);
+		font: inherit;
+	}
+	.cm-name,
+	.cm-email {
+		padding: 0.55em 0.9em;
+		font-size: 13.5px;
+	}
+	.cm-body {
+		padding: 0.7em 0.9em;
+		font-size: 14px;
+		line-height: 1.5;
+		resize: vertical;
+		min-height: 90px;
+	}
+	.cm-name:focus,
+	.cm-email:focus,
+	.cm-body:focus {
+		outline: none;
+		border-color: var(--ink);
+	}
+	.comments-form-foot {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.7em;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.cm-note {
+		flex: 1 1 14em;
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-faint);
+		letter-spacing: 0.02em;
+		line-height: 1.45;
+	}
+	.cm-submit {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.6em 1.2em;
+		border: 1px solid var(--ink);
+		background: var(--ink);
+		color: var(--bg);
+		font: inherit;
+		font-size: 13.5px;
+		font-weight: 500;
+		cursor: pointer;
+		letter-spacing: 0.01em;
+		transition: opacity 0.2s ease;
+	}
+	.cm-submit:hover {
+		opacity: 0.85;
+	}
+	.cm-submit:disabled {
+		opacity: 0.55;
+		cursor: default;
+	}
+	.cm-status {
+		font-family: var(--font-stack-mono);
+		font-size: 12px;
+		color: var(--ink-muted);
+		min-height: 1em;
+		letter-spacing: 0.02em;
+	}
+	.cm-status[data-state='error'] {
+		color: var(--ink);
+	}
+	.comment-actions {
+		margin-top: 0.55em;
+		display: flex;
+		gap: 0.6em;
+	}
+	.reply-btn {
+		background: transparent;
+		border: none;
+		padding: 0;
+		font: inherit;
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-faint);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+	.reply-btn:hover {
+		color: var(--ink);
+	}
+	.reply-container {
+		margin: 0.8em 0 0 1.5em;
+		padding-left: 1em;
+		border-left: 2px solid var(--rule);
+		display: flex;
+		flex-direction: column;
+		gap: 0.8em;
+	}
+	.reply-container:empty {
+		display: none;
+	}
+	.comment.reply {
+		padding: 0.7em 0.9em;
+	}
+	.comment-reply-to {
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-faint);
+		letter-spacing: 0.04em;
+	}
+	.inline-reply-form {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55em;
+		padding: 0.8em 0.9em;
+		border: 1px dashed var(--rule);
+		border-radius: 4px;
+		background: var(--bg);
+	}
+	.inline-reply-form[hidden] {
+		display: none;
+	}
+	.inline-reply-form .ir-name,
+	.inline-reply-form .ir-email,
+	.inline-reply-form .ir-body {
+		width: 100%;
+		box-sizing: border-box;
+		border: 1px solid var(--rule-strong);
+		background: var(--bg);
+		color: var(--ink);
+		font: inherit;
+	}
+	.inline-reply-form .ir-name,
+	.inline-reply-form .ir-email {
+		padding: 0.45em 0.75em;
+		font-size: 13px;
+	}
+	.inline-reply-form .ir-body {
+		padding: 0.6em 0.75em;
+		font-size: 13.5px;
+		line-height: 1.5;
+		resize: vertical;
+		min-height: 70px;
+	}
+	.inline-reply-form .ir-name:focus,
+	.inline-reply-form .ir-email:focus,
+	.inline-reply-form .ir-body:focus {
+		outline: none;
+		border-color: var(--ink);
+	}
+	.ir-honeypot {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+	.ir-actions {
+		display: flex;
+		gap: 0.55em;
+		justify-content: flex-end;
+	}
+	.ir-cancel,
+	.ir-submit {
+		font: inherit;
+		font-size: 12.5px;
+		font-weight: 500;
+		padding: 0.45em 0.95em;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+	.ir-cancel {
+		background: transparent;
+		border: 1px solid var(--rule-strong);
+		color: var(--ink-muted);
+	}
+	.ir-cancel:hover {
+		border-color: var(--ink);
+		color: var(--ink);
+	}
+	.ir-submit {
+		background: var(--ink);
+		border: 1px solid var(--ink);
+		color: var(--bg);
+	}
+	.ir-submit:hover {
+		opacity: 0.85;
+	}
+	.ir-submit:disabled {
+		opacity: 0.55;
+		cursor: default;
+	}
+	.ir-status {
+		font-family: var(--font-stack-mono);
+		font-size: 11px;
+		color: var(--ink-muted);
+		letter-spacing: 0.02em;
+		min-height: 1em;
+	}
+	.ir-status[data-state='error'] {
+		color: var(--ink);
+	}
+	@media (max-width: 540px) {
+		.comments {
+			padding: 1.25em 1em 1.15em 1em;
+		}
+		.cm-note {
+			flex-basis: 100%;
+		}
+		.reply-container {
+			margin-left: 0.5em;
+			padding-left: 0.7em;
+		}
+	}
+</style>
+
+<script is:inline>
+	(function () {
+		document.querySelectorAll('section.comments').forEach(function (section) {
+			if (section.getAttribute('data-cm-bound')) return;
+			section.setAttribute('data-cm-bound', '1');
+
+			var cfgScript = section.parentNode && section.parentNode.querySelector('script.cm-cfg');
+			if (!cfgScript || !cfgScript.textContent) return;
+			var cfg;
+			try {
+				cfg = JSON.parse(cfgScript.textContent);
+			} catch (e) {
+				return;
+			}
+
+			var path = cfg.path || window.location.pathname;
+			var lang = cfg.lang || 'en';
+			var s = cfg.strings || {};
+
+			var listEl = section.querySelector('.comments-list');
+			var form = section.querySelector('.comments-form');
+			var honeypotEl = form.querySelector('.cm-honeypot');
+			var nameEl = form.querySelector('.cm-name');
+			var emailEl = form.querySelector('.cm-email');
+			var bodyEl = form.querySelector('.cm-body');
+			var submitBtn = form.querySelector('.cm-submit');
+			var statusEl = form.querySelector('.cm-status');
+
+			var rtf;
+			try {
+				rtf = new Intl.RelativeTimeFormat(lang, { numeric: 'auto' });
+			} catch (e) {
+				rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+			}
+
+			function formatTime(ts) {
+				var diff = Date.now() - ts;
+				if (diff < 60 * 1000) return s.justNow || 'just now';
+				var mins = Math.floor(diff / 60000);
+				if (mins < 60) return rtf.format(-mins, 'minute');
+				var hours = Math.floor(diff / 3600000);
+				if (hours < 24) return rtf.format(-hours, 'hour');
+				var days = Math.floor(diff / 86400000);
+				if (days < 30) return rtf.format(-days, 'day');
+				return new Date(ts).toLocaleDateString(lang);
+			}
+
+			function escapeHtml(str) {
+				return String(str).replace(/[&<>"']/g, function (c) {
+					return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+				});
+			}
+
+			var URL_RE = /(https?:\/\/[^\s<]+)/g;
+			function linkify(text) {
+				return escapeHtml(text).replace(URL_RE, function (url) {
+					return (
+						'<a href="' +
+						url.replace(/"/g, '&quot;') +
+						'" rel="nofollow ugc noopener" target="_blank">' +
+						url +
+						'</a>'
+					);
+				});
+			}
+
+			function buildCommentNode(c, parentName) {
+				var article = document.createElement('article');
+				article.className = 'comment' + (parentName ? ' reply' : '');
+				article.setAttribute('data-id', c.id);
+				if (c.parent_id) article.setAttribute('data-parent-id', c.parent_id);
+				var html =
+					'<div class="comment-head">' +
+					'<span class="comment-author">' +
+					escapeHtml(c.author_name) +
+					'</span>' +
+					'<span class="comment-time">' +
+					escapeHtml(formatTime(Number(c.created_at))) +
+					'</span>' +
+					(parentName
+						? '<span class="comment-reply-to">' +
+							escapeHtml(s.inReplyTo || '') +
+							' ' +
+							escapeHtml(parentName) +
+							'</span>'
+						: '') +
+					'</div>' +
+					'<p class="comment-body">' +
+					linkify(c.body) +
+					'</p>';
+				if (!parentName) {
+					html +=
+						'<div class="comment-actions">' +
+						'<button type="button" class="reply-btn">' +
+						escapeHtml(s.reply || 'Reply') +
+						'</button>' +
+						'</div>' +
+						'<div class="reply-container"></div>';
+				}
+				article.innerHTML = html;
+				if (!parentName) wireReplyButton(article, c.id);
+				return article;
+			}
+
+			function wireReplyButton(topLevelArticle, parentId) {
+				var btn = topLevelArticle.querySelector('.reply-btn');
+				if (!btn) return;
+				btn.addEventListener('click', function () {
+					var container = topLevelArticle.querySelector('.reply-container');
+					var existing = container.querySelector('.inline-reply-form');
+					if (existing) {
+						existing.hidden = !existing.hidden;
+						if (!existing.hidden) existing.querySelector('.ir-body').focus();
+					} else {
+						var form = buildReplyForm(parentId);
+						container.appendChild(form);
+						form.querySelector('.ir-body').focus();
+					}
+				});
+			}
+
+			function buildReplyForm(parentId) {
+				var form = document.createElement('form');
+				form.className = 'inline-reply-form';
+				form.setAttribute('novalidate', '');
+				form.innerHTML =
+					'<input type="text" name="website" class="ir-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />' +
+					'<input type="text" class="ir-name" placeholder="' +
+					escapeHtml(s.namePlaceholder || '') +
+					'" maxlength="60" required />' +
+					'<input type="email" class="ir-email" placeholder="' +
+					escapeHtml(s.emailPlaceholder || '') +
+					'" maxlength="254" autocomplete="email" />' +
+					'<textarea class="ir-body" placeholder="' +
+					escapeHtml(s.replyPlaceholder || s.bodyPlaceholder || '') +
+					'" maxlength="4000" rows="3" required></textarea>' +
+					'<div class="ir-actions">' +
+					'<button type="button" class="ir-cancel">' +
+					escapeHtml(s.cancel || 'Cancel') +
+					'</button>' +
+					'<button type="submit" class="ir-submit">' +
+					escapeHtml(s.submit || 'Post') +
+					'</button>' +
+					'</div>' +
+					'<div class="ir-status" role="status" aria-live="polite"></div>';
+				form.querySelector('.ir-cancel').addEventListener('click', function () {
+					form.hidden = true;
+					form.querySelector('.ir-body').value = '';
+				});
+				form.addEventListener('submit', function (ev) {
+					ev.preventDefault();
+					submitReply(form, parentId);
+				});
+				return form;
+			}
+
+			function submitReply(form, parentId) {
+				var nameEl = form.querySelector('.ir-name');
+				var emailEl = form.querySelector('.ir-email');
+				var bodyEl = form.querySelector('.ir-body');
+				var honeypotEl = form.querySelector('.ir-honeypot');
+				var submitBtn = form.querySelector('.ir-submit');
+				var statusEl = form.querySelector('.ir-status');
+
+				function setReplyStatus(text, state) {
+					statusEl.textContent = text || '';
+					if (state) statusEl.setAttribute('data-state', state);
+					else statusEl.removeAttribute('data-state');
+				}
+
+				var name = (nameEl.value || '').trim();
+				var body = (bodyEl.value || '').trim();
+				var email = (emailEl.value || '').trim();
+				if (!name || !body) {
+					setReplyStatus(s.errorMissing || '', 'error');
+					return;
+				}
+
+				submitBtn.disabled = true;
+				var origLabel = submitBtn.textContent;
+				submitBtn.textContent = s.submitting || origLabel;
+				setReplyStatus('', null);
+
+				var payload = {
+					post_path: path,
+					author_name: name,
+					body: body,
+					parent_id: parentId,
+					website: honeypotEl ? honeypotEl.value : '',
+				};
+				if (email) payload.email = email;
+
+				fetch('/api/comments', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json', accept: 'application/json' },
+					body: JSON.stringify(payload),
+				})
+					.then(function (res) {
+						return res.json().then(function (data) {
+							return { status: res.status, data: data };
+						});
+					})
+					.then(function (resp) {
+						submitBtn.disabled = false;
+						submitBtn.textContent = origLabel;
+						if (resp.status === 201 && resp.data && resp.data.comment) {
+							var parentArticle = listEl.querySelector(
+								'.comment[data-id="' + parentId + '"]',
+							);
+							if (parentArticle) {
+								var parentAuthorEl = parentArticle.querySelector('.comment-author');
+								var parentName = parentAuthorEl ? parentAuthorEl.textContent : '';
+								var container = parentArticle.querySelector('.reply-container');
+								var replyNode = buildCommentNode(resp.data.comment, parentName);
+								container.insertBefore(replyNode, form);
+							}
+							form.hidden = true;
+							nameEl.value = '';
+							emailEl.value = '';
+							bodyEl.value = '';
+							setReplyStatus(s.successPosted || '', null);
+							capture('comment_submitted', {
+								path: path,
+								body_length: body.length,
+								has_email: !!email,
+								is_reply: true,
+							});
+						} else if (resp.status === 200 && resp.data && resp.data.suppressed) {
+							form.hidden = true;
+							nameEl.value = '';
+							emailEl.value = '';
+							bodyEl.value = '';
+							setReplyStatus(s.successPosted || '', null);
+						} else if (resp.status === 429) {
+							setReplyStatus(s.errorRate || '', 'error');
+						} else {
+							setReplyStatus(s.errorGeneric || '', 'error');
+						}
+					})
+					.catch(function () {
+						submitBtn.disabled = false;
+						submitBtn.textContent = origLabel;
+						setReplyStatus(s.errorGeneric || '', 'error');
+					});
+			}
+
+			function renderComments(items) {
+				if (!items || items.length === 0) {
+					listEl.setAttribute('data-state', 'empty');
+					listEl.innerHTML =
+						'<p class="comments-status">' + escapeHtml(s.empty || '') + '</p>';
+					return;
+				}
+				listEl.setAttribute('data-state', 'loaded');
+				listEl.innerHTML = '';
+
+				var tops = [];
+				var repliesByParent = {};
+				for (var i = 0; i < items.length; i++) {
+					var c = items[i];
+					if (c.parent_id) {
+						if (!repliesByParent[c.parent_id]) repliesByParent[c.parent_id] = [];
+						repliesByParent[c.parent_id].push(c);
+					} else {
+						tops.push(c);
+					}
+				}
+
+				for (var t = 0; t < tops.length; t++) {
+					var top = tops[t];
+					var topNode = buildCommentNode(top, null);
+					listEl.appendChild(topNode);
+					var replies = repliesByParent[top.id] || [];
+					if (replies.length) {
+						var container = topNode.querySelector('.reply-container');
+						for (var r = 0; r < replies.length; r++) {
+							container.appendChild(buildCommentNode(replies[r], top.author_name));
+						}
+					}
+				}
+			}
+
+			function appendComment(c) {
+				if (listEl.getAttribute('data-state') === 'empty') {
+					listEl.innerHTML = '';
+				}
+				listEl.setAttribute('data-state', 'loaded');
+				listEl.appendChild(buildCommentNode(c, null));
+			}
+
+			function setStatus(text, state) {
+				statusEl.textContent = text || '';
+				if (state) statusEl.setAttribute('data-state', state);
+				else statusEl.removeAttribute('data-state');
+			}
+
+			function capture(event, props) {
+				try {
+					if (window.posthog && typeof window.posthog.capture === 'function') {
+						window.posthog.capture(event, props);
+					}
+				} catch (e) {
+					/* analytics blocked: degrade silently */
+				}
+			}
+
+			function loadComments() {
+				fetch('/api/comments?path=' + encodeURIComponent(path), {
+					headers: { accept: 'application/json' },
+				})
+					.then(function (res) {
+						if (!res.ok) throw new Error('http ' + res.status);
+						return res.json();
+					})
+					.then(function (data) {
+						renderComments(data.comments || []);
+					})
+					.catch(function () {
+						listEl.setAttribute('data-state', 'error');
+						listEl.innerHTML =
+							'<p class="comments-status">' + escapeHtml(s.loadError || '') + '</p>';
+					});
+			}
+
+			form.addEventListener('submit', function (ev) {
+				ev.preventDefault();
+				var name = (nameEl.value || '').trim();
+				var body = (bodyEl.value || '').trim();
+				var email = (emailEl.value || '').trim();
+				if (!name || !body) {
+					setStatus(s.errorMissing || '', 'error');
+					return;
+				}
+
+				submitBtn.disabled = true;
+				var originalLabel = submitBtn.textContent;
+				submitBtn.textContent = s.submitting || originalLabel;
+				setStatus('', null);
+
+				var payload = {
+					post_path: path,
+					author_name: name,
+					body: body,
+					website: honeypotEl ? honeypotEl.value : '',
+				};
+				if (email) payload.email = email;
+
+				fetch('/api/comments', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json', accept: 'application/json' },
+					body: JSON.stringify(payload),
+				})
+					.then(function (res) {
+						return res.json().then(function (data) {
+							return { status: res.status, data: data };
+						});
+					})
+					.then(function (resp) {
+						submitBtn.disabled = false;
+						submitBtn.textContent = originalLabel;
+						if (resp.status === 201 && resp.data && resp.data.comment) {
+							appendComment(resp.data.comment);
+							nameEl.value = '';
+							emailEl.value = '';
+							bodyEl.value = '';
+							setStatus(s.successPosted || '', null);
+							capture('comment_submitted', {
+								path: path,
+								body_length: body.length,
+								has_email: !!email,
+							});
+						} else if (resp.status === 200 && resp.data && resp.data.suppressed) {
+							// Honeypot tripped (real user shouldn't see this branch).
+							nameEl.value = '';
+							emailEl.value = '';
+							bodyEl.value = '';
+							setStatus(s.successPosted || '', null);
+						} else if (resp.status === 429) {
+							setStatus(s.errorRate || '', 'error');
+						} else {
+							setStatus(s.errorGeneric || '', 'error');
+						}
+					})
+					.catch(function () {
+						submitBtn.disabled = false;
+						submitBtn.textContent = originalLabel;
+						setStatus(s.errorGeneric || '', 'error');
+					});
+			});
+
+			loadComments();
+		});
+	})();
+</script>

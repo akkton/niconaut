@@ -79,8 +79,10 @@ import { SITE_TITLE } from '../consts';
 				<code>article_read_100</code>, <code>share_whatsapp</code>, <code>share_x</code>,
 				<code>share_linkedin</code>, <code>share_email</code>, <code>share_copy_link</code>,
 				<code>newsletter_signup_intent</code>, <code>feedback_reaction</code> (with the reaction value),
-				<code>feedback_open</code>, <code>feedback_page_submit_intent</code>. That's the full list. The
-				point of tracking is to know whether anyone actually reads what I post, not to build a profile.
+				<code>feedback_open</code>, <code>feedback_page_submit_intent</code>, <code>comment_submitted</code>
+				(only path, body length, and whether an email was attached, never the name or text).
+				That's the full list. The point of tracking is to know whether anyone actually reads
+				what I post, not to build a profile.
 			</p>
 
 			<h2>Session replay</h2>
@@ -104,13 +106,25 @@ import { SITE_TITLE } from '../consts';
 
 			<h2>Comments, reactions, and replies</h2>
 			<p>
-				There is no traditional comments section. At the bottom of every post and journal
-				entry there are three reaction buttons ("resonates" / "didn't land" / "want to say more")
-				and a standalone <a href="/feedback/">/feedback</a> page with a textarea. The two
-				one-tap reactions fire an anonymous PostHog event with the entry path and the reaction
-				value. The "want to say more" button and the /feedback form both open your email client
-				with a pre-filled message that lands in my inbox, they do not POST anywhere on this
-				site. Replies still happen by email or on the social accounts linked in the footer.
+				At the bottom of every post and journal entry there are three reaction buttons
+				("resonates" / "didn't land" / "say more"), a standalone <a href="/feedback/">/feedback</a>
+				page with a textarea, and a public comment thread. The two one-tap reactions and the
+				"say more" textarea fire anonymous PostHog events (private signal to me). The comment
+				thread is the public one.
+			</p>
+			<p>
+				When you post a comment, the name and the body you type are stored in a Cloudflare D1
+				database I own, displayed publicly under that post, and shown to other readers as-is
+				(plain text, URLs auto-linked, no HTML). If you add an email address it is optional and
+				never displayed: it is hashed with a rotating salt before storage, so a database leak
+				would not reveal your address. Your IP address is also hashed (same salt, same reason)
+				and used only to rate-limit drive-by spam (three comments per IP per hour). No cookies
+				are set by the comment form.
+			</p>
+			<p>
+				Moderation is post-moderation: comments appear immediately, and I hide anything
+				abusive, spammy, or off-topic after the fact. If you want a comment removed, email
+				me at the address below and it goes.
 			</p>
 
 			<h2>The source</h2>
@@ -224,9 +238,10 @@ import { SITE_TITLE } from '../consts';
 				For data deletion requests, same address. I respond.
 			</p>
 
-			<p class="updated">Last updated 2026-05-19</p>
+			<p class="updated">Last updated 2026-05-28</p>
 
 			<!-- Note: updated 2026-05-19 evening to add the feedback events and reflect the new feedback feature. -->
+			<!-- Note: updated 2026-05-28 to add the public comment thread, the comment_submitted event, IP-hash + email-hash storage. -->
 
 		</main>
 		<Footer />

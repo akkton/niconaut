@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import AccountabilityFooter from '../components/AccountabilityFooter.astro';
 import BaseHead from '../components/BaseHead.astro';
+import CommentThread from '../components/CommentThread.astro';
 import FeedbackBlock from '../components/FeedbackBlock.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -340,6 +341,7 @@ const copyUrl = shareUrl('copylink');
 				</div>
 			</section>
 			<FeedbackBlock articleType="journal" path={`${base}/journal/${isoDate}/`} />
+			<CommentThread lang={lang} path={`${base}/journal/${isoDate}/`} />
 			<nav class="prevnext" aria-label="Journal navigation">
 				<div>
 					{prev ? (
