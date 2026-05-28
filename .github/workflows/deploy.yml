@@ -31,10 +31,13 @@ jobs:
           PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
           PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
 
+      # The blog-deploy token (CLOUDFLARE_API_TOKEN) is Pages-only.
+      # D1 migrations need a token with D1:Edit, kept as CLOUDFLARE_D1_TOKEN.
+      # Rotate to a permanent D1-only account-scoped token when convenient.
       - name: Apply D1 migrations (remote)
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_D1_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: d1 migrations apply niconaut-comments --remote
 
