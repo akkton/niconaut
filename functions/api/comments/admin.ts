@@ -38,6 +38,7 @@ type AdminRow = {
 	body: string;
 	created_at: number;
 	status: string;
+	parent_id: string | null;
 	ip_hash: string | null;
 };
 
@@ -51,12 +52,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 	let stmt;
 	if (statusFilter && ALLOWED_STATUSES.has(statusFilter)) {
 		stmt = env.COMMENTS_DB.prepare(
-			`SELECT id, post_path, author_name, author_email_hash, body, created_at, status, ip_hash
+			`SELECT id, post_path, author_name, author_email_hash, body, created_at, status, parent_id, ip_hash
 			 FROM comments WHERE status = ? ORDER BY created_at DESC LIMIT ?`,
 		).bind(statusFilter, limit);
 	} else {
 		stmt = env.COMMENTS_DB.prepare(
-			`SELECT id, post_path, author_name, author_email_hash, body, created_at, status, ip_hash
+			`SELECT id, post_path, author_name, author_email_hash, body, created_at, status, parent_id, ip_hash
 			 FROM comments ORDER BY created_at DESC LIMIT ?`,
 		).bind(limit);
 	}
