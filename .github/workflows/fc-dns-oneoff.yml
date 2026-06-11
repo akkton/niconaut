@@ -1,8 +1,8 @@
 name: One-off DNS record for fc subdomain
 
 # Temporary helper: creates the CNAME fc -> flavia-cavalcante.pages.dev on the
-# nicolasneumann.blog zone (the FC crochet portal lives in akkton/personal-apps,
-# whose CF token has no zone scope). Delete this file after a successful run.
+# nicolasneumann.blog zone. Tries both repo tokens; prints which (if either)
+# has zone scope. Delete this file after a successful run.
 
 on: workflow_dispatch
 
@@ -12,13 +12,29 @@ jobs:
     steps:
       - name: Create CNAME fc -> flavia-cavalcante.pages.dev (idempotent)
         env:
-          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          T1: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          T2: ${{ secrets.CLOUDFLARE_D1_TOKEN }}
         run: |
           API="https://api.cloudflare.com/client/v4"
-          ZR=$(curl -sS "$API/zones?name=nicolasneumann.blog" -H "Authorization: Bearer $TOKEN")
-          ZONE_ID=$(echo "$ZR" | jq -r '.result[0].id // empty')
+          ZONE_ID=""
+          TOKEN=""
+          for NAME in T1 T2; do
+            CAND=$(eval "echo \"\$$NAME\"" | tr -d '[:space:]')
+            [ -z "$CAND" ] && { echo "$NAME: empty"; continue; }
+            ZR=$(curl -sS "$API/zones?name=nicolasneumann.blog" -H "Authorization: Bearer $CAND")
+            OK=$(echo "$ZR" | jq -r '.success')
+            COUNT=$(echo "$ZR" | jq -r '.result | length? // 0')
+            echo "$NAME: success=$OK zones_visible=$COUNT"
+            if [ "$OK" = "true" ] && [ "$COUNT" != "0" ]; then
+              ZONE_ID=$(echo "$ZR" | jq -r '.result[0].id')
+              TOKEN="$CAND"
+              break
+            fi
+            echo "$ZR" | jq -c '{errors}'
+          done
           if [ -z "$ZONE_ID" ]; then
-            echo "zone lookup failed:"; echo "$ZR" | jq '{success, errors}'; exit 1
+            echo "VERDICT: no available token can see the zone, CNAME not created"
+            exit 1
           fi
           echo "zone: $ZONE_ID"
           EXISTING=$(curl -sS "$API/zones/$ZONE_ID/dns_records?name=fc.nicolasneumann.blog" \
