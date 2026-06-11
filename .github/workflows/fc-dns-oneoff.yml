@@ -1,0 +1,33 @@
+name: One-off DNS record for fc subdomain
+
+# Temporary helper: creates the CNAME fc -> flavia-cavalcante.pages.dev on the
+# nicolasneumann.blog zone (the FC crochet portal lives in akkton/personal-apps,
+# whose CF token has no zone scope). Delete this file after a successful run.
+
+on: workflow_dispatch
+
+jobs:
+  dns:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create CNAME fc -> flavia-cavalcante.pages.dev (idempotent)
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          API="https://api.cloudflare.com/client/v4"
+          ZR=$(curl -sS "$API/zones?name=nicolasneumann.blog" -H "Authorization: Bearer $TOKEN")
+          ZONE_ID=$(echo "$ZR" | jq -r '.result[0].id // empty')
+          if [ -z "$ZONE_ID" ]; then
+            echo "zone lookup failed:"; echo "$ZR" | jq '{success, errors}'; exit 1
+          fi
+          echo "zone: $ZONE_ID"
+          EXISTING=$(curl -sS "$API/zones/$ZONE_ID/dns_records?name=fc.nicolasneumann.blog" \
+            -H "Authorization: Bearer $TOKEN" | jq -r '.result | length')
+          if [ "$EXISTING" = "0" ]; then
+            curl -sS -X POST "$API/zones/$ZONE_ID/dns_records" \
+              -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              --data '{"type":"CNAME","name":"fc","content":"flavia-cavalcante.pages.dev","proxied":true}' \
+              | jq '{success, errors, record: .result.name}'
+          else
+            echo "record already exists, nothing to do"
+          fi
