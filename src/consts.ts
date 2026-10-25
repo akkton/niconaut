@@ -1,5 +1,5 @@
 export const SITE_TITLE = 'Nico Neumann';
-export const SITE_DESCRIPTION = 'Building, learning, journaling in public. Entrepreneurship, AI, and what I work on day to day.';
+export const SITE_DESCRIPTION = 'Business systems, automation and software products. Current work, AI-assisted delivery and an earlier journal archive.';
 export const SITE_AUTHOR = 'Nicolas Neumann';
 export const SITE_URL = 'https://nicolasneumann.blog';
 

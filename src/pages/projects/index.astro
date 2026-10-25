@@ -129,9 +129,8 @@ const showHeadings = groups.length > 1;
 			<section class="page-head">
 				<h1>Projects</h1>
 				<p>
-					The things I'm working on, in the open. Products I'm building, plus the practice
-					and learning around them. Each has a running changelog and, over time, posts that
-					follow it. Status is honest, not aspirational.
+					Current and past projects, with their status and a record of the work.
+					The <a href="/posts/what-im-building-now/">October 2026 update</a> explains what I'm working on now.
 				</p>
 			</section>
 
@@ -150,7 +149,7 @@ const showHeadings = groups.length > 1;
 											<span class="status">{project.data.status}</span>
 										</div>
 										<p class="p-summary">{project.data.summary}</p>
-										<span class="p-since">since <FormattedDate date={project.data.startedDate} /></span>
+										<span class="p-since">documented since <FormattedDate date={project.data.startedDate} /></span>
 									</a>
 								</li>
 							))}

@@ -246,8 +246,9 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft && d
 				<h1>Nico Neumann</h1>
 				<p class="tagline">Curious about opportunity. Building things. Documenting the mess.</p>
 				<p>
-					I'm building products with AI agents, journaling the work in public, and figuring out
-					what an entrepreneurial life looks like in 2026. This is the log.
+					I work on business systems, automation and software products with AI-assisted development.
+					My current work includes GMT and personal agent systems.
+					<a href="/posts/what-im-building-now/">Read what I'm building now, October 2026</a>.
 				</p>
 			</section>
 
@@ -257,8 +258,8 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft && d
 					<figcaption>The log starts here.</figcaption>
 				</figure>
 				<p>
-					Two streams. A near-daily journal tracks what I worked on, what shipped, what stalled,
-					and the focus time from Rize. Long-form posts when an idea earns more than 200 words.
+					The journal records an earlier stretch of May and remains here as an archive.
+					Longer posts explain the systems, decisions and lessons behind the work.
 				</p>
 				<p>
 					Everything is plain text first. The repo is public. The analytics events are listed
@@ -269,7 +270,7 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft && d
 
 			<section>
 				<div class="section-head">
-					<h2>Recent journal</h2>
+					<h2>Journal archive</h2>
 					<a href="/journal/" class="all-link">all entries &rarr;</a>
 				</div>
 				{recentJournal.length === 0 ? (

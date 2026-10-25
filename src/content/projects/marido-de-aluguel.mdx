@@ -1,14 +1,20 @@
 ---
-name: "Marido de Aluguel"
-status: "Building"
-summary: "A Brazilian marketplace for home services. Husband for Hire, as an app."
+name: "Lydar"
+status: "In testing"
+summary: "A Brazilian home-services marketplace with client and professional workflows, currently in testing."
 startedDate: 2026-05-18
 order: 2
-tags: ["marido-de-aluguel", "marketplace", "brazil"]
+tags: ["lydar", "marido-de-aluguel", "marketplace", "brazil"]
 links:
-  - label: "Live demo"
-    url: "https://marido-de-aluguel-web.pages.dev"
+  - label: "Lydar app in English"
+    url: "https://app.lydar.com.br/en"
+  - label: "Lydar public site"
+    url: "https://lydar.com.br/"
 changelog:
+  - date: 2026-10-25
+    note: "Updated the name, app links and testing status. The current product leaves payment to the client and professional to arrange directly."
+  - date: 2026-05-28
+    note: "Renamed the project Lydar. The original project URL is retained for older links."
   - date: 2026-05-18
     note: "Locked the product brief and the core idea."
   - date: 2026-05-19
@@ -16,7 +22,7 @@ changelog:
   - date: 2026-05-20
     note: "Working session with a local partner. Narrowed the first slice to a small, shippable start."
   - date: 2026-05-21
-    note: "The waitlist went live, and the first real signups came in. Beyond my own testers, seven people found it and put their name down on their own. The clearest signal yet that the thing is wanted."
+    note: "Published the waitlist. Seven people beyond my testers signed up. I treated that as an early signal to investigate."
   - date: 2026-05-22
     note: "Built the foundation. A location model, a typed data layer that keeps precise addresses locked down, and the app moved onto its design system. Code-verified end to end."
   - date: 2026-05-24
@@ -28,16 +34,14 @@ This is a marketplace for home services, the trades you call when something in t
 
 It is built for the Brazilian market first, local before national, the kind of thing where word of mouth and a physical presence do the early work.
 
-## Why this is harder than it looks
+## Current scope
 
-The interesting part is not the marketplace, it is how the money moves. In Brazil that means Pix, the instant-payment rail, and paying in installments, which people expect even for a service. The shortcut would have been to reach for the same payment processor everyone uses in the US. It cannot do marketplace payouts or installments here, so the whole money path runs through a Brazilian processor instead, with the platform taking its cut on the split. That one constraint shaped more of the architecture than any feature did.
+Lydar is still in testing. The workflows cover accounts, professional browsing, service requests and chat between the two sides.
 
-## Built to go two ways
-
-It runs in one town first, but the architecture does not assume it stops there. Two languages and proper currency handling are in from the first commit, and the payment side sits behind an interface rather than wired straight to one provider. So it can stay a Brazilian product, the way some of the best ones have, or become a Brazil-first product that travels later, without a rewrite to find out which.
+Clients and professionals arrange payment directly.
 
 ## Keeping addresses private
 
-A marketplace for home services knows where people live, which is exactly the data you do not want leaking. So the model splits it: a public, city-level location anyone can see, and the precise address gated per user behind row-level rules in the database from day one. Privacy is not a setting bolted on later, it is the shape of the data.
+A marketplace for home services handles information about where people live. The workflow limits when the exact address becomes available, so people can discuss a request before sharing it. Access rules and the distinction between public and private information are part of the product design.
 
-The honest status: the brief is locked, the foundation and sign-in are live, and a small waitlist is already real. Next is the part people will actually touch, profiles and the first job flow. The changelog above is the running record.
+This page uses the current Lydar name. Its older URL remains in place so links to the original Marido de Aluguel project continue to work.

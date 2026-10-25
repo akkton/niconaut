@@ -15,15 +15,17 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as Locale;
 const t = useTranslations(lang);
 
-const hero: Record<string, { tagline: string; intro: string; desc: string }> = {
+const hero: Record<string, { tagline: string; intro: string; current: string; desc: string }> = {
 	pt: {
 		tagline: 'Curioso por oportunidades. Construindo coisas. Documentando a bagunça.',
-		intro: 'Estou construindo produtos com agentes de IA, registrando o trabalho em público e descobrindo como é uma vida empreendedora em 2026. Este é o registro.',
+		intro: 'Trabalho com sistemas de negócios, automação e produtos de software com apoio de IA. Meu trabalho atual inclui o GMT e sistemas pessoais de agentes.',
+		current: 'Leia a atualização de outubro de 2026 sobre o que estou construindo',
 		desc: 'Construindo, aprendendo e escrevendo em público.',
 	},
 	de: {
 		tagline: 'Neugierig auf Chancen. Dinge bauen. Das Chaos dokumentieren.',
-		intro: 'Ich baue Produkte mit KI-Agenten, dokumentiere die Arbeit öffentlich und finde heraus, wie ein unternehmerisches Leben 2026 aussieht. Das ist das Logbuch.',
+		intro: 'Ich arbeite an Geschäftssystemen, Automatisierung und Softwareprodukten mit KI-gestützter Entwicklung. Aktuell gehören GMT und persönliche Agentensysteme dazu.',
+		current: 'Mein Arbeitsstand im Oktober 2026',
 		desc: 'Bauen, lernen und öffentlich dokumentieren.',
 	},
 };
@@ -76,7 +78,7 @@ const recentPosts = (await getCollection('posts', ({ data }) => !data.draft && d
 			<section class="hero">
 				<h1>Nico Neumann</h1>
 				<p class="tagline">{hero[lang].tagline}</p>
-				<p>{hero[lang].intro}</p>
+				<p>{hero[lang].intro} <a href={`/${lang}/posts/what-im-building-now/`}>{hero[lang].current}</a>.</p>
 			</section>
 
 			{recentJournal.length > 0 && (

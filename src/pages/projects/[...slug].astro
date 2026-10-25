@@ -24,7 +24,7 @@ const daysSince = Math.floor((Date.now() - startedDate.valueOf()) / 86400000);
 const milestonesView = (milestones ?? []).map((m) => ({ ...m, reached: daysSince >= m.day }));
 
 // Posts that follow this project: any post tagged with one of the project's tags.
-const related = (await getCollection('posts', ({ data }) => !data.draft))
+const related = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
 	.filter((post) => post.data.tags.some((t) => tags.includes(t)))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
@@ -213,7 +213,7 @@ const related = (await getCollection('posts', ({ data }) => !data.draft))
 						<span class="status">{status}</span>
 					</div>
 					<p class="desc">{summary}</p>
-					<p class="meta">since <FormattedDate date={startedDate} /></p>
+					<p class="meta">documented since <FormattedDate date={startedDate} /></p>
 					{links && links.length > 0 && (
 						<div class="links">
 							{links.map((link) => (

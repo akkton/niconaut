@@ -1,41 +1,45 @@
 ---
 name: "OneProposal"
-status: "Building"
-summary: "Turns the context of a freelance project into a finished, client-ready proposal, written in your voice."
+status: "Parked"
+summary: "A parked AI proposal product covering research, generation, refinement, hosted output and failure recovery."
 startedDate: 2026-05-04
-order: 1
+order: 3
 tags: ["oneproposal"]
 links:
   - label: "oneproposal.app"
     url: "https://oneproposal.app"
-  - label: "How the agentic system works"
-    url: "/posts/how-the-agentic-system-works/"
+  - label: "Public sample output"
+    url: "https://oneproposal.app/p/demo"
+  - label: "October work update"
+    url: "/posts/what-im-building-now/"
 changelog:
+  - date: 2026-10-25
+    note: "Updated this page to reflect the parked product. The public sample shows the output design, not a new generation or a customer result."
+  - date: 2026-05-28
+    note: "Parked the product before reaching the acquisition goal. Completed checkouts were owner tests, not external customer validation."
   - date: 2026-05-04
     note: "Started building the proposal engine."
   - date: 2026-05-11
-    note: "Closed a productization sprint. The engine now returns a finished one-page proposal, not just text, and gained a way to regenerate it from a different angle. Moved off the heavier agent framework to direct model calls, which cut the cost of a draft by roughly ten times."
+    note: "Closed a productization sprint. Added a finished one-page proposal and regeneration from a different angle. Moved from the heavier agent framework to direct model calls."
   - date: 2026-05-14
     note: "Made live research a hard requirement, so a proposal has to be grounded in real signals about the client instead of invented ones. Shipped a cleaner editorial template and verified it end to end."
   - date: 2026-05-16
     note: "Quiet launch to friends and family. Flipped payments to live mode, moved onto its own domain, wired analytics and an in-app feedback widget, and shipped credit purchase plus a batch of readiness fixes in one go."
   - date: 2026-05-17
-    note: "Ran a two-track audit of the whole system and worked the findings. A first tester paid for a credit and got a proposal out the far side, which proved the payment and cost path. Shipped a refine step, a follow-up email generator, and richer research output, each with behavioral tests."
+    note: "Ran an audit and worked through the findings. Owner tests exercised the payment and generation paths. Added refinement, follow-up generation and richer research output."
   - date: 2026-05-18
     note: "Moved the strongest model to the default for drafting and kept the cheaper one for refine and follow-up, so quality goes where it matters and cost stays in check."
 draft: false
 ---
 
-OneProposal takes the context of a freelance project, the job and your background, and drafts the proposal you would have written by hand. The point is to stop rewriting the same structure for every new client and spend the saved time on the parts that actually win the work.
-
-It is still being built, not market-ready yet. It is also the project that pushed me to build the agentic system the rest of this site keeps talking about, because the only way to make it reliable was to build the wrapper around the model, not just the model's output.
+I built OneProposal to turn a freelance project brief and background information into a proposal and a hosted page. The product is parked. The public sample preserves the output format.
 
 ## What it actually is
 
-Two pieces. A front end where you sign in, pay, and read the result, and a separate engine service behind it that does the real work. The engine does not just call a model and hand back whatever it says. It wraps the model in a research step that grounds the proposal in real signals, then runs the draft through a set of inline checks before anything reaches you: the line counts, the banned phrases, the price matching the brief, the sign-off present. The wrapper is the product. The model is one part inside it.
+I built a proposal-generation and refinement product with a front end and a separate generation engine. The work covered research, extraction, a cover letter, a hosted proposal page and checks on the generated output. It also included the contracts and callbacks connecting the two parts, plus recovery when a request failed.
 
 ## The hard parts
 
-The one that taught me the most was a payment race. A tester pressed pay, the screen started generating, then fell back to the previous page, and a second click showed the finished proposal. No error, just a mismatch between when the payment landed and when the result came back. I found it by lining up the database rows against the analytics timeline after the fact, not by reproducing it live, and the fix sat on the front-end callback, not the engine.
+One recurring problem was contract drift. The engine could return a field the front end did not use, leaving a feature partly implemented. I used explicit request and callback contracts and regression checks to make that boundary easier to verify.
 
-The other recurring one is drift between the two halves. The engine expects the front end to fill in a piece, the front end has never heard of it, and a placeholder ships inside a real proposal. The lesson, written down so I stop relearning it: a comment is not a contract. The only thing that holds two systems together is a test that fails the moment the wire between them changes.
+Owner tests exercised the payment and generation paths. Customer validation required a separate acquisition step. The acquisition sprint ended without reaching its goal, and I parked the project.
