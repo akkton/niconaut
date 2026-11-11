@@ -4,3 +4,7 @@
 
 # Friendly alias: /handyman -> the Marido de Aluguel project (2026-05-22).
 /handyman /projects/marido-de-aluguel 301
+
+# Retired public work tracker: keep historical links useful.
+/work /journal/ 301
+/work/ /journal/ 301

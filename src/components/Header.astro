@@ -6,7 +6,7 @@ import { getLangFromUrl, useTranslations } from '../i18n/ui';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 // Localized sections get a locale prefix; en stays at the root (no trailing slash,
-// so HeaderLink active-state matching keeps working). Work stays English for now.
+// so HeaderLink active-state matching keeps working).
 const sec = (seg: string) => (lang === 'en' ? `/${seg}` : `/${lang}/${seg}`);
 const home = lang === 'en' ? '/' : `/${lang}/`;
 ---
@@ -18,7 +18,6 @@ const home = lang === 'en' ? '/' : `/${lang}/`;
 			<HeaderLink href={sec('journal')}>{t.nav.journal}</HeaderLink>
 			<HeaderLink href={sec('posts')}>{t.nav.posts}</HeaderLink>
 			<HeaderLink href={sec('projects')}>{t.nav.building}</HeaderLink>
-			<HeaderLink href="/work">{t.nav.work}</HeaderLink>
 			<HeaderLink href={sec('about')}>{t.nav.about}</HeaderLink>
 			<HeaderLink href={sec('feedback')}>{t.nav.feedback}</HeaderLink>
 			<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◐</button>
