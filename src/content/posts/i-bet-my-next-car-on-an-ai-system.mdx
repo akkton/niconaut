@@ -1,0 +1,229 @@
+---
+title: "I bet my next car on an AI system."
+description: "The tools, mistakes and decisions behind a real ChatGPT-assisted car purchase."
+pubDate: 2026-11-11
+tags: [ai, workflow, agents, systems]
+draft: false
+lang: en
+---
+
+import CarBuyingArticle from '../../components/CarBuyingArticle.astro';
+import CarBuyingTools from '../../components/CarBuyingTools.astro';
+import CarBuyingTimeline from '../../components/CarBuyingTimeline.astro';
+
+<CarBuyingArticle singleLanguage>
+
+<figure class="car-listing-photo">
+  <img src="/post-assets/car-buying-ai-system/civic-seller-listing.webp" alt="The white 2018 Honda Civic coupe I purchased, shown in an AutoNation seller-listing photograph" width="909" height="682" loading="eager" fetchpriority="high" decoding="async" />
+  <figcaption>The Civic I bought, shown in an AutoNation CDJR Spring listing photograph recovered via <a href="https://vehisales.com/vehicle/2018-Honda-Civic-LX-2HGFC4A56JH307108">VehiSales</a>. Retrieved November 11, 2026. Seller image, not a new photograph.</figcaption>
+</figure>
+
+
+I used my own car purchase to test an AI-assisted workflow for research, software building and planning. ChatGPT helped with the work; I directed it and chose the car.
+
+The stakes were real. I needed a car, I had limited time to go and see candidates, and the costs would follow me well beyond the search. A convincing answer or a polished app would be useful only if it helped me work through those decisions.
+
+It also gave me a practical reason to try several ChatGPT capabilities together: voice conversations, browser research, a private web app, separate worker sessions and documents that preserved the work.
+
+<figure class="car-day-plan">
+  <a class="car-image-link" href="/post-assets/car-buying-ai-system/viewing-day-v4-preview.jpg" target="_blank" rel="noopener">
+  <img src="/post-assets/car-buying-ai-system/viewing-day-v4-preview.jpg" alt="Version 4 day-plan preview with a blank starting address, four hours of visits and an unknown finish time because driving durations are missing" width="1165" height="747" loading="eager" fetchpriority="high" decoding="async" />
+  </a>
+  <figcaption>Missing driving durations left the finish time explicitly unknown. Version 4 preserved-source local preview, November 4, 2026; illustrative QA inputs, not my actual itinerary. Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>. <a href="/post-assets/car-buying-ai-system/viewing-day-v4-preview.jpg" target="_blank" rel="noopener">Open the full-size screenshot.</a></figcaption>
+</figure>
+
+I bought a car. Afterward, I documented concerns for dealer and mechanic follow-up. That follow-up remains open in the record behind this story.
+
+The experiment produced a useful system and exposed reproducible software defects, a consequential verification error and plenty of decisions that still needed me. All of that belongs in the case study.
+
+## The brief: get from listings to a workable day
+
+The initial problem was a collection of marketplace listings and a need to turn them into a concrete browsing, test-driving and buying strategy.
+
+I wanted connected car and dealership tables. Each car needed to stay linked to the correct dealer. Prices, mileage, transmission and available history information needed to be comparable. Sources needed to remain accessible so we could inspect what a claim was based on.
+
+That gave us a research record. I also needed to decide which cars to go and see.
+
+Several candidates at one dealership could share a visit. A car elsewhere added travel. Opening hours affected the order, and missing driving estimates affected how much confidence I could put in the day plan.
+
+During the discussion, I said:
+
+<blockquote class="car-quote">
+  <p>“for right now, let's just solve the problem that we have right now.”</p>
+</blockquote>
+
+We recorded three phases: make the existing information useful, verify finalists and prepare visits, then broaden the search and corroborate more evidence.
+
+That kept the immediate buying problem visible while leaving room for the ideas that kept coming up.
+
+## The tools and how they connected
+
+The workflow combined several tools, each with a particular job.
+
+<CarBuyingTools />
+
+I could discuss a requirement by voice, inspect the result on the laptop and ask for a focused change. Workers could investigate separate questions. Their handbacks still needed to be reconciled into the same project.
+
+The data flow evolved. The spreadsheet was the early record. Later releases used a packaged, versioned catalog. An updated app loaded that research snapshot; there was no live two-way connection to the Sheet.
+
+My choices were separate from that catalog. A favorite meant I wanted to keep considering a car. Its research record showed what we knew and what we still needed to establish.
+
+The Maps connection was also specific: the planner handed off chosen destination addresses. It did not receive live driving durations from Maps or automatically optimize the visit order.
+
+## A few specifications behind the interface
+
+The preserved buying-week source was a static HTML/CSS application with JavaScript modules. It fetched a packaged `data.json` catalog and used Leaflet 1.9.4 with OpenStreetMap tiles.
+
+Browser storage held favorites, selections, priorities and planning settings. The development work added state migration, locking and merging behavior for edits across tabs. Another browser did not automatically contain the same plan.
+
+<div class="car-spec-reference" role="region" aria-label="Documented app specifications" tabindex="0">
+
+| Specification | Documented behavior |
+|---|---|
+| Candidate exploration | Filters, available listing photos, profiles, favorites, manual priorities and comparison views |
+| Dealer relationship | Cars retained their dealer association; several cars at one dealer could share one stop |
+| Time planning | Start time, available hours, visit durations and entered driving estimates fed schedule arithmetic and budget warnings |
+| Missing travel inputs | Unknown durations remained visible; a complete finish time could stay unknown |
+| Saved work | Browser-local choices and downloadable JSON backups; later CSV and printable HTML exports |
+| Development checks | Git commits and Node.js checks/tests supplied reviewable release history |
+| Supporting documents | Python and python-docx were used to produce working records and visit-preparation documents |
+
+</div>
+
+These specifications come from preserved source and documented releases. They are not a fresh audit of every current screen.
+
+One early November 4 snapshot contained 465 cars, 197 dealer records and 188 mapped locations. At a later v15 milestone, the catalog contained 4,322 entries across 241 dealers.
+
+The increase described captured research coverage. It did not mean every entry had received the same scrutiny or that the cars were still available.
+
+The current deployment record identifies private v26, deployed on November 4. The buying-week plan remained browser-local. Separate cloud experiments belong later in this account.
+
+## The timeline
+
+Dates below follow the UTC project record. Some early November 4 activity was still November 3 evening in Texas.
+
+<CarBuyingTimeline />
+
+Most of the early app iteration happened while I was actively using and discussing it. That made feedback immediate.
+
+An early map made dealership geography easier to inspect. I questioned why so much appeared concentrated around Houston. The explanation depended on what the map represented: dealers associated with captured listings.
+
+A missing pin could mean an address had not been established. A dealer absent from the dataset could mean no candidate had been captured through that search. The map described our research coverage.
+
+That was an early lesson in interface design. A map can look authoritative while showing a limited sample. Its labels needed to retain that context.
+
+## Building the decisions into the app
+
+The app developed into a workspace connecting the candidate list, dealer map and viewing-day plan.
+
+Available photos made browsing easier. Favorites preserved interest. Viewing selections connected cars to the day plan. Dealer inventory views let me inspect other captured candidates at a location I was considering.
+
+I wanted priorities I could assign myself and change as the search developed.
+
+Some changes became obvious only during use. Sorting by price could mean ordering all cars globally or ordering cars within dealer groups. The screen needed to explain which scope applied.
+
+Selected cars and dealers needed to be easy to find. I wanted to move from a dealer on the map into its inventory and back to the selection context without losing track of my choices.
+
+I also asked for changes to map movement, crowded cards, the calculator and transmission information. Those were requirements emerging from the job I was trying to do.
+
+Later that day, I raised a more fundamental issue: missing listing information was making the tool difficult to use.
+
+I needed to save a promising car even when its research was incomplete. I also wanted the available listing fields filled in before we spent time conducting extensive background checks on every candidate.
+
+That changed the priorities. The planner was updated so saving a listing became independent of its research stage. A reliable dealer location remained necessary before it could become a route destination.
+
+Saving preserved my interest in a candidate. Planning travel required enough information to know where I would be going. Those actions needed different rules.
+
+## What broke, and what we changed
+
+One production review found the platform toolbar covering a shortcut to the day plan. We moved the control, added an inline alternative and retested the affected interaction.
+
+Multiple-tab testing reproduced a race in the saved state. A later check found a problem with first-drive estimates surviving reloads. Those defects were corrected and retested using isolated app state.
+
+Changing the starting point also needed to clear estimates tied to the previous origin. Otherwise, an old assumption could survive into a new plan and still look plausible.
+
+This was less visible work than the map or photo gallery. It mattered because I needed to return to the app, edit choices and understand which assumptions still applied.
+
+The checks remained specific. Same-browser testing covered the tested tab and reload behavior. It did not establish cross-device synchronization. Preview screenshots documented layouts; signed-in app checks supplied evidence about interactions.
+
+Delegation created its own problem. The project handoff recorded overlapping worker assignments and repeated research. A central reservation check was added so workers could establish ownership before starting.
+
+That was a useful correction to the orchestration. More workers required clearer coordination and a combined review.
+
+Another problem was the fit between research and the interface. Some evidence existed without being displayed in the format the app expected. A reviewed adapter helped expose attributed partial updates while keeping their incomplete status visible.
+
+Collecting a result, storing it and making it usable were separate pieces of work.
+
+## The error that mattered beyond the interface
+
+During an insurance comparison, the assistant reported a figure before completing the vehicle-identity check.
+
+It later said the quote still carried another vehicle’s identifier and retracted both that figure and the combined-cost calculation based on it.
+
+That was a consequential verification failure. According to the assistant’s later account, the label looked relevant while the underlying vehicle identifier did not match.
+
+The relevant input needed checking before the price was presented as useful to my decision.
+
+This account does not establish a corrected final quote or a new automated safeguard. The clear result was a retraction of information that should not have been reported as applicable yet.
+
+I wanted the experiment to have real stakes. That also means recording a failure like this, rather than limiting the story to the parts that looked good in a screenshot.
+
+## A detailed profile still leaves questions
+
+The catalog retained stable identifiers, source links, capture dates, conflicts and unknowns. That made findings traceable and kept personal choices separate from research updates.
+
+A November 4 report examined six saved or favorited candidates. It found matching advertisements for all six. Dealer-confirmed physical stock was still missing. Questions remained about histories, title evidence, fees, inspection arrangements and actual financing or insurance terms.
+
+The check did not establish purchase readiness for any of the six at that point. It did not diagnose the cars or establish my final shortlist.
+
+It was still a useful result. A research assignment could finish with a precise list of unanswered questions and next actions.
+
+The same discipline applied to prices. An asking price, a calculation using assumptions and a written out-the-door quote represented different information. The record needed to preserve the basis of each number.
+
+The day plan needed the same honesty. Grouping cars by dealership accounted for stops, and visit durations accounted for time spent there. Missing driving durations still prevented a complete finish-time calculation.
+
+
+
+An eight-hour budget alone did not establish that the proposed visits would fit. The gap belonged on screen, where I could act on it.
+
+## What happened when the software met the car
+
+The buying process kept changing the priorities.
+
+I dictated observations during a test drive. Physical behavior and condition introduced information that the listing and planner could not supply.
+
+The financing available to me also affected which candidates I could pursue. Insurance became a vehicle-specific question. The app organized information around those decisions, while the actual terms shaped what I could do.
+
+On November 7, I told ChatGPT I had bought the car.
+
+Afterward, I documented concerns for dealer and mechanic follow-up, including work to be discussed with the same dealership. The recovered record does not establish the final repair outcome.
+
+That remains part of the story. Purchasing the car introduced further work around the physical vehicle. The software’s contribution and the car’s condition are different parts of the result.
+
+## Where the cloud experiments fit
+
+We also explored account-backed multi-day plans, custom groups and a saved research-request queue in a separate private Beta.
+
+Its tests used fictional saved choices. The real buying-week plan had not been imported into that account. The Beta’s managed database and revision history were separate from Live.
+
+A saved research request recorded something to investigate; it did not automatically launch a worker.
+
+This was another part of experimenting with the capabilities around the project. It also needed a clear boundary so work in a test version did not become a claim about how my real plan was stored.
+
+## Why this is the work I want to keep doing
+
+The value came from fitting the capabilities to an actual task.
+
+Voice and chat helped turn a need into requirements. Delegated sessions gave research and checking explicit assignments. A private app connected cars, dealers and time. Documents preserved the decisions and the questions left open.
+
+My feedback changed the build. Missing listing fields needed attention before deeper research became useful. Incomplete candidates needed to remain selectable. Source observations and personal choices needed separate meanings.
+
+The experiment also exposed software defects, duplicated work and a serious verification error. Some problems were reproduced, fixed and retested. Others remained limitations or open questions.
+
+That is the kind of project I want to keep building: a practical workflow that people can use, with evidence they can inspect and room for their judgment.
+
+A real purchase gave this experiment consequences. The result is a record of where the system helped, where it failed and what still required my attention.
+
+If your work has a similar gap between collecting information and acting on it, I’d be interested in discussing how to connect those pieces.
+
+</CarBuyingArticle>

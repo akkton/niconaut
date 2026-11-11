@@ -1,0 +1,156 @@
+---
+/** Presentation scoped to the car-buying case study; no other posts opt in. */
+interface Props { singleLanguage?: boolean; }
+const { singleLanguage = false } = Astro.props;
+---
+<div class="car-story" data-car-case-study data-car-single-language={singleLanguage || undefined}>
+  <slot />
+</div>
+
+<style>
+  :global(body:has([data-car-single-language]) > header .lang-switch) { display: none; }
+  .car-story[data-car-case-study] :global(.car-listing-photo) {
+    max-width: 760px;
+    margin: 0 auto 2.8rem;
+  }
+  .car-story[data-car-case-study] :global(.car-listing-photo img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  :global(main:has([data-car-case-study])) {
+    box-sizing: border-box;
+    width: min(100%, 1040px);
+    max-width: none;
+    padding: 2.75rem clamp(1rem, 4vw, 3rem) 5rem;
+  }
+  :global(main:has([data-car-case-study]) > .back-link),
+  :global(main:has([data-car-case-study]) article > .title) {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+  :global(main:has([data-car-case-study]) > .back-link) { display: block; }
+  :global(main:has([data-car-case-study]) article > .title) { margin-bottom: 2.5rem; }
+  /* Match PostLayout's scoped specificity without changing other articles. */
+  :global(main:has([data-car-case-study]) .title.title h1) {
+    max-width: 19ch;
+    font-size: clamp(2.1rem, 5.5vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    margin-bottom: 1rem;
+  }
+  :global(main:has([data-car-case-study]) .title.title .desc) {
+    font-size: 1.2rem;
+    line-height: 1.55;
+    color: var(--ink-muted);
+  }
+  :global(main:has([data-car-case-study]) .title.title .meta),
+  :global(main:has([data-car-case-study]) .title.title .meta .sep),
+  :global(main:has([data-car-case-study]) .title.title .meta .updated) { color: var(--ink-muted); }
+  .car-story[data-car-case-study] {
+    max-width: 68ch;
+    margin-inline: auto;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+  .car-story[data-car-case-study] > :global(p:first-of-type) {
+    font-size: 1.13em;
+    line-height: 1.65;
+  }
+  .car-story[data-car-case-study] :global(p) { margin-bottom: 1.25em; }
+  .car-story[data-car-case-study] :global(h2) {
+    margin: 3.5rem 0 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: clamp(1.4rem, 2.8vw, 1.8rem);
+    font-weight: 650;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    scroll-margin-top: 2rem;
+  }
+  .car-story[data-car-case-study] :global(.car-day-plan) {
+    width: min(920px, calc(100vw - 2rem));
+    max-width: none;
+    margin: 2rem 0 2.75rem 50%;
+    transform: translateX(-50%);
+  }
+  .car-story[data-car-case-study] :global(.car-day-plan img) {
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    background: #fff;
+  }
+  .car-story[data-car-case-study] :global(.car-image-link) {
+    display: block;
+    border-radius: 8px;
+  }
+  .car-story[data-car-case-study] :global(.car-image-link:focus-visible) {
+    outline: 3px solid var(--link-hover);
+    outline-offset: 5px;
+  }
+  .car-story[data-car-case-study] :global(figcaption) {
+    max-width: 78ch;
+    margin: 0.9rem auto 0;
+    font-family: var(--font-stack-sans);
+    font-size: 14px;
+    line-height: 1.65;
+    letter-spacing: normal;
+    text-transform: none;
+    text-align: left;
+    color: var(--ink-muted);
+  }
+  .car-story[data-car-case-study] :global(.car-quote) {
+    margin: 2rem 0;
+    padding: 1.4rem 1.6rem;
+    border: 0;
+    border-left: 3px solid var(--ink);
+    background: var(--code-bg);
+    color: var(--ink);
+    font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+    line-height: 1.55;
+    letter-spacing: -0.015em;
+  }
+  .car-story[data-car-case-study] :global(.car-quote p) { margin: 0; }
+  .car-story[data-car-case-study] :global(.car-spec-reference) {
+    margin: 1.75rem 0;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--code-bg);
+    overflow-x: auto;
+  }
+  .car-story[data-car-case-study] :global(.car-spec-reference table) {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .car-story[data-car-case-study] :global(.car-spec-reference th),
+  .car-story[data-car-case-study] :global(.car-spec-reference td) {
+    padding: 0.85rem 0.6rem;
+    vertical-align: top;
+  }
+  .car-story[data-car-case-study] :global(.car-spec-reference th:first-child),
+  .car-story[data-car-case-study] :global(.car-spec-reference td:first-child) { width: 29%; }
+  .car-story[data-car-case-study] :global(.car-spec-reference tr:last-child td) { border-bottom: 0; }
+  @media (max-width: 600px) {
+    :global(body:has([data-car-case-study]) > header nav) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+    :global(body:has([data-car-case-study]) > header .internal-links) {
+      width: 100%;
+      gap: 0.65rem 1rem;
+    }
+
+    :global(main:has([data-car-case-study])) { padding-top: 1.75rem; }
+    .car-story[data-car-case-study] :global(h2) { margin-top: 2.75rem; }
+    .car-story[data-car-case-study] :global(.car-quote) { padding: 1.15rem; }
+    .car-story[data-car-case-study] :global(.car-spec-reference) { padding-inline: 0.4rem; }
+    .car-story[data-car-case-study] :global(.car-spec-reference th),
+    .car-story[data-car-case-study] :global(.car-spec-reference td) { padding-inline: 0.45rem; }
+  }
+</style>

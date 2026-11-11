@@ -1,0 +1,43 @@
+---
+const events = [
+  [
+    "November 3",
+    "I asked for a practical buying strategy and connected car/dealer tables"
+  ],
+  [
+    "November 4",
+    "We built and reviewed the private app, tested defects, expanded research and checked candidates"
+  ],
+  [
+    "November 5",
+    "Test-drive observations and vehicle-specific financing and insurance questions affected the search"
+  ],
+  [
+    "November 7",
+    "I confirmed in the conversation that I had bought the car"
+  ],
+  [
+    "November 9",
+    "I documented concerns and planned further dealer and mechanic follow-up"
+  ]
+];
+---
+<ol class="car-timeline" aria-label="Project timeline">
+  {events.map(([date, text]) => (
+    <li>
+      <time datetime={`2026-11-${date.split(' ')[1].padStart(2, '0')}`}>{date}</time>
+      <p>{text}</p>
+    </li>
+  ))}
+</ol>
+<style>
+  .car-timeline { list-style: none; margin: 1.75rem 0 2.25rem; padding: 0; }
+  li { position: relative; display: grid; grid-template-columns: 6.5rem 1fr; gap: 1.25rem; margin: 0; padding: 0 0 1.4rem 1.4rem; border-left: 1px solid var(--rule-strong); }
+  li:last-child { padding-bottom: 0; }
+  li::before { content: ''; position: absolute; width: 7px; height: 7px; top: 0.55rem; left: -4px; border-radius: 50%; background: var(--ink); }
+  time { padding-top: 0.15rem; font-family: var(--font-stack-mono); font-size: 14px; line-height: 1.6; color: var(--ink-muted); }
+  .car-timeline p { margin: 0; font-size: 17px; line-height: 1.65; }
+  @media (max-width: 600px) {
+    li { grid-template-columns: 1fr; gap: 0.35rem; padding-left: 1.2rem; }
+  }
+</style>

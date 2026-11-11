@@ -1,0 +1,135 @@
+---
+const tools = [
+  [
+    "ChatGPT voice and chat",
+    "Discuss requirements, question findings, review the app and redirect priorities"
+  ],
+  [
+    "Browser research",
+    "Inspect marketplace listings, dealer pages and accessible vehicle-history evidence"
+  ],
+  [
+    "ChatGPT coordinating and worker sessions",
+    "Assign research, implementation and checking, then bring the results back for review"
+  ],
+  [
+    "Google Sheets",
+    "Hold the initial linked tracker and supply captured snapshots; later remain a reference"
+  ],
+  [
+    "Packaged JSON research files",
+    "Retain identifiers, observations, sources, dates, conflicts and unknowns"
+  ],
+  [
+    "Car planner in ChatGPT Sites",
+    "Compare candidates, save choices, connect cars to dealers and assemble a viewing day"
+  ],
+  [
+    "Google Maps",
+    "Open the selected street-address destinations through an external route link"
+  ],
+  [
+    "Library and project documents",
+    "Preserve reports, operating notes, screenshots and the decisions behind the build"
+  ]
+];
+---
+
+<section class="car-tool-section" aria-label="The tools behind the car search">
+  <div class="car-workflow" role="group" aria-label="Conversation, delegated work and the private planner">
+    <p class="car-workflow-label">The working setup</p>
+    <div class="car-workflow-main">
+      <div class="car-tool-window">
+        <div class="car-window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p class="car-window-role">Brief + feedback</p>
+        <h3 class="car-window-title">ChatGPT voice + chat</h3>
+        <p class="car-window-copy">Discuss criteria.<br />Question findings.<br />Review changes.</p>
+      </div>
+      <div class="car-connector" aria-hidden="true"><b>→</b></div>
+      <div class="car-tool-window">
+        <div class="car-window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p class="car-window-role">Separate sessions</p>
+        <h3 class="car-window-title">Orchestrator + workers</h3>
+        <p class="car-window-copy">Browser research.<br />Build the app.<br />Check the results.</p>
+      </div>
+      <div class="car-connector" aria-hidden="true"><b>→</b></div>
+      <div class="car-tool-window car-planner-window">
+        <div class="car-window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p class="car-window-role">Decision workspace</p>
+        <h3 class="car-window-title">Private ChatGPT Sites planner</h3>
+        <p class="car-window-copy">Compare cars.<br />Connect dealers.<br />Plan the day.</p>
+      </div>
+    </div>
+    <p class="car-review-loop">Nico reviewed the app and asked for changes.</p>
+    <div class="car-records" aria-label="Where the work was recorded">
+      <div><strong>Google Sheets</strong><span>Initial linked tracker</span></div>
+      <div><strong>JSON catalog snapshot</strong><span>Dated research packaged into the app</span></div>
+      <div><strong>Library + documents</strong><span>Reports, decisions and screenshots</span></div>
+    </div>
+    <div class="car-maps-handoff">
+      <span class="car-handoff-label">From the planner</span>
+      <span class="car-handoff-arrow" aria-hidden="true">→</span>
+      <strong>Google Maps</strong>
+      <span>Manually open selected stops</span>
+    </div>
+  </div>
+  <p class="car-workflow-note">A simplified view of the tools and their roles. Research snapshots, personal choices and human follow-through stayed separate.</p>
+  <details class="car-tool-details">
+    <summary>All tools and their roles</summary>
+    <dl class="car-tools" aria-label="Tools and what we used them for">
+      {tools.map(([name, role]) => (
+        <div class="car-tool">
+          <dt>{name}</dt>
+          <dd>{role}</dd>
+        </div>
+      ))}
+    </dl>
+  </details>
+</section>
+<style>
+  .car-tool-section { margin: 1.75rem 0 2.25rem; }
+  .car-workflow { border: 1px dashed var(--rule-strong); border-radius: 12px; padding: 1.15rem; background: var(--bg); }
+  .car-workflow .car-workflow-label { margin: 0 0 1rem; font-family: var(--font-stack-mono); font-size: 12px; line-height: 1.5; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); }
+  .car-workflow-main { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr); align-items: stretch; gap: 0.55rem; }
+  .car-tool-window { min-width: 0; border: 1px solid var(--rule-strong); border-radius: 9px; background: var(--code-bg); overflow: hidden; }
+  .car-window-bar { display: flex; gap: 4px; align-items: center; height: 25px; padding-inline: 11px; border-bottom: 1px solid var(--rule-strong); }
+  .car-window-bar span { width: 5px; height: 5px; border: 1px solid var(--ink-muted); border-radius: 50%; }
+  .car-tool-window .car-window-role { margin: 0.9rem 0.8rem 0.45rem; font-family: var(--font-stack-mono); font-size: 10px; line-height: 1.5; color: var(--ink-muted); letter-spacing: 0.035em; text-transform: uppercase; }
+  .car-window-role::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 5px; background: var(--link-hover); vertical-align: middle; }
+  .car-tool-window .car-window-title { margin: 0 0.8rem 0.8rem; font-size: 16px; line-height: 1.35; font-weight: 650; letter-spacing: -0.015em; text-wrap: balance; }
+  .car-tool-window .car-window-copy { margin: 0 0.8rem 1rem; color: var(--ink-muted); font-size: 14px; line-height: 1.65; }
+  .car-connector { align-self: center; text-align: center; color: var(--ink-muted); }
+  .car-connector span { display: block; font-family: var(--font-stack-mono); font-size: 9px; line-height: 1.4; word-break: normal; }
+  .car-connector b { display: block; font-size: 25px; font-weight: 400; line-height: 1.6; }
+  .car-workflow .car-review-loop { margin: 0.95rem 0 1.15rem; color: var(--ink-muted); font-size: 14px; line-height: 1.6; }
+  .car-records { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  .car-records strong { display: block; font-size: 13px; line-height: 1.5; font-weight: 600; }
+  .car-records span { display: block; margin-top: 0.3rem; font-size: 13px; line-height: 1.55; color: var(--ink-muted); }
+  .car-maps-handoff { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.65rem; margin-top: 1.15rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 14px; line-height: 1.6; color: var(--ink-muted); }
+  .car-handoff-label { font-family: var(--font-stack-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.035em; }
+  .car-handoff-arrow { color: var(--ink); }
+  .car-maps-handoff strong { font-size: 14px; }
+  .car-tool-section .car-workflow-note { margin: 0.8rem 0 1.25rem; color: var(--ink-muted); font-size: 14px; line-height: 1.65; }
+  .car-tool-details { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding-block: 0.8rem; }
+  .car-tool-details summary { cursor: pointer; color: var(--ink); font-size: 15px; font-weight: 600; line-height: 1.6; }
+  .car-tool-details summary:focus-visible { outline: 2px solid var(--link-hover); outline-offset: 5px; }
+  .car-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; margin: 1rem 0 0; }
+  .car-tool { padding: 1rem 0; border-top: 1px solid var(--rule); min-width: 0; }
+  dt { margin: 0 0 0.6rem; color: var(--ink); font-size: 16px; font-weight: 650; line-height: 1.4; }
+  dd { margin: 0; color: var(--ink-muted); font-size: 15px; line-height: 1.65; }
+  @media (max-width: 600px) {
+    .car-workflow { padding: 1rem; }
+    .car-workflow-main { grid-template-columns: 1fr; gap: 0; }
+    .car-tool-window .car-window-role { font-size: 11px; }
+    .car-window-role::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 5px; background: var(--link-hover); vertical-align: middle; }
+  .car-tool-window .car-window-title { font-size: 18px; }
+    .car-tool-window .car-window-copy { font-size: 15px; }
+    .car-connector { display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding-block: 0.45rem; }
+    .car-connector span { font-size: 11px; }
+    .car-connector b { transform: rotate(90deg); font-size: 22px; line-height: 1; }
+    .car-records { grid-template-columns: 1fr; gap: 0.9rem; }
+    .car-records strong { font-size: 14px; }
+    .car-records span { margin-top: 0.1rem; font-size: 14px; }
+    .car-tools { grid-template-columns: 1fr; }
+  }
+</style>
